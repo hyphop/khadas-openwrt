@@ -12,7 +12,7 @@ just begin state!
 
 ## screenshots
 
-[openwrt.png][pics/openwrt.png]
+[!openwrt.png](pics/openwrt.png)
 
 ## how to ...
 
