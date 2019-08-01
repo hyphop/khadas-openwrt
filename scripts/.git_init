@@ -1,0 +1,19 @@
+#!/bin/sh
+
+## hyphop ##
+
+## automate basic new git repository create
+## USAGE
+##	./tools/99_git_init
+
+NAME=$(basename "$(realpath .)")  #"#
+GNME="https://github.com/hyphop/$NAME.git"
+
+echo "[i] create GIt $NAME => $GNME">&2
+
+git init
+git add -A
+git commit -m "first commit $(date)"
+git remote add origin $GNME
+git push -u origin master
+
