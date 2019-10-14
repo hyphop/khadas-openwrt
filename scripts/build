@@ -149,7 +149,7 @@ CMD rsync -a --inplace $PR/../files/root/* $OWTMP
 
 #CMD rm -rf $OWTMP/lib/modules/4*
 
-echo "[i] BUILD: $LABEL $REL $BOARD $(date)" > $OWTMP/etc/banner.mod
+echo "[i] BUILD: $LABEL $REL $BOARD $(tz=date)" > $OWTMP/etc/banner.mod
 
 CMD mkimage -C none -A arm -T script -d $PR/../files/openwrt_ext4.cmd $OWTMP/s905_autoscript
 
@@ -240,7 +240,7 @@ cat $OWTMP.squashfs >> $IMG_VFAT
 rm $OWTMP.squashfs
 
 CMD dd if=/dev/zero bs=1M count=$PART2SIZE of=$IMG_VFAT.overlay
-CMD mkfs.ext4 -F -L OW_USER $IMG_VFAT.overlay || FAIL
+CMD mkfs.ext4 -F -L rootfs_data $IMG_VFAT.overlay || FAIL
 
 #BS=4096
 #mkdir /tmp/_empty

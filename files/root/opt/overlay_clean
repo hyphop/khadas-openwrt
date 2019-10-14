@@ -1,1 +1,27 @@
+#!/bin/sh
 
+## hyphop ##
+
+#= overlay reset
+
+echo "[i] $0 ">&2
+CMD(){
+    echo $@
+    $@
+}
+
+#CMD umount /overlay
+#CMD mkfs.ext4 -F -L rootfs_data /dev/loop0
+#CMD mkdir /overlay/upper /overlay/work
+
+[ "$FORCE" ] || {
+    echo "[i] RESET overlay data">&2
+    echo "[i] are u sure ? press ENTER or Ctrl+C for escape">&2
+    read l
+}
+
+CMD rm -rf /overlay/upper/* 1>/dev/null 2>/dev/null
+CMD rm -rf /overlay/upper/.* 1>/dev/null 2>/dev/null
+CMD mount -o remount /
+
+echo "[i] DONE">&2

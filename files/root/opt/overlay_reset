@@ -1,0 +1,13 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= overlay reset
+
+CMD(){
+    echo $@
+    $@
+}
+
+CMD mount -o remount /
+

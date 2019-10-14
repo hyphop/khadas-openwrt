@@ -2,7 +2,7 @@
 
 ## hyphop ##
 
-#= mmc installer from sd
+#= overlay clear (root fs user data)
 
 ## USAGE
 
@@ -16,5 +16,5 @@ export FORCE=1
 
 echo "" > $OUT
 
-mmc_boots erase 1>$OUT 2>$OUT
+overlay_clear 1>$OUT 2>$OUT
 
