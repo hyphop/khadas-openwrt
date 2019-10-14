@@ -12,7 +12,6 @@ git clone https://github.com/hyphop/khadas-openwrt.git
 cd khadas-openwrt
 # ./scripts/build_prepare
 ./scripts/build
-
 ```
 
 ![openwrt.png](pics/openwrt.png)
