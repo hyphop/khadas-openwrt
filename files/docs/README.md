@@ -2,15 +2,9 @@
 
 openwrt for Khadas VIMs boards
 
-## build from sources
-
-## screenshots
-
-![openwrt.png](pics/openwrt.png)
-
-## docs
-
-[files/docs](files/docs)
++ [README.access.md](README.access.md)
++ [README.exta.md](README.extra.md)
++ [README.fs.md](README.fs.md)
 
 ## how to ...
 
