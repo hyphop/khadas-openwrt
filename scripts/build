@@ -7,7 +7,7 @@
 PR=$(dirname $0)
 PA=$(realpath $PR)
 
-. $PR/$0.conf
+. $0.conf
 
 IMG_EXT4_NO=1
 IMG_EXT4=/tmp/$LABEL.$BOARD.ext4.img
@@ -317,6 +317,8 @@ q
 " | fdisk $IMG_VFAT
 
 gzip -c $IMG_VFAT > $IMG_VFAT.gz
+
+ls -l1 $IMG_VFAT*
 
 echo "[i] DONE">&2
 
