@@ -1,0 +1,30 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= print sysinfo
+
+echo "DATE: $(date)
+
+NET: eth0: $(ipaddr eth0) | usb0: $(ipaddr usb0)
+
+NET_STATE: $(grep "" /sys/class/net/*/carrier)
+
+SOC: $(soc_info)
+
+TEMP: $(temp2)
+
+UNAME: $(uname -a)
+
+UPTIME: $(uptime)
+
+FREE:
+$(free)
+
+MODULES: $(lsmod)
+
+MMC: $(mmc 2>/dev/null)
+
+USB: $(lsusb)
+
+"

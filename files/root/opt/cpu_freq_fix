@@ -1,0 +1,18 @@
+#!/bin/sh
+
+## hyphop ##
+
+## fix cpu freq
+
+C=/sys/devices/system/cpu/cpufreq
+
+FREQ=$1
+
+[ "$FREQ" ] || FREQ=1200000
+
+echo "[i] set fix freq $FREQ">&2
+
+for c in $C/policy*; do
+    echo $FREQ > $c/scaling_max_freq
+    echo $FREQ > $c/scaling_min_freq
+done

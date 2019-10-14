@@ -1,0 +1,8 @@
+#!/bin/sh
+
+## hyphop ##
+
+iw event -f | while read r; do
+    date=$(date)
+    echo "[i] $date - $r">&2
+done

@@ -1,0 +1,70 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= check emmc boot area + delicate clear boots area
+
+cat <<'EOF'
+ _           _        _ _ ____      __  __ __  __  ____ 
+(_)_ __  ___| |_ __ _| | |___ \ ___|  \/  |  \/  |/ ___|
+| | '_ \/ __| __/ _` | | | __) / _ \ |\/| | |\/| | |    
+| | | | \__ \ || (_| | | |/ __/  __/ |  | | |  | | |___ 
+|_|_| |_|___/\__\__,_|_|_|_____\___|_|  |_|_|  |_|\____|
+
+EOF
+
+# '
+
+set -e
+
+FAIL(){
+    echo "[e] failed on last cmd">&2
+    exit 1
+}
+
+CMD(){
+    echo "[#] $@">&2
+    $@ || FAIL
+}
+
+MMC=$(mmcdisk mmc)
+SD=$(mmcdisk sd)
+
+MMC=$(mmcdisk mmc)
+SD=$(mmcdisk sd)
+
+#213288*512+2048*512
+
+BLOCKS=$(( $(cat /sys/class/block/${SD##*/}p1/size) + $(cat /sys/class/block/${SD##*/}p2/size) + 2048 ))
+BYTES=$((BLOCKS*512))
+
+echo "[i] need to copy BLOCKS: $BLOCKS BYTES=$BYTES">&2
+
+[ "$FORCE" ] || {
+    echo "[i] NOTE: install system to eMMC (copy from SD)">&2
+    echo "[i] NOTE: next step remove all prev eMMC data (internal storage)">&2
+    echo "[i] are u sure ? press ENTER or Ctrl+C for escape">&2
+    read l
+}
+
+export FORCE=1
+
+CMD mmc_boots erase
+
+mount -o remount,ro /overlay
+
+CMD dd if=$SD of=$MMC bs=512 count=$BLOCKS
+
+mount -o remount,rw /overlay
+
+CMD sync
+
+MNT=/tmp/mmc1
+CMD mkdir -p $MNT
+CMD mount ${MMC}p1 $MNT
+CMD sed -i 's/mmcblk0p2/mmcblk1p2/' $MNT/boot/user.env
+CMD cat $MNT/boot/user.env
+CMD umount $MNT
+
+echo "[i] DONE !! plz remove sd card and reboot from eMMC">&2
+

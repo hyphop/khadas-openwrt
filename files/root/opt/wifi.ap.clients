@@ -1,0 +1,53 @@
+#!/bin/sh
+
+## hyphop ##
+
+. /etc/wifi.ap.conf
+
+hostapd_pid=$(pgrep hostapd)
+
+[ "$hostapd_pid" ] || {
+
+    echo "[i] not in AP mode">&2
+    exit 1
+
+}
+
+
+D=/var/run/wifi.ap/
+D2=/var/run/wifi.ap.clients
+
+[ -d "$D" ] && {
+
+ls $D > $D2
+
+grep -f $D2 /tmp/run/dhcpd.wlan*.leases || {
+    echo "[i] empty | no clients">&2
+}
+
+exit 0
+
+}
+
+echo "[w] not actual status">&2
+
+
+##
+#cat /tmp/dhcp.$DEV.leases
+cat /tmp/run/dhcpd.$DEV.leases
+
+##
+
+##
+#echo "[i] arp tables $DEV"
+grep wlan /proc/net/arp
+##
+
+#WLAN=wlan0
+
+#for HW in `ls $D`; do
+#
+#    echo "$HW - $(grep $HW /tmp/run/dhcpd.wlan*.leases)"
+#
+#done
+

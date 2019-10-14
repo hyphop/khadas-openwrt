@@ -1,0 +1,34 @@
+#!/bin/sh
+
+## hyphop ##
+
+HELP(){ echo "\
+#= ipv6 [on|off]
+";}
+
+case $1 in
+
+    on|1|en*)
+	echo 0 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+    ;;
+    of*|0|d*)
+	echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
+    ;;
+    "")
+    ipv6="$(cat /proc/sys/net/ipv6/conf/all/disable_ipv6)"
+    printf "[i] ipv6: ">&2
+    case $ipv6 in
+	0)
+	echo on
+	;;
+	1)
+	echo off
+	;;
+    esac
+
+
+    ;;
+    *)
+    HELP
+    ;;
+esac

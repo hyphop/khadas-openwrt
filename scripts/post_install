@@ -1,0 +1,26 @@
+#!/bin/sh
+
+## hyphop ##
+
+PR=$(dirname $0)
+opkg=$PR/opkg
+
+echo "[i] install packages">&2
+
+[ -d /tmp/opkg-lists ] || {
+    $opkg update
+}
+
+#    ppp-mod-pptp \
+#    luci-proto-ppp \
+
+$opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
+    i2c-tools usbutils evtest netcat aria2 \
+    dosfstools e2fsprogs blkid losetup dtc uboot-envtools \
+    triggerhappy kmod-hid \
+    iw wpad-wolfssl wpa-cli \
+    wireless-tools \
+    openvpn-mbedtls luci-app-openvpn \
+    iptables-mod-tproxy \
+    shadowsocks-libev-ss-redir shadowsocks-libev-ss-local shadowsocks-libev-ss-rules shadowsocks-libev-config luci-app-shadowsocks-libev \
+    wpan-tools

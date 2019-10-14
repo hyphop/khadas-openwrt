@@ -1,0 +1,18 @@
+#!/bin/sh
+
+LOG() {
+
+	logger -t wifi "${INTERFACE} $@"
+#	env >> /tmp/wifi_wpa_script.log
+}
+
+case "$2" in
+    CONNECTED)
+        LOG "$1 WPA supplicant: connection established";
+		exec /opt/wifi.connected
+        ;;
+    DISCONNECTED)
+        LOG "$1 WPA supplicant: connection lost";
+        ;;
+esac
+

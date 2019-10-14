@@ -1,0 +1,43 @@
+#!/bin/sh
+
+## hyphop ##
+
+# add needed modules
+
+for i in \
+xt_tcpudp	\
+iptable_filter	\
+iptable_mangle	\
+iptable_nat	\
+xt_limit	\
+xt_mac		\
+xt_multiport	\
+xt_comment	\
+xt_LOG		\
+xt_LED		\
+xt_TCPMSS	\
+ipt_MASQUERADE	\
+ipt_REJECT	\
+ipt_ULOG	\
+xt_REDIRECT	\
+xt_TPROXY	\
+xt_time		\
+xt_mark		\
+xt_state	\
+iptable_raw	\
+xt_CT		\
+xt_conntrack	\
+nf_conntrack		\
+nf_defrag_ipv4		\
+nf_conntrack_ipv4	\
+nf_nat			
+do
+
+
+[ -d /sys/module/$i ] || {
+    echo "[i] insmod $i">&2
+    modprobe $i
+}
+
+done
+

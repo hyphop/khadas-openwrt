@@ -1,0 +1,14 @@
+#!/bin/sh
+
+## hyphop ##
+
+grep "" /sys/devices/soc0/*
+
+#root@Krescue-init:/# grep "" /sys/devices/soc0/*
+
+#/sys/devices/soc0/family:Amlogic Meson
+#/sys/devices/soc0/machine:Khadas VIM2
+#/sys/devices/soc0/revision:22:a - 82:2
+#/sys/devices/soc0/soc_id:GXM (S912)
+
+

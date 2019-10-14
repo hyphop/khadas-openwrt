@@ -1,0 +1,15 @@
+#!/bin/sh
+
+## hyphop ##
+
+NET=/sys/class/net
+
+for w in $NET/wlan?; do
+
+DEV=${w#$NET/}
+MOD=$(readlink $w/device/driver/module)
+MOD=${MOD#../../../../module/}
+echo "[i] $DEV [ $MOD ] "
+
+
+done

@@ -1,0 +1,162 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= usb otg composite driver
+
+## liNKS
+## https://gist.github.com/Gadgetoid/c52ee2e04f1cd1c0854c3e77360011e2
+
+set -e
+
+CONF=/opt/usbnet.conf
+
+. $CONF
+
+for m in g_mass_storage g_ether g_ncm; do
+    [ -d /sys/module/$m ] && rmmod $m
+done
+
+#for m in g_ffs; do
+#    [ -d /sys/module/$m ] || modprobe $m
+#done
+
+PR=`cat /etc/hostname`
+MN="rescueip:$ip_dev:$ip_host"
+
+[ "$1" = "none" ] && {
+    MN="openwrt_IP: $(uci get network.lan.ipaddr)"
+}
+
+iProduct="$PR"
+iManufacturer="$MN"
+
+#pkill -f usb0 1>/dev/null 2>/dev/null
+
+CMD(){
+    logger -s -t net "$@"
+    "$@"
+}
+
+MKDIR(){
+    [ -d "$1" ] || \
+    mkdir -p "$1"
+}
+
+CFG=/tmp/configfs
+CID=g1
+
+UDIR=/sys/class/udc/
+
+for i in $UDIR*;  do
+    UDC=${i#$UDIR}
+done
+
+echo "[i] UDC $UDC">&2
+
+[ -d $CFG ] || mkdir $CFG
+
+grep -q $CFG /proc/mounts || \
+    mount none -t configfs $CFG
+
+cd $CFG/usb_gadget
+
+rm -rf $CFG/CIG 1>/dev/null 2>/dev/null
+
+MKDIR $CID
+cd $CID
+
+#    ls -l1
+
+#echo "0x0200" > bcdUSB
+echo "0x0210" > bcdUSB
+echo "0x02" > bDeviceClass
+echo "0x00" > bDeviceSubClass
+echo "0x3066" > bcdDevice
+echo $idVendor > idVendor
+echo $idProduct > idProduct
+
+echo "1" > os_desc/use
+echo "0xcd" > os_desc/b_vendor_code
+echo "MSFT100" > os_desc/qw_sign
+
+STRID=0x409
+
+MKDIR "strings/$STRID"
+
+echo $iSerialNumber > strings/$STRID/serialnumber
+echo $iManufacturer > strings/$STRID/manufacturer
+echo $iProduct > strings/$STRID/product
+
+echo "[i] make config">&2
+
+MKDIR configs/c.1
+MKDIR configs/c.1/strings/$STRID
+
+echo "RNDIS" > configs/c.1/strings/0x409/configuration
+
+MKDIR functions/rndis.usb0
+
+echo "[i] make functions">&2
+
+echo "RNDIS" > functions/rndis.usb0/os_desc/interface.rndis/compatible_id
+echo "5162001" > functions/rndis.usb0/os_desc/interface.rndis/sub_compatible_id
+
+host_addr_act=$(cat functions/rndis.usb0/host_addr)
+dev_addr_act=$(cat functions/rndis.usb0/dev_addr)
+
+echo "[i] make config addr host: $host_addr($host_addr_act) dev: $dev_addr($dev_addr_act)">&2
+
+[ "$host_addr" == "$host_addr_act" ] || \
+echo $host_addr > functions/rndis.usb0/host_addr
+[ "$dev_addr" == "$dev_addr_act" ] || \
+echo $dev_addr > functions/rndis.usb0/dev_addr
+
+host_addr_act=$(cat functions/rndis.usb0/host_addr)
+dev_addr_act=$(cat functions/rndis.usb0/dev_addr)
+
+echo "[i] addr configured as host: $host_addr($host_addr_act) dev: $dev_addr($dev_addr_act)">&2
+
+#ls -l1 configs/c.1
+
+ln -sf functions/rndis.usb0 configs/c.1
+# Tell Windows to use config #2
+ln -sf configs/c.1 os_desc
+
+echo "[i] enable config">&2
+
+#sleep 1
+
+#ls -l1 
+
+echo "[i] enable UDC $UDC">&2
+echo "0x00" > bDeviceClass
+echo $UDC > UDC
+
+CMD ifconfig $DEV up
+
+case "$1" in
+
+    br-lan)
+    brctl addif br-lan usb0
+    exit 0
+    ;;
+
+    none)
+    exit 0
+    ;;
+
+esac 
+
+CMD ifconfig $DEV $IP netmask 255.255.255.0
+
+export DEV=$DEV IP1=$IP1 IP0=$IP0 GW=$GW DNS="$DNS" LEASE_CLEAR=1
+
+case "$1" in
+    gw)
+    export GW=$IP DNS="$IP"
+    ;;
+esac
+
+CMD /opt/dhcp_server
+

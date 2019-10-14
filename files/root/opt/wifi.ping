@@ -1,0 +1,29 @@
+#!/bin/sh
+
+## hyphop ##
+
+## user event wifi net connected 
+
+. /etc/wifi.ip.conf
+
+NAME=$(basename $0)
+
+help(){
+echo "ABOUT
+    $NAME ping router ip
+
+USAGE
+
+    $NAME
+    $NAME -s 1234 -i 0.1
+
+"
+}
+
+router=`cat /tmp/net/$DEV/router`
+
+#pkill -f "-s1234"
+
+/usr/bin/ping $@ -I$DEV $router
+
+

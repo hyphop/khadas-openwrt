@@ -1,0 +1,15 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= disable rc
+
+rmmod ir_nec_decoder
+rmmod rc_geekbox
+rmmod rc_khadas
+rmmod rc_krescue
+rmmod meson-ir
+rmmod rc-core
+
+
+

@@ -1,0 +1,32 @@
+#!/bin/sh
+
+## hyphop ##
+
+NAME=$(basename $0)
+
+help() {
+echo "USAGE
+    $NAME (DEV|all|help)+
+"
+}
+
+case "$@" in
+    ""|-h|--h|help)
+    help
+    exit 1
+    ;;
+    all)
+    match="dnsmasq -p0"
+    echo "[i] stop $match">&2
+    pkill -f "$match"
+    exit
+    ;;
+
+esac
+
+for d in "$@"; do
+    match="dnsmasq -p0 -i $DEV"
+    echo "[i] stop $match">&2
+    pkill -f "$match"
+done
+

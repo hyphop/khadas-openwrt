@@ -1,0 +1,27 @@
+#!/bin/sh
+
+## hyphop ##
+
+## wifi ap launcher 
+
+[ "$SSID" ] || SSID=Krescue
+export SSID=$SSID
+[ "$PASS" ] || PASS=12345678
+export PASS=$PASS
+
+#wifi.on
+#
+FM=2g
+
+case $MODE in
+    sta*|c*|2)
+    /opt/wifi.config "$SSID" "$PASS"
+    /opt/wifi.client
+    ;;
+    o*|no*|0|d*)
+    echo "[i] wifi disabled mode">&2
+    ;;
+    *)
+    /opt/wifi.ap
+    ;;
+esac

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+## hyphop ##
+
+DEV=wlan0
+
+pgrep -f $DEV && echo  "[i] slow down wifi apps!">&2
+
+[ "$1" ] && {
+    echo "[i] force stop">&2
+    pkill -f $DEV
+}
+
+#echo "" > /tmp/hosts/wifi
+
+for m in brcmfmac brcmutil dhd mac80211 cfg80211 ; do
+    [ -d /sys/module/$m ] && rmmod $m
+done
+
+

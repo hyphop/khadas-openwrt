@@ -1,0 +1,22 @@
+#!/bin/sh
+
+## hyphop ##
+
+DEV=wlan0
+
+for m in cfg80211; do
+    [ -d /sys/module/$m ] || {
+	echo "[i] load $m">&2
+	insmod $m
+    }
+done
+
+#for m in dhd; do
+for m in brcmutil brcmfmac; do
+    [ -d /sys/module/$m ] || {
+	echo "[i] load $m">&2
+	insmod $m ap_mode=2
+    }
+done
+
+

@@ -1,0 +1,84 @@
+#!/bin/sh
+[ -e /tmp/.failsafe ] && export FAILSAFE=1
+
+[ -f /etc/banner ] && cat /etc/banner
+#[ -n "$FAILSAFE" ] && cat /etc/banner.failsafe
+
+HOSTNAME=$(cat /proc/sys/kernel/hostname)
+
+#echo "[i] HOSTNAME $HOSTNAME"
+
+case "$HOSTNAME" in
+    "(none)")
+    cat /etc/hostname > /proc/sys/kernel/hostname
+    ;;
+esac
+
+export PATH="/opt:/tmp/opt:/usr/sbin:/usr/bin:/sbin:/bin"
+export HOME=$(grep -e "^${USER:-root}:" /etc/passwd | cut -d ":" -f 6)
+export HOME=${HOME:-/root}
+export PS1='\u@\h:\w\$ '
+
+
+case "$TERM" in
+	xterm*|rxvt*)
+		export PS1='\[\e]0;\u@\h: \w\a\]'$PS1
+		;;
+esac
+
+[ -x /bin/more ] || alias more=less
+[ -x /usr/bin/vim ] && alias vi=vim || alias vim=vi
+
+alias ll='ls -alF --color=auto'
+
+[ -z "$KSH_VERSION" -o \! -s /etc/mkshrc ] || . /etc/mkshrc
+
+[ -x /usr/bin/arp -o -x /sbin/arp ] || arp() { cat /proc/net/arp; }
+[ -x /usr/bin/ldd ] || ldd() { LD_TRACE_LOADED_OBJECTS=1 $*; }
+
+[ -n "$FAILSAFE" ] || {
+	for FILE in /etc/profile.d/*.sh; do
+		[ -e "$FILE" ] && . "$FILE"
+	done
+	unset FILE
+}
+
+if ( grep -qs '^root::' /etc/shadow && \
+     [ -z "$FAILSAFE" ] )
+then
+
+
+for a in $(cat /proc/cmdline); do
+#    echo "$a"
+    case $a in
+    passw*)
+        v=${a#passw=}
+#       echo "[i] root password: $v" >&2;
+	printf "$v\n$v\n\n" | passwd root 2>/dev/null 1>/dev/null
+    ;;
+    esac
+done
+
+grep -qs '^root::' /etc/shadow && \
+echo "
+=== WARNING! =====================================
+There is no root password defined on this device!
+Use the "passwd" command to set up a new password
+in order to prevent unauthorized SSH logins.
+--------------------------------------------------
+"
+
+fi
+
+for FILE in /etc/user_note*.sh; do
+    [ -e "$FILE" ] && . "$FILE"
+done
+
+service() {
+	[ -f "/etc/init.d/$1" ] || {
+		echo "service "'"'"$1"'"'" not found, the following services are available:"
+		ls "/etc/init.d"
+		return 1
+	}
+	/etc/init.d/$@
+}

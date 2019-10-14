@@ -1,0 +1,80 @@
+#!/bin/bash
+
+## hyphop ##
+
+#= deep find modules with dep modules
+
+#/ NOTE: ACHTUNG its ugly )
+
+MD="/lib/modules/$(uname -r)"
+
+DEEP(){
+
+for m in /sys/module/*/holders/$1; do
+    M=${m#/sys/module/};
+    M=${M%/holders/$1};
+    [ "$M" = "*" ] || {
+	echo "$M"
+	DEEP $M
+    }
+done
+
+}
+
+## by lines
+
+[ "$1" = "-1" ] && {
+    shift 
+    DEEP "$1" | sort -u
+    return 
+}
+
+# full path
+[ "$1" = "-F" ] && {
+    shift
+    DEEP "$1" | sort -u | while read l; do
+	ls -1 $MD/${l//_/?}.ko
+    done
+
+    return 
+}
+
+# only file name
+[ "$1" = "-f" ] && {
+    shift
+    DEEP "$1" | sort -u | while read l; do
+	ls -1 $MD/${l//_/?}.ko | while read k; do
+	    printf "${k#$MD/} "
+	done
+    done
+
+    return
+}
+
+[ "" ] && {
+[ "$1" = "-f" ] && {
+    shift
+    DEEP "$1" | sort -u | while read l; do
+	F="${l//_/?}.ko"
+	P="$MD/$F"
+	for f in $P; do
+	    [ -f "$f" ] && {
+		printf "$f "
+	    }
+	done
+    done
+    echo
+    return
+}
+}
+
+## by one line 
+
+DEEP "$1" | sort -u | while read l ; do
+    printf "$l "
+done
+echo
+
+
+
+

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= display thermal zone values
+
+P=/sys/class/thermal/thermal_zone
+
+N=$1
+
+for t in $P?/temp; do
+
+    n=${t#$P}
+    n=${n%/*}
+    
+    [ -f "$t" ] && {
+    T=$(cat $t)
+    [ "$T" ] && T=$((T/1000))
+    }
+
+    printf "$T "
+
+    [ "$N" = "$n" ] && {
+	break
+    }
+
+done
+
+echo

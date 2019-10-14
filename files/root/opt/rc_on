@@ -1,0 +1,54 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= enable rc + config
+
+IRK=$(which ir-keytable)
+
+MODS=" ir-nec-decoder rc-core meson-ir"
+
+[ "$IRK" ] || {
+    MODS="rc-krescue $MODS"
+}
+
+LOG=/tmp/rc.log
+
+CMD(){
+    echo "$0 [#] $@" >>$LOG
+    $@ >>$LOG
+}
+
+while [ "1" ]; do
+    [ -d /sys/module ] && break
+    echo "[i] $0 wait sys init">> $LOG
+    sleep 1
+done
+
+for m in $MODS; do
+    [ -d /sys/module/$m ] || CMD modprobe $m
+done
+
+[ -f /sys/class/rc/rc0/protocols ] || {
+
+    echo "[w] rc not loaded ">>$LOG
+}
+
+
+for t in 1 2 3 4 5; do
+    cat /sys/class/rc/rc0/protocols && break
+	echo "[i] wait loading $t">>$LOG
+#	exit 1
+    sleep 1
+done
+
+echo nec > /sys/class/rc/rc0/protocols
+
+
+cat /sys/class/rc/rc?/input?/uevent
+
+[ "$IRK" ] && {
+    CMD $IRK -c
+    CMD $IRK -w /etc/ir-keytable.conf
+
+}

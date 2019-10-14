@@ -1,0 +1,13 @@
+#!/bin/sh
+
+## hyphop ##
+
+echo "[i] stop all wifi commands + mods">&2
+
+pkill -f wpa_
+pkill -f hostapd
+pkill -f "\-I wlan"
+pkill -f "\-i wlan"
+pkill -f "\-iwlan"
+
+[ -d /sys/module/dhd ] && rmmod dhd

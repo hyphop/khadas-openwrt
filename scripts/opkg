@@ -1,0 +1,18 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= opkg wrapper
+
+PR=$(dirname 0)
+
+EXT=../bin/x86_64
+
+export LD_LIBRARY_PATH=$(realpath $EXT/lib)
+
+CACHE=$PR/../bin/opkg-cache
+
+[ -d $CACHE ] || mkdir -p $CACHE
+
+$EXT/lib/libc.so $EXT/bin/opkg --conf $PR/$0.conf --cache $CACHE $@
+

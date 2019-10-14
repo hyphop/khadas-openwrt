@@ -1,0 +1,16 @@
+#!/bin/sh
+
+## hyphop ##
+
+[ "$dev" ] || dev=$1
+[ "$dev" ] || dev=eth0
+
+[ -d "/sys/class/net/$dev" ] || exit 1
+
+IP(){
+    ifconfig $1 | egrep -o  \\d+\\.\\d+\\.\\d+\\.\\d+\\s | head -n1
+}
+
+echo $(IP $dev)
+
+

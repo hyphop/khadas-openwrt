@@ -1,0 +1,96 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= check emmc boot area + delicate clear boots area
+
+HELP(){ echo "ABOUT
+
+    check emmc boot area + delicate clear boots area
+
+USAGE
+
+    mmc_boots [erase|forcerase]
+
+"
+}
+
+CMD(){
+    echo "[i] $@"
+    $@
+}
+
+ERASE() {
+
+echo "[i] delicate erase mmc boot">&2
+
+for b in /sys/block/mmcblk?boot?; do
+
+DEV=${b##*\/}
+
+echo "[i] $DEV : $(cat $b/force_ro)">&2
+echo 0 > $b/force_ro
+echo "[i] $DEV : $(cat $b/force_ro)">&2
+
+CMD dd if=/dev/zero of=/dev/$DEV bs=512 count=4 2>/dev/null
+
+done
+
+[ "$boot_blank" ] || \
+CMD dd if=/dev/zero of=$(mmcdisk MMC) bs=512 seek=1 count=4 2>/dev/null
+
+sync
+
+}
+
+FORCE=
+case "$1" in
+    *force*)
+    echo "[i] force erase mode">&2
+    FORCE=1
+    ;;
+    -h|--help|help)
+    HELP
+    exit 0
+    ;;
+esac
+
+boot_md5=$(dd if=$(mmcdisk mmc) skip=1 count=1 bs=512 2>/dev/null | md5sum)
+boot0_md5=$(dd if=$(mmcdisk mmc)boot0 count=1 bs=512 2>/dev/null | md5sum)
+boot1_md5=$(dd if=$(mmcdisk mmc)boot1 count=1 bs=512 2>/dev/null | md5sum)
+
+boot_md5=${boot_md5%% *}
+boot0_md5=${boot0_md5%% *}
+boot1_md5=${boot1_md5%% *}
+
+BLANK=bf619eac0cdf3f68d496ea9344137e8b
+
+[ "$boot_md5" = "$BLANK" ] && boot_blank=1
+[ "$boot0_md5" = "$BLANK" ] && boot0_blank=1
+[ "$boot1_md5" = "$BLANK" ] && boot1_blank=1
+
+echo "[i] check mmc bootable status || more options $0 --help">&2
+echo "[i] boot__blank: $boot_blank ($boot_md5)">&2
+echo "[i] boot0_blank: $boot0_blank ($boot0_md5)">&2
+echo "[i] boot1_blank: $boot1_blank ($boot1_md5)">&2
+
+[ "$boot_blank" ] && {
+[ "$boot0_blank" ] && {
+[ "$boot1_blank" ] && {
+    echo "[i] mmc not bootable">&2
+
+    [ "$FORCE" ] || exit 0
+}
+}
+}
+
+case "$1" in
+    *erase*)
+    ERASE
+    ;;
+    *)
+    HELP
+    exit 0
+    ;;
+esac
+#echo 1 > /sys/block/mmcblk2boot0/ro_lock_until_next_power_on

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= hello test script from sd - simple example
+
+MSG="[i] simple message from '$0' script at $(date)"
+
+OUT=/dev/tty0
+
+echo "" > $OUT
+
+echo "$MSG" > $OUT

@@ -1,0 +1,65 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= board init config
+
+echo 0 4 1 > /proc/sys/kernel/printk
+
+WIFI=1
+USBNET=1
+#USB_NET_MODE=br-lan	#
+USBNET_MODE=		# default dhcp connection no routing
+
+/opt/cpu_freq_fix
+
+[ -d /sys/class/net/eth0 ] || /opt/eth_on
+
+grep '#' -v /etc/config/network | grep -q "usb0" && {
+# [ "$(uci get network.lan.ifname)" = "usb0" ] && {
+    USBNET_MODE=none   # configured by openwrt
+}
+[ "$USBNET" ] && [ -d /sys/class/net/usb0 ] || /opt/usb_otg_rndis $USBNET_MODE
+
+
+[ "$WIFI" ] && [ -d /sys/class/net/wlan0 ] || /opt/wifi.on
+
+[ -d /sys/class/net/wlan0 ] && {
+
+# wifi hack ap mode
+
+    iw phy phy0 interface add wlan1 type __ap
+
+
+}
+
+[ "$WIFI" ] && [ -f /etc/config/wireless ] || {
+
+    OK=
+
+    grep /dev/root /proc/mounts | grep -q rw && OK=1
+    grep "overlayfs:/overlay" /proc/mounts && OK=1
+
+    [ "$OK" ] && {
+
+    echo "[i] setup wifi default config"
+
+    wifi config
+    uci set wireless.radio0.disabled=0
+    uci commit
+    
+    echo "" > /tmp/need_restart_network
+
+    # /etc/init.d/network restart
+    # ( sleep 2 ; wifi reload ) &
+
+    }
+
+
+}
+
+for l in /sys/class/leds/*; do
+    [ -d "$l" ] || /opt/led hb
+done
+
+exit 0

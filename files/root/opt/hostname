@@ -1,0 +1,13 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= get/set hostame
+
+[ "$1" ] || {
+    cat /proc/sys/kernel/hostname
+    exit 0
+}
+
+echo "$@" > /proc/sys/kernel/hostname
+

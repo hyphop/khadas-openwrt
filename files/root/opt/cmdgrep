@@ -1,0 +1,33 @@
+#!/bin/sh
+
+## hyphop ##
+
+[ "$1" ] || exit 0
+
+#echo cmd="pgrep $@"
+
+PS=`pgrep $1 $2 $3 $4`
+
+n=
+for p in $PS ; do
+    
+    [ "$p" = "$$" ] && continue
+    n=$((n+1))
+    echo "$p">&2
+
+    [ -d "/proc/$p" ] && {
+
+    cat "/proc/$p/cmdline" | tr '\000' ' '
+    echo
+
+    }
+
+done
+
+
+[ "$n" ] || { 
+
+#echo "[i] not found $@">&2
+exit 1
+
+}

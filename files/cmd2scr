@@ -1,0 +1,15 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= update boot.sd.scr from boot.sd.cmd source
+CMD(){
+    echo "[#] $@">&2
+    $@
+}
+
+IN="$1"
+OUT=${1%.*}
+
+CMD mkimage -C none -A arm -T script -d "$IN" "$OUT"
+

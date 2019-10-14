@@ -1,0 +1,97 @@
+#!/bin/sh
+
+## hyphop ##
+
+. /etc/wifi.ip.conf
+
+OFF=/tmp/wifi.off
+WPA_CONF=/etc/wifi.net.conf
+
+[ "$DEV" = "" ] && DEV=$1
+[ "$DEV" = "" ] && DEV=wlan0
+[ "$IP1" = "" ] && IP1=10.20.20.20
+
+logger -t wifi "$0 ${DEVTYPE} => $DEV start"
+
+wifi.kill
+
+wpid=/tmp/wpa.$DEV.pid
+
+DD=/sys/class/net/$DEV
+
+[ -d "$DD" ] || {
+    /opt/wifi.on
+}
+
+[ -d "$DD" ] && {
+
+grep "down" $DD/operstate || {
+
+    echo "[w] up already" >&2
+#    exit 0
+
+}
+
+
+}
+
+[ -f $WPA_CONF ] || {
+    echo "[w] net config not found at $WPA_CONF" >&2
+    echo "[i] run wifi.config" >&2
+    exit 1
+}
+
+[ -f "$wpid" ] && {
+    [ -d "(cat $wpid)" ] && {
+	echo "[i] run already!" >&2 
+#	exit 0
+    }
+}
+
+#/opt/event.play wifi-on  1>/dev/null 2>/dev/null
+
+echo "ifconfig ${DEV} up set hw $HW"
+
+#ifconfig ${DEV} down
+ifconfig ${DEV} up
+ifconfig ${DEV} hw ether $HW
+
+[ "$IP1" = "no" ] || { 
+	echo ifconfig ${DEV}:1 ${IP1} netmask 255.255.255.0
+	ifconfig ${DEV}:1 ${IP1} netmask 255.255.255.0
+}
+
+
+ifconfig ${DEV} $ifcfg1
+iwconfig ${DEV} $iwcfg1
+
+#. /sys/class/net/$DEV/device/uevent
+
+VARS=`egrep 'DRIVER|DEVTYPE|PRODUCT' /sys/class/net/$DEV/device/uevent`
+echo $VARS
+eval $VARS
+
+case $DRIVER in
+
+    rtl8812au)
+    wpadrv=wext
+    ;;
+
+    *)
+    wpadrv=nl80211
+
+esac
+#wpadrv=wext # R1 fail
+
+
+echo wpa_supplicant -D$wpadrv -B -i$DEV -P$wpid -c$WPA_CONF
+
+wpa_supplicant -D$wpadrv -B -i$DEV -P$wpid -c$WPA_CONF
+
+###
+wpa_cli -i$DEV -B -a /opt/wpa_script
+
+###
+echo "pkill -f $DEV " >> $OFF
+
+exit 0

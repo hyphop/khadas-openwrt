@@ -1,0 +1,10 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= load modules from stdin
+
+while read l ; do
+    echo "[i] load $l">&2
+    modprobe $l
+done

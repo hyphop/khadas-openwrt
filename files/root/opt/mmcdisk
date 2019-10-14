@@ -1,0 +1,76 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= mmc types detect
+
+USAGE() { echo "\
+USAGE $0 [args] or $0 || echo mmc_not_found
+ARGS   0  | 1   | 2     - detect print type
+       SD | MMC | sdio  - detect device by type
+       --help	 - ...
+
+";}
+
+case $1 in
+
+    mmc|MMC|sd|SD)
+    m=$(grep -w -i $1\$ /sys/class/mmc_host/mmc?/mmc?\:*/type 2>/dev/null)
+
+    [ "${m%:*}" ] || {
+	echo "[w] not found $1 - $m">&2
+	exit 1
+    }
+
+    [ -f "${m%:*}" ] || {
+	echo "[w] not found $1 - $m">&2
+	exit 1
+    }
+
+    M=${m#/sys/class/mmc_host/mmc}
+    N=${M%/mmc*}
+    dev="/dev/mmcblk$N"
+    [ -b "$dev" ] && {
+	echo $dev
+    }
+    exit
+    ;;
+
+    0|1|2|3)
+    [ -f "/sys/class/mmc_host/mmc$1/mmc$1\:*/type" ] || {
+	echo "[w] not found by num $1">&2
+	exit 1
+    }
+
+    m=$(cat /sys/class/mmc_host/mmc$1/mmc$1\:*/type)
+    echo "$m"
+    exit
+    ;;
+    sdio|SDIO)
+    m=$(grep -w -i $1\$ /sys/class/mmc_host/mmc?/mmc?\:*/type 2>/dev/null )
+
+    [ "${m%:*}" ] || {
+	echo "[w] not found $1 - $m">&2
+	exit 1
+    }
+
+    [ -f "${m%:*}" ] || {
+	echo "[w] not found $1 - $m">&2
+	exit 1
+    }
+    
+    echo "$m">&2
+    exit
+    ;;
+    ""|*l*|show|all)
+    grep "" /sys/class/mmc_host/mmc?/mmc?\:*/type 2>/dev/null || {
+	echo "[i] mmc not found">&2
+	return 1
+    }
+    ;;
+    *)
+    USAGE
+    ;;
+esac
+
+

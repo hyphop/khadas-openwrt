@@ -1,0 +1,174 @@
+#!/bin/sh
+
+## hyphop ##
+
+NAME=$(basename $0)
+D=$(dirname $0)
+
+[ "$CONF" ] || CONF=$D/../etc/wifi.ap.conf
+
+case "$1" in
+    br)
+    CONF=$D/../etc/wifi.ap.br.conf
+    ;;
+esac
+
+. $CONF
+
+mkdir -p /tmp/hosts/ 1>/dev/null 2>/dev/null
+
+echo "$DEV - $IP">&2
+
+    conf=$D/../etc/hostapd.conf.tpl
+
+for a in "$@"; do
+    case $a in
+	-s|st*|kill|off)
+	exec wifi.ap.stop
+	;;
+	-p=*|--password=*)
+	PASSWORD=${a#*=}
+	;;
+	-s=*|--ssid=*)
+	SSID=${a#*=}
+	;;
+	-5)
+	MODE=5
+	;;
+	-2)
+	MODE=2
+	;;
+	-25)
+	MODE=25
+	;;
+    esac 
+done
+
+case $MODE in
+    5*)
+    conf=$D/../etc/hostapd.conf.5g
+    ;;
+    2*)
+    conf=$D/../etc/hostapd.conf.2g
+    ;;
+    25*|52*)
+    echo ""
+    ;;
+esac
+
+[ "$SSID" ] ||  SSID="$(cat /proc/sys/kernel/hostname)"
+[ "$PASSWORD" ] ||  PASSWORD=12345678
+
+
+DD=/sys/class/net/$WLAN
+
+[ -d "$DD" ] && {
+    grep "down" $DD/operstate || {
+	echo "[w] $WLAN up already" >&2
+#        exit 0
+    }
+}
+
+[ -d "$DD" ] || {
+    echo "[i] $0 UP $WLAN">&2
+#    ( 
+#	exec /opt/wifi.on
+#    >/dev/null 2>&1 )&
+    wifi.on
+#    exit 0
+}
+
+for t in 1 2 3; do
+    [ -d "$DD" ] || {
+    	echo "[i] wait $DD : $t">&2
+	sleep 1
+	continue
+    }
+    break
+done
+
+[ -d "$DD" ] || {
+    echo "[e] still not apear $DD">&2
+    exit 1
+}
+
+#echo "[i] $0 $DEV started">&2
+
+wifi.ap.stop
+
+IP_HOST_NAME=wifi.mizy
+echo "$IP $IP_HOST_NAME" > /tmp/hosts/wifi
+
+logger -s -t wifi "AP SSID: $SSID($PASSWORD) start $DEV ($DEVS) $IP($IP_HOST_NAME) => $IP0 - $IP1"
+logger -s -t wifi "AP mode $MODE + $conf"
+
+## setup bridge
+#$0.bridge
+
+[ "$DEVS" ] && {
+    bridge.setup $DEV $WLAN
+}
+
+
+#ifconfig $WLAN up
+
+iw $WLAN set power_save off
+
+ifconfig $DEV $IP netmask 255.255.255.0
+DEV=$DEV IP1=$IP1 IP0=$IP0 GW=$IP DNS="$DNS" dhcp_server
+
+# BRBRBRBR 
+#iptables -I INPUT -i wifi-br -j ACCEPT
+
+nat_eth start  >/dev/null 2>/dev/null
+
+#iw phy phy0 interface add wlan1 type __ap
+
+conf2=/tmp/hostapd.conf
+PIDF=/tmp/hostapd.$WLAN.pid
+CTRL=/tmp/hostapd.$WLAN.ctrl
+
+egrep -v "(ssid|wpa_passphrase)" $conf > $conf2
+echo "ssid=$SSID" >> $conf2
+echo "wpa_passphrase=$PASSWORD" >> $conf2
+
+echo "interface=$WLAN" >> $conf2
+
+[ "$DEVS" ] && {
+    echo "bridge=$DEV" >> $conf2
+}
+
+echo "HOSTAPD $CONF => $conf2 ARGS($@)">&2
+
+#cmd="hostapd -P $PIDF -g $CTRL -B $conf2 "
+#cmd="hostapd -P $PIDF -B $conf2 "
+
+BG=1
+
+HOSTAPD_LOG=/tmp/$NAME.log
+HOSTAPD_RUN=/var/run/hostapd
+
+[ -d "$HOSTAPD_RUN" ] || mkdir -p $HOSTAPD_RUN
+
+cmd="hostapd -i $WLAN -P $PIDF -t"
+#cmd="hostapd -P $PIDF -t -d"
+#cmd="hostapd -P $PIDF -t"
+cmd1="$cmd $conf2"
+cmd2="$cmd -B $conf2"
+cmd3="hostapd_cli -B -a /opt/hostapd_script"
+
+[ "" ] && {
+    logger -t wifi "run: $cmd1 > $HOSTAPD_LOG"
+    $cmd >$HOSTAPD_LOG  2>&1 &
+}
+
+
+logger -t wifi "run: $cmd2 + $cmd3"
+$cmd2 && $cmd3
+
+
+#ping -i 0.01 -I $DEV 123.123.123.123 >/dev/null 2>/dev/null &
+
+## ????
+
+export CONF=$CONF

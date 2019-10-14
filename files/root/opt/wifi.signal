@@ -1,0 +1,17 @@
+#!/bin/sh
+
+## hyphop ##
+
+[ -d /sys/class/net/wlan?/wireless ] || {
+    echo "[w] not found any wlan devices" 1>&2
+    exit 1
+}
+
+delay=$1
+
+while [ "1" ]; do
+    cat /proc/net/wireless
+    [ "$1" ] || exit 0
+    sleep $delay
+    clear
+done

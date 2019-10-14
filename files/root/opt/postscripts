@@ -1,0 +1,47 @@
+#!/bin/sh
+
+## hyphop ##
+
+export PATH="/opt:/tmp/opt:/usr/sbin:/usr/bin:/sbin:/bin"
+
+for d in /tmp/scripts /tmp/flash; do
+    mkdir -p $d
+done
+
+SDp1="$(mmcdisk sd)p1"
+
+[ -b $SDp1 ] || {
+
+    logger -s -t $0 "source $SDp1 not found"
+
+    exit 1
+
+}
+CMD(){
+    echo "[#] $@"
+    "$@" || { 
+
+    echo "[e] last cmd failed">&2
+    exit 1
+
+    }
+}
+
+CMD mount -o rw $SDp1 /tmp/flash
+
+for S in /tmp/flash/scripts/*.script; do
+    [ -f $S ] && {
+	logger -s -t $0 " copy $S">&2
+	CMD cp $S /tmp/scripts
+	CMD mv $S $S.disabled
+    }
+done
+
+CMD umount /tmp/flash
+
+for S in /tmp/scripts/*.script; do
+    [ -f $S ] && {
+	logger -s -t $0 " run $S">&2
+	sh $S | tee $S.log
+    }
+done

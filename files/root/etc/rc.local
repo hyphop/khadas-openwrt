@@ -1,0 +1,15 @@
+#!/bin/sh
+
+echo "[i] $0 started">&2
+
+[ "" ] && \
+[ -f /tmp/need_restart_network ] && {
+    logger "[i] NEED RESTART NETWORK"
+    /etc/init.d/network restart
+    mv /tmp/need_restart_network /tmp/need_restart_network.restarted
+}
+
+## post sript start
+
+/opt/postscripts
+

@@ -1,0 +1,42 @@
+#!/bin/sh
+
+## hyphop ##
+
+## user event wifi net connected 
+
+logger -t wifi "dev ${DEVTYPE} connected"
+
+. /etc/wifi.ip.conf
+
+#DEV=$1
+
+[ "$DEV" = "" ] && DEV=wlan0
+
+pidf="/tmp/wifi.$DEV.pid"
+
+[ -f $pidf ] &&  {
+	pidp=`cat $pidf`
+	[ -d "/proc/$pidp" ] && exit 0
+	rm $pidf
+}
+
+
+#exit
+
+#ifconfig ${DEV}:1 ${DEV}ip netmask 255.255.255.0
+
+#hname=`hostname`
+[ "$HNAME" ] || HNAME=`cat /proc/sys/kernel/hostname`
+
+[ -d /tmp/net/$DEV ] && rm -r /tmp/net/$DEV
+
+# try improve connection setup
+#/bin/ping -s1400 -w30 -I$DEV ${DEV}ipg 1>/tmp/ping.$DEV.log 2>&1 &
+pkill -f "ping -s1400 -w30 -I$DEV"
+
+/bin/ping -s1400 -w30 -I$DEV 192.168.0.0 1>/tmp/ping.$DEV.log 2>&1 &
+
+pkill -f $pidf
+udhcpc -p $pidf -B -t1 -R -S -b -i $DEV -x "hostname:${HNAME//./_}"
+
+

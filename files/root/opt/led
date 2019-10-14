@@ -1,0 +1,77 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= led control
+
+for m in leds_pwm; do
+    [ -d /sys/module/$m ] || modprobe $m
+done
+
+D=/sys/class/leds
+
+LED="$2"
+L=
+
+
+[ "$LED" ] && {
+for L in $D/*$LED*; do
+    echo "[i] $L">&2
+    [ -d "$L" ] || continue
+    LED=${L#$D/}
+    break
+done
+}
+
+[ "$LED" ] || {
+for L in $D/*:power $D/vim*; do
+    echo "[i] $L">&2
+    [ -d "$L" ] || continue
+    LED=${L#$D/}
+    break
+done
+}
+
+#LED="vim:red:power"
+#LED="vim2:white:power"
+
+[ "$LED" ] || {
+    echo "[e] led not found">&2
+    exit 1
+}
+
+LED_TRIGGER(){
+T=$(cat /sys/class/leds/$1/trigger)
+T=${T#*[}
+echo ${T%]*}
+}
+
+TRIGGER=$(LED_TRIGGER $LED)
+NEW=
+#
+#for i in "$@"; do
+#    case $i in
+    case $1 in
+	h*|blink)
+	NEW=heartbeat
+	;;
+	on|1|en*)
+	NEW=default-on
+	;;
+	off|no*|0)
+	NEW=none
+	;;
+	*)
+	grep "" /sys/class/leds/$LED/*
+	exit 0
+	;;
+    esac
+#done
+
+
+[ "$NEW" ] && {
+    echo $NEW > /sys/class/leds/$LED/trigger
+}
+
+echo "[i] LED: $LED ($TRIGGER) => $NEW">&2
+

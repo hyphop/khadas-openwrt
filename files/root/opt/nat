@@ -1,0 +1,56 @@
+#!/bin/sh
+
+## hyphop ##
+
+NAME=$(basename $0)
+
+#iptables_setup
+
+ipt_cmd="POSTROUTING -j MASQ"
+
+start() {
+logger -s -t net "$NAME forward => ON"
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+iptables_setup
+
+echo "*nat
+:MASQ - [0:0]
+-A MASQ -i lo -j RETURN
+-A MASQ -o lo -j RETURN
+-A MASQ -j MASQUERADE
+COMMIT" | iptables-restore --noflush
+
+iptables -t nat -C $ipt_cmd || \
+iptables -t nat -I $ipt_cmd
+
+}
+
+stop() {
+echo 0 > /proc/sys/net/ipv4/ip_forward
+iptables -t nat -D $ipt_cmd
+}
+
+status() {
+grep -H "" /proc/sys/net/ipv4/ip_forward
+iptables -t nat -L -n -v -x
+}
+
+[ "$NAME" = "nat" ] || {
+    start
+    exit 0
+}
+
+
+case "$1" in
+    restart|start|on|enable|1|yes)
+    start
+    ;;
+    stop|off|disable|0|none|no)
+    stop
+    logger -s -t net "nat forward => OFF"
+    ;;
+    *)
+    status
+    ;;
+esac

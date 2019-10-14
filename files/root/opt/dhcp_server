@@ -1,0 +1,101 @@
+#!/bin/sh
+
+## hyphop ##
+
+NAME=$(basename $0)
+
+#[ "$CONF" ] || CONF=/etc/wifi.ap.conf
+#. $CONF
+
+#debug="-q -d --log-dhcp"
+
+help(){
+echo "USAGE
+
+    ARGS $NAME [ dnsmasq_args ]
+
+ARGS
+
+    DEV=	interface name (eth0|wlan0|usb0)
+    IP=		ip device
+    MASK=	ip mask
+    IP0=	ip pool start
+    IP1=	ip pool end
+    GW=		ip gateway router
+    DNS=	ip dns
+    TEST=	test mode
+    debug=-d
+
+"
+}
+
+[ "$DEV" ] || {
+    help
+    exit 1
+}
+
+[ "$IP" ] || {
+    IP=`ip a show wifi-br 2>/dev/null | egrep -m1 -o "\\d+\.\\d+\.\\d+\.\\d+/"`
+    IP=${IP%/}
+}
+
+[ "$IP0" ] || { 
+IP0="${IP%.*}.100"
+}
+
+[ "$IP1" ] || { 
+IP1="${IP%.*}.200"
+}
+
+DNS_SERVER=$DNS
+
+pgrep -f /var/run/resolver.pid && {
+    echo "[i] DNS setup local resolver $IP">&2
+    DNS_SERVER=$IP
+}
+
+# force DNS
+#[ "$DNS_SERVER" ] || \
+    DNS_SERVER=$IP
+#
+
+[ "$TEST" ] && {
+    debug=-d
+}
+
+[ "$MASK" ] || MASK="255.255.255.0"
+
+OMASK=--dhcp-option=1
+OGW=--dhcp-option=3
+ODNS=--dhcp-option=6
+
+[ "$MASK" ] && OMASK="$OMASK,"
+[ "$GW" ] && OGW="$OGW,"
+[ "$DNS_SERVER" ] && ODNS="$ODNS,"
+
+LEASE_FILE="/var/run/dhcpd.$DEV.leases"
+PID_FILE="/var/run/dhcpd.$DEV.pid"
+
+logger -s -t $NAME "$DEV $IP $IP0-$IP1 GW: $GW DNS: $DNS_SERVER $LEASE_FILE $PID_FILE" >&2
+
+pkill -f "dnsmasq \-p0 \-i $DEV"
+
+[ "$LEASE_CLEAR" ] && {
+    echo "[i] clear lease file $LEASE_FILE">&2
+    [ -f "$LEASE_FILE" ] && {
+    rm $LEASE_FILE
+    }
+}
+
+cmd="dnsmasq -p0 -i $DEV -x $PID_FILE \
+	--user=root -z \
+	$OGW$GW \
+	$ODNS$DNS_SERVER \
+	$OMASK$MASK \
+	--dhcp-range=$IP0,$IP1,240h \
+	--dhcp-leasefile=$LEASE_FILE \
+	 "$@" "
+
+echo "[i] cmd "$cmd"" >&2
+
+$cmd

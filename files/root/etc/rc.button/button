@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cat << "EOF" > /etc/hotplug.d/button/buttons
+logger "the button was ${BUTTON} and the action was ${ACTION}"
+EOF
+

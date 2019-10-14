@@ -1,0 +1,19 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= stop otg usb
+
+for m in g_mass_storage g_ether g_ncm; do
+    [ -d /sys/module/$m ] && rmmod $m
+done
+
+CFG=/tmp/configfs
+CID=g1
+
+[ -e $CFG/usb_gadget/$CID/UDC ] && \
+    echo "" > $CFG/usb_gadget/$CID/UDC
+
+rm -rf $CFG/usb_gadget/$CID 1>/dev/null 2>/dev/null
+
+pkill -f usb0

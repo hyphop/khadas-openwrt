@@ -1,0 +1,11 @@
+#!/bin/sh
+
+## hyphop ##
+
+
+MOD="dwmac_meson8b stmmac_platform stmmac realtek phylink meson-gxl mdio_mux_meson_g12a"
+
+for i in $MOD; do
+    [ -d /sys/module/$i ] && rmmod $i
+done
+

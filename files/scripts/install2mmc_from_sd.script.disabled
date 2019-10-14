@@ -1,0 +1,20 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= mmc installer from sd
+
+## USAGE
+
+# this script can activated after reboot
+# just rename from install2mmc_from_sd.script.disabled to install2mmc_from_sd.script
+#
+
+OUT=/dev/tty0
+
+export FORCE=1
+
+echo "" > $OUT
+
+mmc_install_from_sd 1>$OUT 2>$OUT
+

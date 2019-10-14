@@ -1,0 +1,274 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= build demo openwrt khadas vims image
+
+PR=$(dirname $0)
+PA=$(realpath $PR)
+
+. $PR/$0.conf
+
+IMG_EXT4=/tmp/$LABEL.$BOARD.ext4.img
+IMG_VFAT=/tmp/$LABEL.$BOARD.vfat.img
+
+BIN="$PR/../bin"
+
+echo "[i] build $REL / $TARGET ">&2
+
+FAIL(){
+    echo "[i] stop fail">&2
+    exit 1
+}
+
+CMD(){
+    echo "[#] $@">&2
+    "$@"
+}
+
+R=
+DL() {
+
+    echo "[i] DL $@">&2
+
+    F=$(basename $1)
+    T=$2
+    [ "$T" ] || T=$BIN
+    S="$T/$F"
+    R=
+    [ -f "$S" ] && {
+
+    [ -s "$S.md5sum" ] && {
+
+	echo "[i] $F already downloaded">&2
+	R=$S
+	return
+
+    }
+
+	CMD rm $S
+	
+    }
+
+    [ -f "$S" ] || {
+	CMD wget $1 -O"$S" || return 1
+	R=$S
+    }
+
+    [ -s "$S.md5sum" ] || {
+	CMD md5sum $S | tee $S.md5sum
+    }
+
+}
+
+T=
+UNPACK(){
+    T=
+    case $1 in
+	*.tar.*)
+	T=${1%.tar.*}
+
+	[ -d "$T" ] || return 0
+
+	mkdir "$T"
+
+	CMD tar -C "$T" -xf  "$1"
+	;;
+	*)
+	echo "[i] undef format $1">&2
+	return 1
+    esac
+}
+
+#cd ../bin
+DL http://downloads.openwrt.org/releases/18.06.4/packages/x86_64/base/opkg_2019-06-14-dcbc142e-1_x86_64.ipk || FAIL
+
+DL https://downloads.openwrt.org/releases/$REL/targets/$TARGET/64/openwrt-$REL-$TARGET-64-default-rootfs.tar.gz || FAIL
+
+UNPACK $R 
+
+OWBASE=$T
+OWTMP=/tmp/openwrt_khadas
+
+rm -rf $OWTMP
+
+[ -d "$OWTMP" ] || mkdir -p $OWTMP
+
+for k in Image.gz krescue-vim1.dtb modules.openwrt.tar.gz; do
+    DL https://github.com/hyphop/khadas-linux-kernel/releases/download/openwrt/$k || FAIL
+done
+
+#UNPACK $R 
+MODULES_TAR=$R
+
+DL https://github.com/hyphop/khadas-uboot-spi/releases/download/openwrt/u-boot.vim1.sd.bin || FAIL
+UBOOT_BIN=$R
+
+DL https://github.com/hyphop/pkg/releases/download/openwrt_khadas_fw/openwrt_khadas_fw.tar.gz || FAIL
+
+FW_BIN=$R
+
+CMD cp -a $OWBASE/* $OWTMP
+
+CMD rm -rf $OWTMP/lib/modules/*
+CMD tar -xf $MODULES_TAR -C $OWTMP
+CMD tar -xf $FW_BIN -C $OWTMP
+
+TMPMOD=/tmp/
+
+ln -s $TMPMOD $OWTMP/lib/modules/$REP_MOD
+
+[ -d $TMPMOD ] || mkdir $TMPMOD
+
+#exit 0
+
+CMD mkdir $OWTMP/boot
+
+CMD mkimage -A $TARGET_KERNEL_ARCH \
+    -O linux -C gzip -T kernel -a 0x01080000 -e 0x01080000 \
+    -n kernel -d $PR/../bin/Image.gz $OWTMP/boot/uImage.gzip
+
+CMD cp $PR/../bin/*.dtb $OWTMP/boot
+CMD cp $UBOOT_BIN $OWTMP/boot
+CMD cp $PR/../files/splash/splash.bmp.gz $OWTMP/boot
+
+echo $LABEL > $OWTMP/$LABEL.label
+echo $LABEL > $OWTMP/LABEL
+
+CMD cp $PR/../files/user.env $OWTMP/boot/user.env
+
+#echo cmdline= > $OWTMP/boot/user.env
+
+$PR/post_install
+
+CMD tar -xf $PR/../bin/openwrt_extra_bins.tar.gz -C $OWTMP || FAIL
+
+CMD rsync -a --inplace $PR/../files/root/* $OWTMP
+
+# clean wrong kernel modules
+
+#CMD rm -rf $OWTMP/lib/modules/4*
+
+echo "[i] BUILD: $LABEL $REL $BOARD $(date)" > $OWTMP/etc/banner.mod
+
+CMD mkimage -C none -A arm -T script -d $PR/../files/openwrt_ext4.cmd $OWTMP/s905_autoscript
+
+CMD dd if=/dev/zero bs=1M count=$PART1SIZE of=$IMG_EXT4
+
+CMD dd if=$UBOOT_BIN of=$IMG_EXT4 conv=fsync,notrunc bs=444 count=1
+CMD dd if=$UBOOT_BIN of=$IMG_EXT4 conv=fsync,notrunc bs=512 skip=1 seek=1
+
+P1OFFSET=2048
+
+echo "n
+p
+1
+$P1OFFSET
+
+
+w
+q
+" | fdisk $IMG_EXT4
+
+CMD mkfs.ext4 -F -L ${LABEL} -d $OWTMP -E offset=$((P1OFFSET*512)) $IMG_EXT4 || FAIL
+CMD sync
+
+## some triks for size
+
+
+CMD cp $PR/../files/user_squash.env $OWTMP/boot/user.env
+CMD cp $PR/../files/docs/* $OWTMP
+CMD cp -a $PR/../files/scripts $OWTMP
+
+CMD dd if=/dev/zero bs=1M count=1 of=$IMG_VFAT
+CMD dd if=$UBOOT_BIN of=$IMG_VFAT conv=fsync,notrunc bs=444 count=1
+CMD dd if=$UBOOT_BIN of=$IMG_VFAT conv=fsync,notrunc bs=512 skip=1 seek=1
+
+CMD dd if=/dev/zero bs=1M count=$PART0SIZE of=$IMG_VFAT.vfat
+CMD mkfs.vfat -n OW_BOOT -i DEADBEEF ${IMG_VFAT}.vfat
+
+
+P=$(realpath $PWD)
+#F="${IMG_VFAT}@@$((1+$PART0SIZE))M"
+F="${IMG_VFAT}.vfat"
+
+CMD mdir -i $F ::
+#CMD mdir -i $F ::boot
+cd $OWTMP
+for f in boot LABEL OPENWRT.label s905* scripts README* ; do
+ls -l1 $f
+CMD mcopy -i $F $f ::$f
+done
+cd $P
+
+cat ${IMG_VFAT}.vfat >> $IMG_VFAT
+CMD rm ${IMG_VFAT}.vfat
+
+echo "n
+p
+1
+$P1OFFSET
+
+t
+e
+w
+q
+" | fdisk $IMG_VFAT
+
+[ "$COMP" = "" ] && COMP=gzip
+#[ "$CMP_BLOCK_SIZE" ] || CMP_BLOCK_SIZE=1024k
+[ "$CMP_BLOCK_SIZE" ] || CMP_BLOCK_SIZE=128k
+[ "$COMP" = "xz" ] && CMP_OPTS="-Xdict-size $CMP_BLOCK_SIZE -Xbcj arm"
+
+[ -f $OWTMP.squashfs ] && rm $OWTMP.squashfs
+
+CMD rm -rf $OWTMP/boot
+CMD mkdir  $OWTMP/boot
+CMD rm  $OWTMP/s9* 
+CMD rm  $OWTMP/LABEL
+CMD rm  $OWTMP/*.label
+CMD rm -rf $OWTMP/scripts
+
+CMD mksquashfs \
+    "$OWTMP" \
+    $OWTMP.squashfs \
+    -all-root \
+    -b $CMP_BLOCK_SIZE \
+    -comp $COMP $CMP_OPTS || FAIL
+
+cat $OWTMP.squashfs >> $IMG_VFAT
+rm $OWTMP.squashfs
+
+CMD dd if=/dev/zero bs=1M count=$PART2SIZE of=$IMG_VFAT.overlay
+CMD mkfs.ext4 -F -L OW_USER $IMG_VFAT.overlay || FAIL
+
+#BS=4096
+#mkdir /tmp/_empty
+#echo "OPENWRT_USER_JFFS2" > /tmp/_empty/LABEL
+#CMD mkfs.jffs2 -r /tmp/_empty -s $BS -X lzo -q -p $((1000*$BS)) -o $IMG_VFAT.overlay
+#rm -rf /tmp/_empty
+
+CMD ls -l1 $IMG_VFAT.overlay
+
+#CMD dd if=/tmp/image.jffs2 of=$IMG_VFAT.overlay conv=fsync,notrunc
+
+
+CMD sync
+
+cat $IMG_VFAT.overlay >> $IMG_VFAT
+rm $IMG_VFAT.overlay
+
+#dd if=/dev/zero bs=1M count=$PART2SIZE >> $IMG_VFAT
+
+echo "n
+p
+2
+
+
+n
+w
+q
+" | fdisk $IMG_VFAT
+
+echo "[i] DONE">&2
+

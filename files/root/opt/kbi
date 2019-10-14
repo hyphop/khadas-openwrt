@@ -1,0 +1,261 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= linux user space kbi like kbi uboot
+
+# plz check full kbi source
+ 
+#define CHIP_ADDR              0x18
+#define REG_BOOT_MODE           0x20
+#define BOOT_MODE_SPI       0
+#define BOOT_MODE_EMMC      1
+#define REG_PORT_MODE           0x33
+#define REG_POWER_OFF           0x80
+#define REG_POWER_STATE    0x86
+
+CHIP_ADDR=0x18
+REG_BOOT_MODE=0x20
+REG_PORT_MODE=0x33
+
+PORT_MODE_USB=0x00
+PORT_MODE_PCI=0x01
+
+BOOT_MODE_SPI=0x00
+BOOT_MODE_EMMC=0x01
+BOOT_MODE_MMC=$BOOT_MODE_EMMC
+
+REG_POWER_OFF=0x80
+REG_POWER_STATE=0x86
+
+#i2cset -f -y $BUS 0x18 0x80 0x1
+
+
+USAGE(){ echo "kbi (bootmode | power_off)
+
+ABOUT
+
+    user space kbi like kbi uboot cmd  https://docs.khadas.com/
+
+USAGE
+
+    kbi bootmode [mmc|sd|spi|toggle|get|help] [save]
+
+ALIASES
+
+    bootmode - kbi bootmode
+    power_off - kbi power_off
+
+NOTE add save for activation new value via power_off
+
+"; }
+
+CMD(){
+    echo "[#] $@">&2
+    $@ 
+}
+
+# try to find chip
+BUS=
+for b in /dev/i2c-?; do
+    [ -c $b ] && {
+        B=${b#*-}
+	i2cget -y $B $CHIP_ADDR 1>/dev/null 2>/dev/null && {
+	    BUS=$B
+	    break
+	}
+    }
+done
+
+[ "$BUS" ] || {
+    echo "[e] not found i2c chips">&2
+    exit 1
+}
+
+
+bootmode_get(){
+
+BOOT_MODE=$(i2cget -y $BUS $CHIP_ADDR $REG_BOOT_MODE b)
+
+#echo "[i] boot_mode is $BOOT_MODE">&2
+
+case $BOOT_MODE in
+    $BOOT_MODE_SPI)
+    echo "spi"
+    ;;
+    $BOOT_MODE_EMMC)
+    echo "mmc"
+    ;;
+    *)
+    echo "UNDEF"
+    ;;
+esac
+
+}
+
+
+portmode_get(){
+
+PORT_MODE=$(i2cget -y $BUS $CHIP_ADDR $REG_PORT_MODE b)
+
+#echo "[i] port_mode is $PORT_MODE">&2
+
+case $PORT_MODE in
+    $PORT_MODE_USB)
+    echo "usb"
+    ;;
+    $PORT_MODE_PCI)
+    echo "pcie"
+    ;;
+esac
+
+}
+
+power_off_now(){
+    i2cset \
+    -y $BUS $CHIP_ADDR $REG_POWER_OFF 1 b
+}
+
+bootmode_set(){
+#    CMD \
+    i2cset \
+    -y $BUS $CHIP_ADDR $REG_BOOT_MODE $1 b
+}
+
+portmode_set(){
+#    CMD \
+    i2cset \
+    -y $BUS $CHIP_ADDR $REG_PORT_MODE $1 b
+}
+
+PORTMODE(){
+#echo "[i] BOOTMODE $@">&2
+
+active=$(portmode_get)
+
+for i in "$@" ; do
+case "$i" in
+    p*|P*|1)
+    echo "[i] $0 $active -> pcie">&2
+    portmode_set $PORT_MODE_PCI
+    ;;
+    u*|U*|0)
+    echo "[i] $0 $active -> usb">&2
+    portmode_set $PORT_MODE_USB
+    ;;
+
+    t*)
+    to="pcie"
+    ton=$PORT_MODE_PCI
+    [ "$active" = "pcie" ] && {
+    to="usb"
+    ton=$PORT_MODE_USB
+    }
+    echo "[i] $0 toogle $active -> $to">&2
+    portmode_set $ton
+    ;;
+    save|store|*off)
+    echo "[i] power off">&2
+#   poweroff
+    sleep 1
+    power_off_now
+    ;;
+    get|status|r|read|active)
+    echo "$active"
+    ;;
+    *)
+    USAGE
+    exit 0
+    ;;
+esac
+done
+
+[ "$1" ] || echo "$active"
+
+}
+
+BOOTMODE(){
+
+    active=$(bootmode_get)
+#    echo "[i] BOOTMODE $@">&2
+
+for i in "$@" ; do
+case "$i" in
+    *mc|sd|SD|1)
+    echo "[i] $0 $active -> mmc(sd)">&2
+    bootmode_set $BOOT_MODE_MMC
+    ;;
+    sp*|SP*|0)
+    echo "[i] $0 $active -> spi">&2
+    bootmode_set $BOOT_MODE_SPI
+    ;;
+
+    t*)
+    to="mmc"
+    ton=$BOOT_MODE_MMC
+    [ "$active" = "mmc" ] && {
+    to="spi"
+    ton=$BOOT_MODE_SPI
+    }
+    echo "[i] $0 toogle $active -> $to">&2
+    bootmode_set $ton
+    ;;
+    save|store|*off)
+    echo "[i] power off">&2
+    sleep 1
+#   poweroff
+    power_off_now
+    ;;
+    get|status|r|read|active)
+    echo "$active"
+    ;;
+    *)
+    USAGE
+    exit 0
+    ;;
+esac
+done
+
+[ "$1" ] || echo "$active"
+
+}
+
+show_all(){
+    echo "
+    PORT_MODE: $(portmode_get)
+    BOOT_MODE: $(bootmode_get)
+"
+}
+
+ACTION=$0
+
+case $ACTION in
+    *kbi*)
+    ACTION=$1
+    shift
+    ;;
+esac
+
+#echo "[i] kbi $ACTION">&2
+
+case $ACTION in
+    *boot*)
+    BOOTMODE $@
+    ;;
+    *port*)
+    PORTMODE $@
+    ;;
+    *off*)
+    echo "[i] power_off">&2
+    echo "[i] press power_on again for wakeup">&2
+    sleep 1
+    power_off_now
+    ;;
+    all|show)
+    show_all
+    ;;
+
+    *)
+#    USAGE
+    ;;
+esac

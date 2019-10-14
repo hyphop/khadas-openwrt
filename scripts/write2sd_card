@@ -1,0 +1,31 @@
+#!/bin/sh
+
+## hyphop ##
+
+sudo=$(which sudo)
+
+. $0.conf
+
+[ "$1" ] && SD=$1
+
+echo "[i] burn image $SD">&2
+
+[ -b $SD ] || {
+    echo "[e] not block dev $SD">&2
+    exit 1
+}
+
+for IMG in $IMGS; do
+    [ -f $IMG ] && {
+
+    echo "[i] burn image $IMG > $SD">&2
+
+    $sudo dd if=$IMG bs=1M of=$SD
+    sync
+
+    break
+
+    }
+done
+
+

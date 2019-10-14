@@ -1,0 +1,5 @@
+#!/bin/sh
+
+grep "" /sys/class/net/eth0/*|egrep "speed|carrier:|oper|address"
+
+

@@ -1,0 +1,42 @@
+#!/bin/sh
+
+## hyphop ##
+
+[ -d /sys/class/net/wlan?/wireless ] || {
+    echo "[w] not found any wlan devices" 1>&2
+    exit 1
+}
+
+#DEV=wlan0
+
+#sys/class/net/wlan0/device/uevent:DRIVER=xradio_wlan
+grep "" /sys/class/net/wlan?/device/uevent
+
+hostapd_pid=$(pgrep hostapd)
+
+cmd="iw dev"
+
+echo "[i] $cmd"
+$cmd
+
+[ "$hostapd_pid" ] && {
+
+    . /etc/wifi.ap.conf
+
+    echo "[i] AP mode active hostapd: $hostapd_pid" >&2
+#    which iwinfo >/dev/null 2>&1 && {
+	iwinfo
+	iwinfo wlan0 assoclist
+#    }
+    exit 0
+}
+
+wpacli_pid=$(pgrep wpa_cli)
+
+echo "[i] CLIENT mode active $wpacli_pid">&2
+
+wpa_cli status
+
+    exit 0
+
+

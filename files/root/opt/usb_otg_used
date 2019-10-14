@@ -1,0 +1,30 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= check state for usb otg composite driver
+
+
+#CFG=/tmp/configfs
+#CID=g1
+
+#UDC=$(cat $CFG/usb_gadget/$CID/UDC)
+
+for UDC in /sys/class/udc/* ""; do
+    [ -d $UDC ] && {
+#	UDC=${UDC%/sys/class/udc/}
+	break
+    } 
+done
+
+
+
+[ "$UDC" ] || {
+    echo "[i] otg UDC: not used">&2
+    exit 1
+}
+
+func="$(cat $UDC/function)"
+state="$(cat $UDC/state)"
+
+echo "[i] otg UDC: $UDC used // FUNC: $func STATE: $state">&2

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+## hyphop ##
+
+[ "$WLAN" ] && DEV=$WLAN
+[ "$DEV" ] || DEV=wlan0
+
+echo "[i] stop wifi by wlan: $DEV">&2
+pkill -f "\-i$DEV"
+pkill -f "\-i $DEV"
+
+pgrep -f $DEV && {
+    echo "pkill -9 $DEV">&2
+    sleep 1
+    pkill -9 -f "\-i$DEV"
+    pkill -9 -f "\-i $DEV"
+}

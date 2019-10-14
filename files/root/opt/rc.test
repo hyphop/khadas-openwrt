@@ -1,0 +1,34 @@
+#!/bin/sh
+
+## hyphop ##
+
+DEVNAME=meson-ir
+
+E=/sys/class/input/event
+N=/device/name
+i=0
+
+rc_on
+
+for D in $E?$N; do
+    name="$(cat $D)"
+    dev=${D#$E}
+    dev=/dev/input/event${dev%$N}
+
+    echo "[i] $i $dev $name"2>&2
+
+    case "$name" in
+	$DEVNAME)
+	DEV=$dev
+	break
+	;;
+    esac 
+    i=$((i+1))
+done
+
+cmd="evtest $DEV"
+
+echo "# $cmd">&2
+
+$cmd
+#

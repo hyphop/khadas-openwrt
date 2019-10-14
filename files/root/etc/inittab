@@ -1,0 +1,18 @@
+::sysinit:/etc/init.d/rcS S boot
+::shutdown:/etc/init.d/rcS K shutdown
+
+#tty0::respawn:/usr/libexec/login.sh
+#ttyS0::respawn:/usr/libexec/login.sh
+
+## no need enter password
+
+tty0::respawn:/bin/sh --login
+ttyS0::respawn:/bin/sh --login
+ttyAML0::respawn:/bin/sh --login
+
+#ttyGS0::respawn:/usr/libexec/login.sh
+#ttyGS0::askfirst:/usr/libexec/login.sh
+#ttyGS0::askconsole:/usr/libexec/login.sh
+
+#tty0::askfirst:/usr/libexec/login.sh
+#ttyS0::askfirst:/usr/libexec/login.sh

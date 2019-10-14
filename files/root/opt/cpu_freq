@@ -1,0 +1,30 @@
+#!/bin/sh
+
+## hyphop ##
+
+## fix cpu freq
+
+C=/sys/devices/system/cpu/cpufreq
+
+FREQ=1200000
+
+for c in $C/policy*; do
+    grep "" $c/*_freq
+done
+
+exit 0
+
+for c in $C/policy*; do
+    grep "" $c/*cur_freq
+done
+
+echo ""
+
+for c in $C/policy*; do
+    grep "" $c/*max_freq
+done
+
+for c in $C/policy*; do
+    grep "" $c/*min_freq
+done
+

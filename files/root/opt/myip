@@ -1,0 +1,10 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= detect my public ip + geoid
+
+#curl -s ifconfig.co/json | json_pp
+
+curl -s ifconfig.co/json | jsonfilter  -e '@.ip' -e '@.country_iso'
+

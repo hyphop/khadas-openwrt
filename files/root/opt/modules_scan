@@ -1,0 +1,12 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= simple kernel modules scanner by mask
+
+#= USAGE modules_scan snd
+
+ver="$(uname -r)"
+filter="$1"
+echo "[i] scan modules $ver // $filter">&2
+ls $2 $3 $4 /lib/modules/$ver | grep .ko | grep "$filter"
