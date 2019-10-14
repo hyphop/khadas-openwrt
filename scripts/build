@@ -41,7 +41,6 @@ CMD mkdir -p $BIN
 
 echo "[i] build $REL / $TARGET ">&2
 
-
 R=
 DL() {
 
@@ -254,7 +253,7 @@ CMD rm  $OWTMP/LABEL
 CMD rm  $OWTMP/*.label
 CMD rm -rf $OWTMP/scripts
 
-CMD $mksquashfs \
+CMD mksquashfs \
     "$OWTMP" \
     $OWTMP.squashfs \
     -all-root \
