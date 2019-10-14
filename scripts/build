@@ -27,6 +27,9 @@ IMG_VFAT=/tmp/$LABEL.$BOARD.vfat.img
 
 BIN="$PR/../bin"
 
+[ -d $BIN ] || \
+CMD mkdir -p $BIN
+
 echo "[i] build $REL / $TARGET ">&2
 
 FAIL(){
