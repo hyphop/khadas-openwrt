@@ -1,5 +1,6 @@
 !.gitignore
 bin/*
+bin.tmp/*
 share/*
 tmp/*
 !README.md

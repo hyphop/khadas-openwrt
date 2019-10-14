@@ -6,7 +6,13 @@
 
 PR=$(dirname 0)
 
-EXT=../bin/x86_64
+EXT="$PR/../bin/x86_64"
+
+[ -d "$EXT" ] || {
+    echo "[i] opkg not prepared">&2
+    echo "[i] use ./build at first !!!">&2
+    exit 1
+}
 
 export LD_LIBRARY_PATH=$(realpath $EXT/lib)
 

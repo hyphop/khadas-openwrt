@@ -9,6 +9,19 @@ PA=$(realpath $PR)
 
 . $PR/$0.conf
 
+
+## check
+REQUIRED="rsync fdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
+
+echo "[i] check required: $REQUIRED">&2
+
+for t in $REQUIRED ; do
+    c=$(which $t) || {
+	echo "[e] $t not installed">&2
+	exit 1
+    }
+done
+
 IMG_EXT4=/tmp/$LABEL.$BOARD.ext4.img
 IMG_VFAT=/tmp/$LABEL.$BOARD.vfat.img
 
@@ -80,12 +93,21 @@ UNPACK(){
     esac
 }
 
-#cd ../bin
-DL http://downloads.openwrt.org/releases/18.06.4/packages/x86_64/base/opkg_2019-06-14-dcbc142e-1_x86_64.ipk || FAIL
+# cd ../bin
+# DL http://downloads.openwrt.org/releases/18.06.4/packages/x86_64/base/opkg_2019-06-14-dcbc142e-1_x86_64.ipk || FAIL
 
 DL https://downloads.openwrt.org/releases/$REL/targets/$TARGET/64/openwrt-$REL-$TARGET-64-default-rootfs.tar.gz || FAIL
 
-UNPACK $R 
+UNPACK $R
+
+## PREPRARE HOST OPKG
+
+TO="$PR/../bin/$HOST_ARCH"
+[ -d "$TO" ] || \
+CMD mkdir -p $TO
+CMD tar -xf $R -C "$TO" ./bin/opkg  ./lib/libc.so  ./lib/libgcc_s.so.1  ./lib/libubox.so
+
+###
 
 OWBASE=$T
 OWTMP=/tmp/openwrt_khadas
@@ -168,7 +190,7 @@ $P1OFFSET
 
 w
 q
-" | fdisk $IMG_EXT4
+" | fdisk $IMG_EXT4 2>/dev/null || FAIL
 
 CMD mkfs.ext4 -F -L ${LABEL} -d $OWTMP -E offset=$((P1OFFSET*512)) $IMG_EXT4 || FAIL
 CMD sync
@@ -213,7 +235,7 @@ t
 e
 w
 q
-" | fdisk $IMG_VFAT
+" | fdisk $IMG_VFAT 2>/dev/null || FAIL
 
 [ "$COMP" = "" ] && COMP=gzip
 #[ "$CMP_BLOCK_SIZE" ] || CMP_BLOCK_SIZE=1024k
@@ -229,7 +251,7 @@ CMD rm  $OWTMP/LABEL
 CMD rm  $OWTMP/*.label
 CMD rm -rf $OWTMP/scripts
 
-CMD mksquashfs \
+CMD $mksquashfs \
     "$OWTMP" \
     $OWTMP.squashfs \
     -all-root \
