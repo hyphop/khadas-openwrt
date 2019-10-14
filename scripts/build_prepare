@@ -1,0 +1,8 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= prepare for build
+
+sudo apt-get install u-boot-tools mtools squashfs-tools e2fsprogs dosfstools
+

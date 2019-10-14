@@ -23,6 +23,16 @@ gzip -dc OPENWRT.vim1.vfat.img.gz | sudo dd bs=1M of=/dev/SD_PATH
 sync
 ```
 
+## Build
+
+```
+git clone https://github.com/hyphop/khadas-openwrt.git
+cd khadas-openwrt
+# ./scripts/build_prepare
+./scripts/build
+
+```
+
 ## docs
 
 [files/docs](files/docs)
