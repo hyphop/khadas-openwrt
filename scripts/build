@@ -9,6 +9,8 @@ PA=$(realpath $PR)
 
 . $PR/$0.conf
 
+
+IMG_EXT4_NO=1
 IMG_EXT4=/tmp/$LABEL.$BOARD.ext4.img
 IMG_VFAT=/tmp/$LABEL.$BOARD.vfat.img
 
@@ -195,6 +197,8 @@ echo "[i] BUILD: $LABEL $REL $BOARD $(tz=date)" > $OWTMP/etc/banner.mod
 
 CMD mkimage -C none -A arm -T script -d $PR/../files/openwrt_ext4.cmd $OWTMP/s905_autoscript
 
+[ "$IMG_EXT4_NO" ] || {
+
 CMD dd if=/dev/zero bs=1M count=$PART1SIZE of=$IMG_EXT4
 
 CMD dd if=$UBOOT_BIN of=$IMG_EXT4 conv=fsync,notrunc bs=444 count=1
@@ -215,8 +219,9 @@ q
 CMD mkfs.ext4 -F -L ${LABEL} -d $OWTMP -E offset=$((P1OFFSET*512)) $IMG_EXT4 || FAIL
 CMD sync
 
-## some triks for size
+}
 
+## some triks for size
 
 CMD cp $PR/../files/user_squash.env $OWTMP/boot/user.env
 CMD cp $PR/../files/docs/* $OWTMP
