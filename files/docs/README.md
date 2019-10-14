@@ -4,6 +4,7 @@ openwrt for Khadas VIMs boards
 
 + [README.access.md](README.access.md)
 + [README.exta.md](README.extra.md)
++ [README.sd.boot.md](README.boot.md)
 + [README.fs.md](README.fs.md)
 
 ## how to ...

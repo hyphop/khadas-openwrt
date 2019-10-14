@@ -270,5 +270,7 @@ w
 q
 " | fdisk $IMG_VFAT
 
+gzip -c $IMG_VFAT > $IMG_VFAT.gz
+
 echo "[i] DONE">&2
 

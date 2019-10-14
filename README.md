@@ -8,6 +8,22 @@ openwrt for Khadas VIMs boards
 
 ![openwrt.png](pics/openwrt.png)
 
+## Images
+
++ https://github.com/hyphop/khadas-openwrt/releases/download/vim1/OPENWRT.vim1.vfat.img.gz
+
+
+## Installation
+
+just write iamge to SD card
+
+```
+cd /tmp
+wget https://github.com/hyphop/khadas-openwrt/releases/download/vim1/OPENWRT.vim1.vfat.img.gz
+gzip -dc OPENWRT.vim1.vfat.img.gz | sudo dd bs=1M of=/dev/SD_PATH
+sync
+```
+
 ## docs
 
 [files/docs](files/docs)
