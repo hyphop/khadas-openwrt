@@ -100,7 +100,9 @@ UNPACK(){
 
 DL https://downloads.openwrt.org/releases/$REL/targets/$TARGET/64/openwrt-$REL-$TARGET-64-default-rootfs.tar.gz || FAIL
 
-UNPACK $R
+#UNPACK $R
+
+#exit 0
 
 ## PREPRARE HOST OPKG
 
@@ -111,7 +113,12 @@ CMD tar -xf $R -C "$TO" ./bin/opkg  ./lib/libc.so  ./lib/libgcc_s.so.1  ./lib/li
 
 ###
 
-OWBASE=$T
+#OWBASE=$T
+OWBASE_TAR=$R
+echo "$OWBASE_TAR"
+
+#exit 
+
 OWTMP=/tmp/openwrt_khadas
 
 rm -rf $OWTMP
@@ -132,7 +139,8 @@ DL https://github.com/hyphop/pkg/releases/download/openwrt_khadas_fw/openwrt_kha
 
 FW_BIN=$R
 
-CMD cp -a $OWBASE/* $OWTMP
+#CMD cp -a $OWBASE/* $OWTMP
+CMD tar -xf $OWBASE_TAR -C $OWTMP
 
 CMD rm -rf $OWTMP/lib/modules/*
 CMD tar -xf $MODULES_TAR -C $OWTMP
@@ -165,7 +173,12 @@ CMD cp $PR/../files/user.env $OWTMP/boot/user.env
 
 $PR/post_install
 
-CMD tar -xf $PR/../bin/openwrt_extra_bins.tar.gz -C $OWTMP || FAIL
+
+## INSTALL EXTRA openwrt packages
+
+CMD DL https://github.com/hyphop/pkg/releases/download/bins/openwrt_extra_bins.tar.gz || FAIL
+
+CMD tar -xf $R -C $OWTMP || FAIL
 
 CMD rsync -a --inplace $PR/../files/root/* $OWTMP
 
