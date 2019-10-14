@@ -9,6 +9,8 @@ PA=$(realpath $PR)
 
 . $PR/$0.conf
 
+IMG_EXT4=/tmp/$LABEL.$BOARD.ext4.img
+IMG_VFAT=/tmp/$LABEL.$BOARD.vfat.img
 
 ## check
 REQUIRED="rsync fdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
@@ -22,16 +24,6 @@ for t in $REQUIRED ; do
     }
 done
 
-IMG_EXT4=/tmp/$LABEL.$BOARD.ext4.img
-IMG_VFAT=/tmp/$LABEL.$BOARD.vfat.img
-
-BIN="$PR/../bin"
-
-[ -d $BIN ] || \
-CMD mkdir -p $BIN
-
-echo "[i] build $REL / $TARGET ">&2
-
 FAIL(){
     echo "[i] stop fail">&2
     exit 1
@@ -41,6 +33,14 @@ CMD(){
     echo "[#] $@">&2
     "$@"
 }
+
+BIN="$PR/../bin"
+
+[ -d $BIN ] || \
+CMD mkdir -p $BIN
+
+echo "[i] build $REL / $TARGET ">&2
+
 
 R=
 DL() {
