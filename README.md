@@ -2,9 +2,18 @@
 
 openwrt for Khadas VIMs boards
 
-## build from sources
 
 ## screenshots
+
+## Build
+
+```
+git clone https://github.com/hyphop/khadas-openwrt.git
+cd khadas-openwrt
+# ./scripts/build_prepare
+./scripts/build
+
+```
 
 ![openwrt.png](pics/openwrt.png)
 
@@ -21,16 +30,6 @@ cd /tmp
 wget https://github.com/hyphop/khadas-openwrt/releases/download/0.1/OPENWRT.vim1.vfat.img.gz
 gzip -dc OPENWRT.vim1.vfat.img.gz | sudo dd bs=1M of=/dev/SD_PATH
 sync
-```
-
-## Build
-
-```
-git clone https://github.com/hyphop/khadas-openwrt.git
-cd khadas-openwrt
-# ./scripts/build_prepare
-./scripts/build
-
 ```
 
 ## docs
