@@ -1,0 +1,38 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= openwrt wifi config script
+
+## USAGE
+
+## wifi_config [SSID] [PASSWORD]
+
+CMD(){
+    echo "[#] $@"
+    $@
+}
+
+D=default_radio0
+
+[ "$PASS" ] || PASS="$2"
+[ "$SID" ] || SID="$1"
+
+echo "[i] wifi confi SID: $SID | PASS: $PASS"
+
+CMD uci set "wireless.$D.ssid=$SID"
+
+[ "$PASS" ] || {
+    echo "[i] password not set">&2
+    CMD uci set "wireless.$D.key="
+    CMD uci set "wireless.$D.encryption=none"
+}
+
+[ "$PASS" ] && {
+CMD uci set "wireless.$D.key=$PASS"
+CMD uci set "wireless.$D.encryption=psk-mixed"
+}
+
+CMD uci commit
+CMD wifi restart
+
