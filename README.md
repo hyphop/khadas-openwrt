@@ -1,4 +1,4 @@
-# khadas openwrt
+# khadas openwrt [![Build Status](https://travis-ci.com/hyphop/khadas-openwrt.svg?branch=master)](https://travis-ci.com/hyphop/khadas-openwrt)
 
 openwrt for Khadas VIMs boards
 
