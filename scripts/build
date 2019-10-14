@@ -95,16 +95,11 @@ UNPACK(){
     esac
 }
 
-# cd ../bin
-# DL http://downloads.openwrt.org/releases/18.06.4/packages/x86_64/base/opkg_2019-06-14-dcbc142e-1_x86_64.ipk || FAIL
-
-DL https://downloads.openwrt.org/releases/$REL/targets/$TARGET/64/openwrt-$REL-$TARGET-64-default-rootfs.tar.gz || FAIL
-
-#UNPACK $R
-
-#exit 0
-
 ## PREPRARE HOST OPKG
+
+DL https://downloads.openwrt.org/releases/$REL/targets/x86/64/openwrt-$REL-x86-64-generic-rootfs.tar.gz || FAIL
+
+#HOST_ARCH="$(uname -m)"
 
 TO="$PR/../bin/$HOST_ARCH"
 [ -d "$TO" ] || \
@@ -113,8 +108,18 @@ CMD tar -xf $R -C "$TO" ./bin/opkg  ./lib/libc.so  ./lib/libgcc_s.so.1  ./lib/li
 
 ###
 
+# cd ../bin
+# DL http://downloads.openwrt.org/releases/18.06.4/packages/x86_64/base/opkg_2019-06-14-dcbc142e-1_x86_64.ipk || FAIL
+
+DL https://downloads.openwrt.org/releases/$REL/targets/$TARGET/64/openwrt-$REL-$TARGET-64-default-rootfs.tar.gz || FAIL
+
+#UNPACK $R
 #OWBASE=$T
 OWBASE_TAR=$R
+
+#exit 0
+
+
 echo "$OWBASE_TAR"
 
 #exit 
