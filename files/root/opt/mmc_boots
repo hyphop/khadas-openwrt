@@ -10,7 +10,7 @@ HELP(){ echo "ABOUT
 
 USAGE
 
-    mmc_boots [erase|forcerase]
+    mmc_boots [erase|forcerase|eraseparts]
 
 "
 }

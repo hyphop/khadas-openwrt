@@ -15,7 +15,7 @@ echo "[i] install packages">&2
 #    luci-proto-ppp \
 
 $opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
-    i2c-tools usbutils evtest netcat aria2 \
+    fdisk sfdisk i2c-tools usbutils evtest netcat aria2 \
     dosfstools e2fsprogs blkid losetup dtc uboot-envtools \
     triggerhappy kmod-hid \
     iw wpad-wolfssl wpa-cli \
