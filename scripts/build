@@ -181,7 +181,7 @@ $PR/post_install
 
 ## INSTALL EXTRA openwrt packages
 
-CMD DL https://github.com/hyphop/pkg/releases/download/bins/openwrt_extra_bins.tar.gz || FAIL
+DL https://github.com/hyphop/pkg/releases/download/bins/openwrt_extra_bins.tar.gz || FAIL
 
 CMD tar -xf $R -C $OWTMP || FAIL
 
