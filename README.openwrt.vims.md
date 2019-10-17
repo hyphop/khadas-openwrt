@@ -4,6 +4,11 @@ openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim
 
 ![Khadas vims openwrt](pics/khadas_vim1_openwrt.jpg)
 
+## supported Boards
+
++ khadas vim1 - OK
++ khadas vim2 - WIP - test mode
+
 ## Download Images
 
 + https://dl.khadas.com/Firmware/VIM1/OpenWrt

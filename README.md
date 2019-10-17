@@ -4,6 +4,11 @@ openwrt for Khadas VIMs boards https://www.khadas.com/vim (Amlogic s905 s912 a31
 
 ![khadas vims openwrt](pics/khadas_vim1_openwrt.jpg)
 
+## supported Boards
+
++ khadas vim1 - OK
++ khadas vim2 - WIP - test mode
+
 ## Build
 
 ```

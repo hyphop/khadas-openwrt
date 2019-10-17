@@ -29,8 +29,8 @@ done
 echo "[i] config board: $BOARD rel : $REL">&2
 
 IMG_EXT4_NO=1
-IMG_EXT4=/tmp/$BOARD.$LABEL.ext4.sd.img
-IMG_VFAT=/tmp/$BOARD.$LABEL.sd.img
+IMG_EXT4=/tmp/$BOARD.$LABEL.$REL.ext4.sd.img
+IMG_VFAT=/tmp/$BOARD.$LABEL.$REL.sd.img
 
 ## check
 REQUIRED="rsync fdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
