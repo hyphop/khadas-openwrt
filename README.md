@@ -1,8 +1,8 @@
 # khadas openwrt [![Build Status](https://travis-ci.com/hyphop/khadas-openwrt.svg?branch=master)](https://travis-ci.com/hyphop/khadas-openwrt)
 
-openwrt for Khadas VIMs boards https://www.khadas.com/vim
+openwrt for Khadas VIMs boards https://www.khadas.com/vim (Amlogic s905 s912 a311D s905d3 )
 
-![vim1_openwrt.jpg](pics/vim1_openwrt.jpg)
+![khadas vims openwrt](pics/khadas_vim1_openwrt.jpg)
 
 ## Build
 
@@ -40,9 +40,8 @@ wget https://dl.khadas.com/Firmware/VIM1/OpenWrt/vim1.OPENWRT.sd.img.gz
 
 ## docs & how to
 
-read more docs ...
-[files/docs](files/docs)
-[README.openwrt.vims.md](README.openwrt.vims.md)
++ [files/docs](files/docs)
++ [README.openwrt.vims.md](README.openwrt.vims.md)
 
 ## related projects
 

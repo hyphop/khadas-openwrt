@@ -2,7 +2,7 @@
 
 openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim
 
-![vim1_openwrt.jpg](pics/vim1_openwrt.jpg)
+![Khadas vims openwrt](pics/khadas_vim1_openwrt.jpg)
 
 ## Download Images
 
