@@ -8,7 +8,12 @@ sudo=$(which sudo)
 
 [ "$1" ] && SD=$1
 
-echo "[i] burn image $SD">&2
+[ "$SD" ] || {
+    echo "[e] target device not defined">&2
+    exit 1
+}
+
+#echo "[i] burn image to $SD">&2
 
 [ -b $SD ] || {
     echo "[e] not block dev $SD">&2

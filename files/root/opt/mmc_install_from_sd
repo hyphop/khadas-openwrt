@@ -5,6 +5,7 @@
 #= check emmc boot area + delicate clear boots area
 
 cat <<'EOF'
+
  _           _        _ _ ____      __  __ __  __  ____ 
 (_)_ __  ___| |_ __ _| | |___ \ ___|  \/  |  \/  |/ ___|
 | | '_ \/ __| __/ _` | | | __) / _ \ |\/| | |\/| | |    
@@ -51,6 +52,12 @@ export FORCE=1
 
 CMD mmc_boots erase
 
+for m in $(egrep -o ${MMC}p. /proc/mounts); do
+    CMD umount $m
+done
+
+}
+
 mount -o remount,ro /overlay
 
 CMD dd if=$SD of=$MMC bs=512 count=$BLOCKS
@@ -58,10 +65,11 @@ CMD dd if=$SD of=$MMC bs=512 count=$BLOCKS
 mount -o remount,rw /overlay
 
 CMD sync
+echo -e "q\n" | fdisk $MMC
 
 MNT=/tmp/mmc1
 CMD mkdir -p $MNT
-CMD mount ${MMC}p1 $MNT
+CMD mount -o rw ${MMC}p1 $MNT
 CMD sed -i 's/mmcblk0p2/mmcblk1p2/' $MNT/boot/user.env
 CMD cat $MNT/boot/user.env
 CMD umount $MNT

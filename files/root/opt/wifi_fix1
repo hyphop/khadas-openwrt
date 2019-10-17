@@ -1,0 +1,29 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= wifi fix1 vim2 
+
+
+while [ "1" ] ; do
+
+[ -d /sys/class/net/wlan1 ] || {
+    sleep 5
+    continue
+}
+
+
+grep -q 0x02d0 /sys/class/net/wlan1/device/vendor 2>/dev/null && {
+
+wifi down
+logger -s -t $0 "find extra interface wlan1"
+wifi.off
+wifi.on
+sleep 2
+wifi up
+
+}
+
+sleep 5
+
+done

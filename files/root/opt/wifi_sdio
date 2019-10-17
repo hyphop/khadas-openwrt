@@ -1,0 +1,23 @@
+#!/bin/sh
+
+## hyphop ##
+
+for s in /sys/class/mmc_host/mmc*; do
+
+    type="$(cat $s/mmc*/type)"
+
+    dev=${s##*/}
+
+    case $type in
+    
+    SDIO) 
+    echo "$s ($dev) -> $type"
+    grep "" $s/mmc*/*1/uevent
+    grep "" /sys/kernel/debug/$dev/*
+
+    ;;
+
+    esac
+
+done
+

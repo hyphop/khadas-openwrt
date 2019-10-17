@@ -10,11 +10,11 @@
 # just rename from install2mmc_from_sd.script.disabled to install2mmc_from_sd.script
 #
 
-OUT=/dev/tty0
 
 export FORCE=1
 
-echo "" > $OUT
+OUT="tee /dev/tty0 /dev/ttyAML0"
 
-mmc_install_from_sd 1>$OUT 2>$OUT
+echo "" | $OUT
 
+mmc_install_from_sd 2>&1 | $OUT

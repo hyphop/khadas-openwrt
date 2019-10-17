@@ -6,6 +6,7 @@
 
 echo 0 4 1 > /proc/sys/kernel/printk
 
+ETH=1
 WIFI=1
 USBNET=1
 #USB_NET_MODE=br-lan	#
@@ -13,6 +14,7 @@ USBNET_MODE=		# default dhcp connection no routing
 
 /opt/cpu_freq_fix
 
+[ "$ETH" ] && \
 [ -d /sys/class/net/eth0 ] || /opt/eth_on
 
 grep '#' -v /etc/config/network | grep -q "usb0" && {
@@ -28,8 +30,8 @@ grep '#' -v /etc/config/network | grep -q "usb0" && {
 
 # wifi hack ap mode
 
+    iw dev wlan0 set power_save off
     iw phy phy0 interface add wlan1 type __ap
-
 
 }
 
@@ -58,8 +60,24 @@ grep '#' -v /etc/config/network | grep -q "usb0" && {
 
 }
 
+## mount boot partiotions from /etc/fstab
+#grep -q /boot /proc/mounts && {
+#    echo "[i] mounted"
+#}
+
+#grep -q /boot /proc/mounts || {
+#    mount /boot
+#}
+
 for l in /sys/class/leds/*; do
     [ -d "$l" ] || /opt/led hb
 done
+
+#config led
+#        option default '0'
+#        option name 'led1'
+#        option sysfs 'vim:red:power'
+#        option trigger 'default-on'
+
 
 exit 0

@@ -1,4 +1,4 @@
-# openwrt Access info
+# OpenWrt Access
 
 + no root password
 + wifi ap mode enabled - no password
@@ -6,14 +6,22 @@
 + wan -> eth0 (dhcp)
 + serial console enabled -> ttyAML0
 + hdmi output -> tty0
-+ web interface http://172.23.0.1
-+ ssh root@172.23.0.1 -p 22
++ web interface http://vim.lan
++ ssh root@vim.lan -p 22
 
-NOTE: blink led mode started if openwrt was successful loaded
+# LAN ip resolve to local openwrt hosts
 
-NOTE: setup root password and wifi password at fist after installation!
+    172.23.0.1 openwrt.lan vim.lan
 
-NOTE: usb net connection enabled by default, 
+# mDNS
 
-NOTE: if vim device powered by usb cable from pc u can have network access to LAN via usb-net without any extra configuration
++ OpenWrt._ssh._tcp.local
++ OpenWrt._http._tcp.local
+
+# NOTES
+
++ blink led mode started if openwrt was successful loaded
++ setup root password and wifi password at fist after installation!
++ usb net connection enabled by default in bridge mode with LAN
++ if vim device connected by usb cable to your pc u can have network access to LAN via usb-net without any extra configuration
 

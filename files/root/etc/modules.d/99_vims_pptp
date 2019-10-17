@@ -1,0 +1,15 @@
+## pptp
+crc_ccitt
+slhc
+ppp_generic
+ppp_async
+ppp_mppe
+ip_tunnel
+ip_gre
+gre
+pptp
+
+## pptp iptables
+
+nf_nat_pptp
+nf_conntrack_pptp

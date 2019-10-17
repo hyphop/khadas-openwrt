@@ -1,9 +1,8 @@
 # khadas openwrt [![Build Status](https://travis-ci.com/hyphop/khadas-openwrt.svg?branch=master)](https://travis-ci.com/hyphop/khadas-openwrt)
 
-openwrt for Khadas VIMs boards
+openwrt for Khadas VIMs boards https://www.khadas.com/vim
 
-
-## screenshots
+![vim1_openwrt.jpg](pics/vim1_openwrt.jpg)
 
 ## Build
 
@@ -14,11 +13,14 @@ cd khadas-openwrt
 ./scripts/build
 ```
 
-![openwrt.png](pics/openwrt.png)
 
 ## Images
 
 + https://github.com/hyphop/khadas-openwrt/releases/
++ https://dl.khadas.com/Firmware/VIM1/OpenWrt
++ https://dl.khadas.com/Firmware/VIM2/OpenWrt
++ https://dl.khadas.com/Firmware/VIM3/OpenWrt
++ https://dl.khadas.com/Firmware/VIM3L/OpenWrt
 
 ## Installation
 
@@ -26,16 +28,21 @@ just write iamge to SD card
 
 ```
 cd /tmp
-wget https://github.com/hyphop/khadas-openwrt/releases/download/0.1/OPENWRT.vim1.vfat.img.gz
-gzip -dc OPENWRT.vim1.vfat.img.gz | sudo dd bs=1M of=/dev/SD_PATH
+wget https://github.com/hyphop/khadas-openwrt/releases/download/0.1/vim1.OPENWRT.sd.img.gz
+gzip -dc vim1.OPENWRT.sd.img.gz | sudo dd bs=1M of=/dev/SD_PATH
 sync
+
+out mirror
+
+```
+wget https://dl.khadas.com/Firmware/VIM1/OpenWrt/vim1.OPENWRT.sd.img.gz
 ```
 
-## docs
+## docs & how to
 
+read more docs ...
 [files/docs](files/docs)
-
-## how to ...
+[README.openwrt.vims.md](README.openwrt.vims.md)
 
 ## related projects
 
@@ -45,5 +52,7 @@ sync
 
 ## links
 
++ https://openwrt.org/
++ https://www.khadas.com/vim
 + https://github.com/khadas
 + https://docs.khadas.com

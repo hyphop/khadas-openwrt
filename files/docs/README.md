@@ -6,6 +6,7 @@ openwrt for Khadas VIMs boards
 
 + [](README.access.md)
 + [](README.boot.from.sd.md)
++ [](README.download.write.sd.md)
 + [](README.install.to.emmc.md)
 + [](README.extra.md)
 + [](README.fs.md)
@@ -22,3 +23,4 @@ openwrt for Khadas VIMs boards
 + https://github.com/hyphop/khadas-openwrt
 + https://github.com/khadas
 + https://docs.khadas.com
++ https://openwrt.org

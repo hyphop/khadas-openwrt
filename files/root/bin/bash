@@ -1,0 +1,8 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= simple bash alias to sh
+
+exec sh "$@"
+

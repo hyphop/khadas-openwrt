@@ -1,6 +1,4 @@
-# Openwrt Vims boot
-
-# INSTALL to EMMC (internal storage)
+# INSTALL to EMMC (internal storage) Khadas Openwrt Vims 
 
 1) Write image to SD card.
 2) Open/mount SD card (first partition) on your PC.
@@ -13,3 +11,4 @@ Rename it from `install2mmc_from_sd.script.disabled` -> `install2mmc_from_sd.scr
 8) OK! Well done! EMMC boot will occur automatically.
 
 NOTE: All previous EMMC data will be lost!!!
+

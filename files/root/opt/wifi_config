@@ -4,9 +4,13 @@
 
 #= openwrt wifi config script
 
-## USAGE
+USAGE(){ echo "USAGE
 
-## wifi_config [SSID] [PASSWORD]
+    wifi_config [SSID|-|.] [PASSWORD|-|no]	# setup config
+    wifi_config 			# show config
+
+"
+}
 
 CMD(){
     echo "[#] $@"
@@ -15,11 +19,37 @@ CMD(){
 
 D=default_radio0
 
+USAGE
+
+[ "$1" ] || {
+    uci show wireless
+    exit 0
+}
+
+
+PASS2="$(uci get wireless.$D.key 2>/dev/null)"
+SID2="$(uci get wireless.$D.ssid)"
+
+echo "[i] old wifi confi SID: $SID2 | PASS: $PASS2">&2
+
 [ "$PASS" ] || PASS="$2"
 [ "$SID" ] || SID="$1"
+
+[ "$SID" = "-" ] && SID="$SID2"
+[ "$SID" = "." ] && SID=""
 [ "$SID" ] || SID="$(hostname)"
 
-echo "[i] wifi confi SID: $SID | PASS: $PASS"
+[ "$PASS" = "" ] && PASS="$PASS2"
+[ "$PASS" = "no" ] && PASS=""
+[ "$PASS" = "-" ] && PASS=""
+
+[ "$PASS" ] && \
+[ ${#PASS} -lt 8 ] && {
+    echo "[i] password length must >= 8 symbols">&2
+    exit 1
+}
+
+echo "[i] new wifi confi SID: $SID | PASS: $PASS"
 
 CMD uci set "wireless.$D.ssid=$SID"
 

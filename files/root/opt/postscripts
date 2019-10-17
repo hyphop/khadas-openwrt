@@ -27,6 +27,7 @@ CMD(){
     }
 }
 
+#CMD mount -o rw $SDp1 /tmp/flash
 CMD mount -o rw $SDp1 /tmp/flash
 
 for S in /tmp/flash/scripts/*.script; do

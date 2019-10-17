@@ -1,5 +1,10 @@
 #!/bin/sh
 
+## hyphop ##
+
+
+export PATH="/opt:/tmp/opt:/usr/sbin:/usr/bin:/sbin:/bin"
+
 echo "[i] $0 started">&2
 
 [ "" ] && \
@@ -9,7 +14,27 @@ echo "[i] $0 started">&2
     mv /tmp/need_restart_network /tmp/need_restart_network.restarted
 }
 
+## post net config 
+
+avahi-daemon -c || avahi-daemon -D
+
+# /opt/eth_on
+
+## wifi hacks
+
+LOG=/tmp/wifi_fix1.log
+/opt/wifi_fix1 1>$LOG 2>&1 &
+
 ## post sript start
 
 /opt/postscripts
+
+mount /boot
+
+/opt/fan daemon
+
+######
+
+# put your script there
+
 

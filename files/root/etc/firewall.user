@@ -1,0 +1,20 @@
+# This file is interpreted as shell script.
+# Put your custom iptables rules here, they will
+# be executed with each firewall (re-)start.
+
+# Internal uci firewall chains are flushed and recreated on reload, so
+# put custom rules into the root chains e.g. INPUT or FORWARD or into the
+# special user chains, e.g. input_wan_rule or postrouting_lan_rule.
+
+## accept pptp vpn
+
+iptables -I INPUT -p tcp -m tcp --sport 1723 -j ACCEPT
+iptables -I INPUT -p gre -j ACCEPT
+
+## mdns
+
+iptables -I INPUT -p udp -m udp --sport 5353 -j ACCEPT
+iptables -I OUTPUT -p udp -m udp --dport 5353 -j ACCEPT
+iptables -I FORWARD -p udp -m udp --sport 5353 -j ACCEPT
+iptables -I FORWARD -p udp -m udp --dport 5353 -j ACCEPT
+

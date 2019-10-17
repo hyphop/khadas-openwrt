@@ -9,9 +9,28 @@ PA=$(realpath $PR)
 
 . $0.conf
 
+for p in $@; do
+
+    case $p in
+	-vim2|-2)
+	BOARD=vim2
+	;;
+	-vim1|-1)
+	BOARD=vim1
+	;;
+	*)
+	echo "[w] unknown param $p">&2
+	exit 1
+	;;
+    esac
+
+done
+
+echo "[i] config board: $BOARD rel : $REL">&2
+
 IMG_EXT4_NO=1
-IMG_EXT4=/tmp/$LABEL.$BOARD.ext4.img
-IMG_VFAT=/tmp/$LABEL.$BOARD.vfat.img
+IMG_EXT4=/tmp/$BOARD.$LABEL.ext4.sd.img
+IMG_VFAT=/tmp/$BOARD.$LABEL.sd.img
 
 ## check
 REQUIRED="rsync fdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
@@ -131,17 +150,21 @@ rm -rf $OWTMP
 
 [ -d "$OWTMP" ] || mkdir -p $OWTMP
 
-for k in Image.gz krescue-vim1.dtb modules.openwrt.tar.gz; do
+#https://github.com/hyphop/khadas-linux-kernel/releases/download/openwrt/vims.dtb.tar.gz
+
+for k in Image.gz krescue-vim1.dtb krescue-vim2.dtb krescue-vim3-a311d.dtb krescue-vim3-s922x.dtb modules.openwrt.tar.gz; do
     DL https://github.com/hyphop/khadas-linux-kernel/releases/download/openwrt/$k || FAIL
 done
 
 #UNPACK $R 
 MODULES_TAR=$R
 
-DL https://github.com/hyphop/khadas-uboot-spi/releases/download/openwrt/u-boot.vim1.sd.bin || FAIL
+DL https://github.com/hyphop/khadas-uboot-spi/releases/download/openwrt/u-boot.$BOARD.sd.bin || FAIL
 UBOOT_BIN=$R
 
-DL https://github.com/hyphop/pkg/releases/download/openwrt_khadas_fw/openwrt_khadas_fw.tar.gz || FAIL
+#DL https://github.com/hyphop/pkg/releases/download/openwrt_khadas_fw/openwrt_khadas_fw.tar.gz || FAIL
+DL https://github.com/hyphop/pkg/releases/download/openwrt_khadas_fw_vims/openwrt_khadas_fw_vims.tar.gz || FAIL
+
 
 FW_BIN=$R
 
@@ -315,7 +338,7 @@ w
 q
 " | fdisk $IMG_VFAT
 
-gzip -c $IMG_VFAT > $IMG_VFAT.gz
+gzip -1 -c $IMG_VFAT > $IMG_VFAT.gz
 
 ls -l1 $IMG_VFAT*
 

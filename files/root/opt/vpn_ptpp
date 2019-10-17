@@ -1,0 +1,16 @@
+#/bin/sh
+
+## hyphop ##
+
+#= setup pptp vpn connection
+
+uci show network.vpn_pptp
+
+A="
+config interface 'vpn_pptp'
+	option proto 'pptp'
+	option server 'pptp.vpn.server'
+	option username 'mylogin'
+	option password 'mypassword'
+	option auto '0'
+"
