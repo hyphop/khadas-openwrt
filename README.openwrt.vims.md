@@ -21,8 +21,8 @@ openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim
 + wan -> eth0 (dhcp)
 + serial console enabled -> ttyAML0
 + hdmi output -> tty0
-+ web interface http://vim.lan
-+ ssh `root@vim.lan -p 22`
++ web interface http://vim.lan or http://172.23.0.1/
++ ssh `root@vim.lan -p 22` or `root@172.23.0.1 -p 22`
 
 # LAN ip resolve to local openwrt hosts
 
