@@ -338,9 +338,23 @@ w
 q
 " | fdisk $IMG_VFAT
 
+md5sum $IMG_VFAT > $IMG_VFAT.md5sum
+
 gzip -1 -c $IMG_VFAT > $IMG_VFAT.gz
 
-ls -l1 $IMG_VFAT*
+IMG=${IMG_VFAT%.img}
+IMGZ=$IMG.zip
+
+[ -f $IMG ] || rm $IMGZ
+
+CMD zip -1 -j $IMGZ \
+    $IMG_VFAT \
+    $IMG_VFAT.md5sum \
+    $PR/../README*txt
+
+CMD cp $PR/../README.openwrt.vims.txt $IMG.readme.txt
+
+ls -l1 $IMG*
 
 echo "[i] DONE">&2
 

@@ -20,5 +20,5 @@ or install after - next boot
 
     remount_rw /boot
     cd boot/scripts/
-    mv install2mmc_from_sd.script.disabled install2mmc_from_sd.script
+    mv *2mmc* install2mmc_from_sd.script
     reboot
