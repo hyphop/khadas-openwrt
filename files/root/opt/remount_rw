@@ -1,0 +1,7 @@
+#!/bin/sh
+
+## hyphop ##
+
+mount -o remount,rw "$@"
+
+

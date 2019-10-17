@@ -12,3 +12,13 @@ Rename it from `install2mmc_from_sd.script.disabled` -> `install2mmc_from_sd.scr
 
 NOTE: All previous EMMC data will be lost!!!
 
+## inside openwrt
+
+    root@openwrt:/# mmc_install_from_sd
+
+or install after - next boot
+
+    remount_rw /boot
+    cd boot/scripts/
+    mv install2mmc_from_sd.script.disabled install2mmc_from_sd.script
+    reboot

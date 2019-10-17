@@ -33,6 +33,10 @@ gzip -dc vim1.OPENWRT.sd.img.gz | sudo dd bs=1M of=/dev/SD_PATH
 sync
 ```
 
+## install to emmc inside openwrt booted from sd
+
+    root@openwrt:/# mmc_install_from_sd
+
 ## docs & how to
 
 + [files/docs](files/docs)

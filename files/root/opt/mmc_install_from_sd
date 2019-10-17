@@ -56,8 +56,6 @@ for m in $(egrep -o ${MMC}p. /proc/mounts); do
     CMD umount $m
 done
 
-}
-
 mount -o remount,ro /overlay
 
 CMD dd if=$SD of=$MMC bs=512 count=$BLOCKS

@@ -35,7 +35,7 @@ openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim
 + usb net connection enabled by default in bridge mode with LAN
 + if vim device connected by usb cable to your pc u can have network access to LAN via usb-net without any extra configuration
 
-## Installation
+## Install
 
 just write image to SD card
 
@@ -89,6 +89,10 @@ Just triple-press `KEY_F` (middle button) to force SD bootup!
 * OK! Well done! EMMC boot will occur automatically.
 
 NOTE: All previous EMMC data will be lost!!!
+
+### install to emmc inside openwrt booted from sd
+
+    root@openwrt:/# mmc_install_from_sd
 
 ## how to Build from sources
 
