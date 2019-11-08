@@ -1,0 +1,59 @@
+#!/bin/sh
+
+## hyphop ##
+
+HW=
+
+SOC_ID=$(cat /sys/devices/soc0/soc_id)
+
+DEV=eth0
+
+#MOD="meson-gxl realtek mdio-mux-meson-g12a dwmac_meson8b"
+
+MOD="meson-gxl realtek dwmac_meson8b"
+
+case $SOC_ID in
+    *GXM*)
+    MOD="realtek dwmac_meson8b"
+    ;;
+    *SM1*)
+
+    ;;
+
+esac
+
+echo "[i] SOC: $SOC_ID load modules $MOD">&2
+
+for i in $MOD; do
+    [ -d /sys/module/$i ] || modprobe $i
+done
+
+
+for c in $(cat /proc/cmdline); do
+
+    case $c in
+    #eth_hw=C0:4A:00:C0:3F:DB 
+	eth_hw=*)
+	HW=${c#*=}
+	;;
+    esac
+
+done
+
+for t in 1 2 3 4 5; do
+    [ -d /sys/class/net/$DEV ] && break
+    sleep 1
+done
+
+[ "$HW" ] && {
+    echo "[i] setup $DEV hw mac $HW ">&2
+    ifconfig $DEV down
+    ifconfig $DEV hw ether $HW
+    
+}
+
+for t in 1 2 3 4 5; do
+    ifconfig $DEV up && break
+    sleep 1
+done
+

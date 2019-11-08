@@ -1,0 +1,60 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= mpd cleaner
+
+CONF=/etc/mpd.conf
+
+echo "[i] CONF $CONF">&2
+
+[ "$HOME" ] || HOME=root
+
+#music_directory	"~/music"
+#playlist_directory	"~/.mpd/playlists"
+#db_file		"~/.mpd/database"
+#log_file		"/var/log/mpd.log"
+#pid_file		"/var/run/mpd.pid"
+#state_file		"~/.mpd/state"
+#sticker_file		"~/.mpd/sticker.sql"
+
+echo "[i] $0" >&2
+
+TMP=/tmp/mpd.dirs
+
+egrep -v ^# $CONF | egrep \(.+_file\|.+_directory\|database\"\) > $TMP
+
+while read l ; do
+
+	    d=${l#*\"}
+	    d=${d%\"}
+	    d=${d/\~/$HOME}
+
+#    echo "[i] $l -> $d">&2
+    case $l in
+	*playlist_directory*)
+	    [ -d "$d" ] && {
+		echo "[i] $0 PLAY LISTS $d">&2
+		#rm -rf $d/*
+	    }
+	;;
+	*db_file*|*path*)
+	    [ -f "$d" ] && {
+		echo "[i] $0 DB FILE $d">&2
+		rm -f $d
+	    }
+	;;
+	*state_file*)
+	    [ -f "$d" ] && {
+		echo "[i] $0 STATE FILE $d">&2
+		rm -f $d
+	    }
+	
+	;;
+    esac
+
+done < $TMP
+
+rm $TMP
+
+

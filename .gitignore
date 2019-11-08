@@ -1,4 +1,5 @@
 !.gitignore
+files/extra/bin
 bin/*
 bin.tmp/*
 share/*

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+## hyphop ##
+
+(
+## pre zero
+dd if=/dev/zero bs=48000 count=1
+## play 
+opusdec "$1" -
+) | aplay -fdat -
+

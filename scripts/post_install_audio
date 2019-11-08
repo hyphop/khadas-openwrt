@@ -1,0 +1,70 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= post install audio
+
+PR=$(dirname $0)
+opkg=$PR/opkg
+
+NAME=${0#*post_install_}
+
+. $PR/build.conf
+. $PR/build.lib
+
+echo "[i] add $NAME">&2
+
+CMD cp $PR/../files/splash/splash-tone.bmp.gz $OWTMP/boot/splash.bmp.gz
+
+[ -d $PR/../files/extra/bin ] && \
+CMD cp -a $PR/../files/extra/bin $OWTMP/usr || FAIL
+
+#$opkg --force-removal-of-dependent-packages remove libavahi-nodbus-support avahi-nodbus-daemon 
+
+#mpd-full mpc \
+$opkg install \
+    opus-tools \
+    libflac libmpg123 libvorbis mpc \
+    alsa-utils shairplay luci-app-shairplay \
+
+$opkg install \
+    libfreetype \
+    dejavu-fonts-ttf-DejaVuSans \
+    dejavu-fonts-ttf-DejaVuSerif \
+    dejavu-fonts-ttf-DejaVuSansMono \
+    dejavu-fonts-ttf-DejaVuSansMono-Bold \
+
+CMD ln -s ttf-dejavu/DejaVuSans.ttf $OWTMP/usr/share/fonts/default.ttf #|| FAIL
+
+#ln -s libavcodec.so libavcodec.so.57
+#ln -s libavformat.so libavformat.so.57
+#ln -s libavutil.so libavutil.so.55
+
+#ffmpeg
+#    ffmpeg
+
+#CMD tar -C $OWTMP -xf $PR/../bin/fonts.tar.gz
+
+## custom extra soft
+$opkg install $PR/../bin/opkg-extra/mpd-*.ipk
+$opkg install $PR/../bin/opkg-extra/ympd_*.ipk
+$opkg install $PR/../bin/opkg-extra/ncmpc_*.ipk
+$opkg remove triggerhappy
+$opkg install $PR/../bin/opkg-extra/triggerhappy_*.ipk
+
+CMD rm $OWTMP/usr/lib/libavcodec*
+CMD rm $OWTMP/usr/lib/libavdevice*
+CMD rm $OWTMP/usr/lib/libavfilter*
+CMD rm $OWTMP/usr/lib/libavresample*
+CMD rm $OWTMP/usr/lib/libavformat*
+CMD rm $OWTMP/usr/lib/libavutil*
+CMD rm $OWTMP/usr/lib/libsw*
+
+CMD tar -C $OWTMP -xf $PR/../bin/ffmpeg-*.tar.gz
+
+[ -d $PR/../files/root.$NAME ] && {
+
+    CMD rsync -a --inplace $PR/../files/root.$NAME/* $OWTMP
+
+}
+

@@ -1,4 +1,24 @@
-# Khadas Vims OpenWrt rel 0.1
+# OpenWrt VIM Changes
+
+## Khadas Vims OpenWrt rel 0.3
+
++ added support for VIM2 ( with wifi chip AP6356S VIM2.V14 tested )
++ preinstalled samba, mdns, ttyd, thd + many other packages
++ fix ethernet for VIM2, but still not possible reinit ethernet interface for VIM2
++ improve startup speed - now is about 7 sec
++ LEDs indicators - supported
++ board buttons KEY_F KEY_P - custom usage KEY_F - reset wifi | KEY_P - power off
++ initial optimization for Ethernet USB MMC subsystems
++ many improves
++ change default hostname to openwrt-vim + mdns name to: openwrt-vim.local
+
+## Khadas Vims OpenWrt rel 0.2
+
++ usb 3g 4g modems - OK
++ improve build scripts
++ some changes
+
+## Khadas Vims OpenWrt rel 0.1
 
 it's a firt release for Khadas Vims boards
 

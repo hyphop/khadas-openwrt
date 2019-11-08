@@ -1,0 +1,18 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= simple mpd status
+
+. /opt/mpd.config
+
+echo "# usb $SOCKET">&2
+
+echo "[
+>command_list_ok_begin
+>status
+>currentsong
+>command_list_end
+<
+" | usc $SOCKET | egrep "^(volume|state|time|Title|file|Artist|Album|Date)"
+

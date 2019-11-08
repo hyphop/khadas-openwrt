@@ -1,0 +1,58 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= vol control
+
+. /opt/mpd.config
+
+DD=1%
+
+grep -q DSD_ /proc/asound/card?/pcm?p/sub?/hw_params && {
+    echo "[i] ignore DSD">&2
+    exit 0
+}
+
+V=
+v=$1
+
+case "$v" in
+
+    up)
+    V=$DD+
+    ;;
+
+    down)
+    V=$DD-
+    ;;
+
+    +*%)
+    v=${v%\%}
+    V=${v#+}%+
+    continue
+    ;;
+    -*%)
+    v=${v%\%}
+    V=${v#-}%-
+    continue
+    ;;
+    +*)
+    V=${v#+}+
+    continue
+    ;;
+    -*)
+    V=${v#-}-
+    continue
+    ;;
+esac
+
+CMD(){
+    echo "$@"
+    "$@"
+}
+
+[ "$V" ] || exit 0
+
+CMD amixer sset "$VOL_CTRL_NAME" $V
+
+#5%+

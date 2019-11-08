@@ -6,7 +6,8 @@
 
 C=/sys/devices/system/cpu/cpufreq
 
-FREQ=1200000
+[ "$FREQ" ] || FREQ="$1"
+[ "$FREQ" ] || FREQ=1200000
 
 for c in $C/policy*; do
     grep "" $c/*_freq

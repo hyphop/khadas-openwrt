@@ -1,0 +1,82 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= simple console image writer
+
+for t in /sys/class/block/*/device/model; do
+    [ -f $t ] && {
+    d=${t#*block/}
+    d=${d%%/*}
+    egrep -q "Card Reader" $t && {
+    SD=/dev/$d
+    echo "[i] auto detected dev: $SD ($(cat $t))">&2
+    break
+    }
+    }
+done
+
+#IN=
+#SD=
+
+for a in "$@"; do
+    [ -b "$a" ] && {
+	SD="$a"
+    }
+    [ -f "$a" ] && {
+	IN="$a"
+    }
+
+done
+
+[ "$SD" ] || {
+    echo "[e] target device not defined">&2
+    exit 1
+}
+
+#echo "[i] burn image to $SD">&2
+
+[ -b $SD ] || {
+    echo "[e] not block dev $SD">&2
+    exit 1
+}
+
+[ "$IN" ] || {
+for i in *.gz *.7z *.zip  ; do
+    [ -f "$i" ] && {
+	IN="$i"
+	break
+    }
+done
+}
+
+[ -f $IN ] || {
+    echo "[e] not found image $IN">&2
+    exit 1
+}
+
+echo "[i] IMAGE: $IN > $SD">&2
+
+case "$IN" in
+    *.gz)
+    echo "[i] gzip image mode">&2
+    gzip -dc "$IN" | sudo dd bs=1M of=$SD
+    ;;
+    *.xz)
+    echo "[i] xz image mode">&2
+    xz -dc "$IN" | sudo dd bs=1M of=$SD
+    ;;
+    *.zip)
+    echo "[i] zip image mode">&2
+    unzip -p "$IN" "*.img" | sudo dd bs=1M of=$SD
+    ;;
+    *.7z)
+    echo "[i] 7z image mode">&2
+    7z x "$IN" "*/*.img" -so | sudo dd bs=1M of=$SD
+    ;;
+    *)
+    echo "[i] raw image mode">&2
+    sudo dd if="$IN" bs=1M of=$SD
+esac
+
+sync

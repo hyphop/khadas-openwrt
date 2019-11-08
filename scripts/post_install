@@ -2,29 +2,62 @@
 
 ## hyphop ##
 
+#= post install base
+
 PR=$(dirname $0)
 opkg=$PR/opkg
 
 echo "[i] install packages">&2
 
 [ -d /tmp/opkg-lists ] || {
+    echo "[i] opkg update">&2
     $opkg update
 }
+
+for p in /tmp/opkg-lists/openwrt_*; do
+    [ -f $p ] || {
+        echo "[i] opkg update">&2
+	$opkg update
+    }
+    [ -s $p ] || {
+        echo "[i] opkg update">&2
+	$opkg update
+    }
+done
+
 
 #    ppp-mod-pptp \
 #    luci-proto-ppp \
 
 # mountd
+# avahi-daemon-service-ssh avahi-daemon-service-http \
+# blockd
 
 $opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
     fdisk sfdisk i2c-tools usbutils evtest netcat aria2 \
-    avahi-daemon-service-ssh avahi-daemon-service-http \
-    mount-utils dosfstools e2fsprogs blkid losetup dtc uboot-envtools \
+    shadow-useradd shadow-userdel shadow-usermod \
+    gzip tar unzip zip unrar coreutils-dd \
+    inotifywatch inotifywait \
+    coreutils-stty \
+    avahi-dbus-daemon avahi-utils \
+    mount-utils dosfstools e2fsprogs resize2fs blkid losetup dtc uboot-envtools \
+    comgt luci-proto-3g usb-modeswitch usbreset \
     triggerhappy kmod-hid \
     iw wpad-wolfssl wpa-cli \
-    wireless-tools \
+    wireless-tools iwinfo \
+    iperf pv \
+    ttyd \
+    samba36-server samba36-client luci-app-samba \
+    nfs-utils \
     ppp-mod-pptp \
     openvpn-mbedtls luci-app-openvpn \
     iptables-mod-tproxy \
+    iptables-mod-trace \
     shadowsocks-libev-ss-redir shadowsocks-libev-ss-local shadowsocks-libev-ss-rules shadowsocks-libev-config luci-app-shadowsocks-libev \
     wpan-tools
+
+#
+#
+# nfs broken - not usable
+#
+#    nfs-kernel-server nfs-kernel-server-utils nfs-utils \

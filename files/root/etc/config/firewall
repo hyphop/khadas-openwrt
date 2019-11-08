@@ -18,6 +18,8 @@ config zone
 	list   network		'wan'
 	list   network		'wan6'
 	list   network		'vpn_pptp'
+	list   network		'modem'
+	list   network		'modem_eth'
 	option input		REJECT
 	option output		ACCEPT
 	option forward		REJECT

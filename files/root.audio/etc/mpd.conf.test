@@ -1,0 +1,112 @@
+
+## MPD config
+
+music_directory		"~/music"
+playlist_directory	"~/.mpd/playlists"
+db_file			"~/.mpd/database"
+log_file		"/var/log/mpd.log"
+pid_file		"/var/run/mpd.pid"
+state_file		"~/.mpd/state"
+sticker_file		"~/.mpd/sticker.sql"
+
+###############################################################################
+#user				"nobody"
+#group				"nogroup"
+#bind_to_address		"any"
+
+bind_to_address			"/var/run/mpd.socket"
+port				"6600"
+bind_to_address			"0.0.0.0"
+
+#log_level			"default"
+gapless_mp3_playback			"yes"
+
+restore_paused "no"
+
+#save_absolute_paths_in_playlists	"no"
+#metadata_to_use	"artist,album,title,track,name,genre,date,composer,performer,disc"
+#auto_update	"yes"
+#auto_update_depth "3"
+###############################################################################
+
+follow_outside_symlinks	"yes"
+follow_inside_symlinks	"yes"
+
+###############################################################################
+
+zeroconf_enabled		"yes"
+zeroconf_name			"Music Player - vim"
+
+###############################################################################
+
+
+# Permissions #################################################################
+#
+# If this setting is set, MPD will require password authorization. The password
+# setting can be specified multiple times for different password profiles.
+#
+#password                        "password@read,add,control,admin"
+#
+# This setting specifies the permissions a user has who has not yet logged in. 
+#
+#default_permissions             "read,add,control,admin"
+#
+###############################################################################
+
+
+# Database #######################################################################
+#
+
+#database {
+#       plugin "proxy"
+#       host "other.mpd.host"
+#       port "6600"
+#}
+
+# Input #######################################################################
+#
+
+input {
+        plugin "curl"
+#       proxy "proxy.isp.com:8080"
+#       proxy_user "user"
+#       proxy_password "password"
+}
+
+#
+###############################################################################
+
+audio_output {
+	type		"alsa"
+	name		"ALSA default"
+#	device		"hw:0"	# optional
+	device		"plughw:0"	# optional
+#	device		"sysdefault:CARD=Control"	# optional
+
+#       format		"48000:32:2"
+
+#	mixer_type      "software"	# optional
+	mixer_type      "hardware"	# optional
+	mixer_device	"hw:0"	# optional
+	mixer_control	"Khadas Tone Control "		# optional
+	mixer_index	"1"		# optional
+}
+
+#
+
+audio_output {
+	type		"null"
+	name		"My Null Output"
+	mixer_type      "software"	# optional
+#	mixer_type      "none"			# optional
+}
+
+###############################################################################
+
+#replaygain			"album"
+#replaygain_preamp		"0"
+#replaygain_missing_preamp	"0"
+#replaygain_limit		"yes"
+#volume_normalization		"no"
+
+#filesystem_charset		"UTF-8"

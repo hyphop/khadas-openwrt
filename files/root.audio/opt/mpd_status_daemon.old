@@ -1,0 +1,80 @@
+#!/bin/sh
+
+## hyphop ##
+
+# mpd status daemon
+
+. /opt/mpd.config  2>/dev/null
+
+MPDS=/var/mpd.status
+PIDF=$MPDS/.pid
+
+DELAY=2
+SILENT=
+DEBUG=
+BG=
+
+[ -d "$MPDS" ] || mkdir -p $MPDS
+
+#export DEBUG=$DEBUG
+
+cd $MPDS
+
+#echo "# $unx">&2
+while [ "1" ] ; do
+
+#[ "$SILENT" ] || \
+#    clear
+
+n=0
+echo "[
+>command_list_ok_begin
+>status
+>currentsong
+>command_list_end
+<
+" | usc $SOCKET | while read l ; do
+#egrep "^(volume|state|time|Title|file|Artist|Album|Date)"
+
+    [ "$n" = "0" ] && {
+	echo > .lock
+	rm $MPDS/*
+    }
+
+    n=$((n+1))
+
+    [ "$DEBUG" ] && {
+	echo "$n: $l"
+    }
+
+    case "$l" in
+
+    #playlistlength
+
+	volume:*|error:*|playlistlength:*|state:*|time:*|Title:*|Name:*|file:*|Album:*|Artist:*|Date:*|song:*|bitrate:*)
+	    val=${l#*: }
+	    var=${l/:*/}
+
+	    echo "$val: $var">&2
+	    printf "%s" "$val" > "$var"
+
+	;;
+    esac
+
+done
+
+#    ln -s Date Year
+#
+    [ "$n" = "0" ] && {
+	rm .lock
+    }
+
+    date > .updated
+
+    sleep $DELAY
+
+done
+
+
+}
+

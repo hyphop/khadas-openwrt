@@ -1,0 +1,31 @@
+#!/bin/sh
+
+## hyphop ##
+
+MODES=
+
+w=0
+while [ "1" ] ; do
+	pgrep /usr/bin/mpd && break
+	echo "wait $w"
+	w=$((w+1))
+	sleep 2
+done
+
+R=24
+C=80
+
+dd if=/dev/zero bs=1M of=/dev/fb0 >/dev/null 2>/dev/null
+
+#echo stty rows $R cols $C
+stty rows $R cols $C
+
+#export TERM=linux
+export TERM=xterm-color
+export USER=root
+export HOME=/root
+
+/opt/colors.sh
+
+ncmpc -h /var/run/mpd.socket -f ~/.ncmpc/config
+

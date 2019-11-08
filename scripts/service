@@ -1,0 +1,83 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= service wrapper
+
+PR=$(dirname $0)
+
+. $PR/build.conf
+
+I=$OWTMP/etc/init.d
+R=$OWTMP/etc/rc.d
+
+ACTION="$1" # serverice name
+
+CMD(){
+    echo "[i] $@">&2
+    "$@"
+}
+
+case "$ACTION" in
+    "")
+    echo "[i] services list">&2
+    ls $I
+    exit 0
+    ;;
+esac
+
+echo "[i] service $ACTION">&2
+
+shift
+
+for S in $@; do
+
+s="$I/$S"
+
+[ -f "$s" ] || {
+    echo "[e] service $S not found">&2
+    continue
+}
+
+. $s
+
+echo "[i] service $S START: $START STOP $STOP">&2
+
+
+case "$ACTION" in
+
+    enable)
+
+	[ "$START" ] && {
+	    CMD ln -sf \
+	    "../init.d/$S" \
+	    "$R/S$START$S" 
+	}
+
+	[ "$STOP" ] && {
+	    CMD ln -sf \
+	    "../init.d/$S" \
+	    "$R/K$STOP$S" 
+	}
+    ;;
+    disable)
+
+	[ "$START" ] && {
+	    [ -f "$R/S$START$S" ] && \
+	    CMD rm \
+	    "$R/S$START$S"
+	}
+
+	[ "$STOP" ] && {
+	    [ -f "$R/S$STOP$S" ] && \
+	    CMD rm \
+	    "$R/K$STOP$S"
+	}
+	
+    ;;
+    *)
+    ;;
+
+esac
+
+done

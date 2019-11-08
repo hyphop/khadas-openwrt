@@ -1,0 +1,176 @@
+#!/bin/sh
+
+## hyphop ## 
+
+## MIT License
+# https://github.com/hyphop/opus123.git
+
+# AI-Radio.org opus streams tested
+
+help(){
+    echo "
+    opus123 - command-line Opus codec radio player (like ogg123 or mpg123)
+	      Listen internet radio station + display meta tags for songs
+
+    USAGE
+	
+	 opus123 [url|-shotcut] [dev]
+
+    EXAMPLE
+        opus123 http://ai-radio.org
+        opus123 http://ai-radio.org/128.opus default
+        opus123 http://ai-radio.org/320.opus plughw:CARD=DragonFly,DEV=0
+        opus123 -airadio
+        opus123 - null
+	AUDIODEV=plughw:CARD=HDMI,DEV=7 opus123
+	PULSE=NO ./opus123
+        opus123 --show-config
+	wget https://ai-radio.org/get/opus123 -O- | sh -
+    
+    DOWNLOAD
+	wget http://ai-radio.org/get/opus123
+	wget https://raw.githubusercontent.com/hyphop/opus123/master/opus123
+
+    INSTALL
+	chhmod 0755 opus123
+    
+    CONFIG FILES
+	/etc/opus123.conf  - system config
+	~/.opus123rc       - user config
+
+    #audio_dev=default
+    #audio_out=
+    #audio_out=sox --rate 48000 -q -t raw -e signed -b 16 -c 2 - -t alsa
+    #reconnect_auto=1
+    #stream_default=http://ai-radio.org/64.opus
+    #stream_1=http://ai-radio.org/128.opus
+    #stream_2=http://ai-radio.org/64.opus
+    #stream_3=http://ai-radio.org/320.opus
+    #stream_n=URL
+    #stream_airadio=http://ai-radio.org/128.opus
+    
+    Add shotcut example
+	
+    echo stream_default=http://ai-radio.org/64.opus >> ~/.opus123rc 
+    echo stream_airadio=http://ai-radio.org/64.opus >> ~/.opus123rc 
+
+    LINKS
+
+    * https://github.com/hyphop/opus123.git
+    * http://ai-radio.org/chronos/2015-06-08-opus123-command-line-radio-player
+
+    "
+}
+note(){
+    echo "    NOTICE!
+	$1 - required installed $2 package $3"
+}
+check(){
+    command -v $1 >/dev/null 2>&1 && return 1
+    return 0
+}
+
+
+[ "$1" = "--help" ] && help && exit
+
+src=$1
+
+decoder="opusdec --force-wav - -"
+check opusdec &&  help && note opus-tools https://www.opus-codec.org/downloads/ && exit
+
+LADSPA_PATH=/usr/lib/ladspa/
+
+filter_sox=""
+
+dev=$2
+
+AUDIODEV=${AUDIODEV:-$dev}
+LADSPA_PATH=${LADSPA_PATH:-/usr/lib/ladspa/}
+conf=/etc/opus123.conf
+store_user=~/.opus123rc
+
+[ -f $conf ] && . $conf
+[ -f $store_user ] && . $store_user
+
+[ "$stream_default" = "" ] && { 
+echo "[i] write default user config $store_user" 2>&1 ;
+echo "# default user config
+#audio_dev=alsa_pcm_name
+#audio_dev=default
+reconnect_auto=1
+stream_default=http://ai-radio.org/128.opus
+stream_airadio=http://ai-radio.org/128.opus
+stream_mid=http://ai-radio.org/128.opus
+stream_hi=http://ai-radio.org/320.opus
+stream_low=http://ai-radio.org/64.opus
+" >> $store_user 
+
+[ -f $store_user ] && . $store_user
+
+}
+
+[ "$1" = "--show-config" ] && {
+    [ -f $conf ] && echo "== $conf" && cat $conf
+    [ -f $store_user ] && echo "== $store_user" && cat $store_user
+    exit 0
+}
+
+[ "$src" = "-list" ] && { grep stream_ $store_user; exit 0 ; } 
+#[ "$src" = "-conf" ] && { cat $store_user; exit 0; } 
+
+shotcut=${src#-}
+[ "$shotcut" != "$src" ] && eval src=\$stream_$shotcut
+
+[ "$src" = "" ] && { src=$stream_default;
+    [ "$src" ] && echo "use default stream $stream_default"; } 
+
+[ "$dev" = "" ] && dev=$audio_dev
+[ "$dev" = "" ] && dev="default"
+
+AUDIODEV=${AUDIODEV:-$dev}
+dev=$AUDIODEV
+export AUDIODEV=$AUDIODEV
+
+[ "$get" = "" ] && { check curl  || get="curl -k -A opus123/curl -sLN"; }
+[ "$get" = "" ] && { check wget  || get="wget -U opus123/wget -qO-"; }
+[ "$get" = "" ] && help && note curl curl or && note wget wget && exit
+
+[ "$audio_out" = "" ] || out=$audio_out
+[ "$out" = "" ] && { 
+    [ "$PULSE_SERVER" ] && {
+	out="paplay --raw"
+    }
+    [ "$PULSE_SERVER" ] || {
+	[ "$NOPULSE" -o "$PULSE" = "NO" -o "$PULSE" = "0" \
+	    -o "$PULSE" = "no" -o "$ALSA" ] || {
+	    pactl info 1>/dev/null 2>/dev/null && out="paplay --raw"
+	}
+    }
+}
+[ "$out" = "" ] && { check aplay || out="aplay -fdat -q -D $dev"; } 
+[ "$out" = "" ] && { check play || out="play -q -"; 
+    #out="play --rate 48000 -q -t raw -e signed -b 16 -c 2 - $filter_sox"; 
+}
+[ "$out" = "" ] && help && note aplay alsa-utils or && note play sox && exit
+
+[ "$src" = "" ] && help && exit
+
+echo "connection to $src / $get / $audio_filter / $out"
+try=1
+
+
+while [ "1" ]; do
+
+    echo "$get \"$src\" | $decoder | $audio_filter | $out"
+
+    [ "$audio_filter" = "" ] || \
+    $get "$src" | $decoder | $audio_filter | $out
+    [ "$audio_filter" = "" ] && \
+    $get "$src" | $decoder | $out
+
+    [ "$reconnect_auto" ] || exit 0;
+    echo "reconnect $try"
+    try=$((try+1))
+    sleep 1 
+done
+

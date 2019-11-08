@@ -1,0 +1,112 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= play audio + display info
+
+AUDIODEV=hw:0
+FBDEV=/dev/fb0
+FBFMT=rgb32
+
+FONT=/usr/share/fonts/default.ttf
+FFINFO=/tmp/ffinfo.txt
+
+W=1920
+H=1080
+
+W2=$((W/2))
+H2=$((H/2))
+
+L1="$1"
+
+TP=40
+
+dd if=/dev/zero bs=1M of=/dev/fb0 >/dev/null 2>/dev/null
+
+play(){
+
+(
+ffmpeg \
+-hide_banner \
+-f lavfi -i "color=s=${W2}x${H2},drawtext=fontsize=30:fontcolor=ffffff:x=$TP:y=$TP:fontfile=$FONT:text='$1'" \
+-frames 1 \
+-s ${W2}x${H2} \
+-f rawvideo \
+-xoffset 0 \
+-pix_fmt $FBFMT -f fbdev $FBDEV 1>/dev/null 2>/dev/null </dev/null
+)&
+
+(
+ffmpeg \
+-hide_banner \
+-vn \
+-t 5 \
+-i "$1" \
+-lavfi showspectrumpic=s=800x400:mode=separate \
+-s ${W2}x${H2} \
+-f rawvideo \
+-xoffset $W2 \
+-pix_fmt $FBFMT -f fbdev $FBDEV \
+1>$FFINFO 2>&1
+# </dev/null
+)&
+
+
+DISPLAY_TXT(){
+
+IN=$1
+X=$2
+Y=$3
+
+[ "$X" ] || X=0
+[ "$Y" ] || Y=0
+
+[ "$IN" ] || IN=-
+
+ffmpeg -hide_banner \
+    -s 640x480 -f tty -i "$IN" -f fbdev -r 1 -xoffset $X -yoffset $Y -pix_fmt $FBFMT $FBDEV 1>/dev/null 2>/dev/null
+
+}
+
+(
+sleep 1
+
+(
+alsa.state
+echo
+amixer
+) | DISPLAY_TXT - $((W2+$TP)) $((H2+$TP))
+
+#audio_meta "$1"
+cat $FFINFO | grep -m1 "Stream #0:0" -B100 | DISPLAY_TXT - $TP $((H2+$TP))
+
+) &
+
+#LOOP=
+[ -d /sys/module/snd_aloop ] && { 
+
+    modprobe snd_aloop
+
+#LOOP=-f alsa default:CARD=Loopback
+
+}
+
+ffmpeg \
+    -vn \
+    -hide_banner \
+    -probesize 4096 \
+    -threads 1 \
+    -fflags nobuffer -flags low_delay \
+    -i "$1" -ar 96000 -ac 2 -f alsa $AUDIODEV \
+    -f alsa -ar 96000 -ac 2 default:CARD=Loopback
+
+}
+
+for i in "$@"; do
+
+    echo "[i] play $i">&2
+    play "$i"
+
+    sleep 1
+
+done

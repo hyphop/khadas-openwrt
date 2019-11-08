@@ -1,0 +1,48 @@
+#!/bin/sh
+
+## hyphop ##
+
+export PATH=/opt:/usr/sbin:/usr/bin:/sbin:/bin
+
+
+cat << EOF
+Content-type: text/html
+Date: Thu, 01 Jan 1970 01:47:13 GMT
+Cache-Control: no-cache,no-store,max-age=0,must-revalidate
+X-miZy-athor: hyphop
+Pragma: no-cache
+Expires: 0
+Connection: close
+
+EOF
+
+export HTTP_HEADERS_OK=1
+
+DEFAULT=http://$HTTP_HOST:8080/
+AUDIO=http://$HTTP_HOST:8080/
+NCMPC=http://$HTTP_HOST:8081/
+OPENWRT=http://$HTTP_HOST/cgi-bin/luci/
+REDIRECT_DELAY=5
+
+cat << EOF
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="refresh" content="$REDIRECT_DELAY; URL=$DEFAULT" />
+</head>
+<body style="margin: 100px; background-color: white; color: black; font-size: 20px; font-family: arial, helvetica, sans-serif">
+
+    <center>
+    <a href='$AUDIO'>AudioPlayer</a><br>
+    <a href='$NCMPC'>Ncmpc</a><br>
+    <a href='$OPENWRT'>OpenWrt</a>
+    </center>
+
+</body>
+</html>
+
+
+EOF

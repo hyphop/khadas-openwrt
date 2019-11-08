@@ -1,0 +1,21 @@
+#!/bin/sh /etc/rc.common
+
+## hyphop ##
+
+START=94
+
+USE_PROCD=1
+
+PROG=/usr/bin/ttyd
+PORT=8088
+IFACE=br-lan
+
+start_service() {
+
+	procd_open_instance 
+	logger -t init.d ""$PROG""
+	procd_set_param command "$PROG" -i $IFACE -p $PORT login
+	procd_set_param respawn ${respawn_threshold:-3600} ${respawn_timeout:-5} ${respawn_retry:-5}
+	procd_close_instance
+
+}

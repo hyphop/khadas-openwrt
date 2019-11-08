@@ -7,7 +7,7 @@ openwrt for Khadas VIMs boards https://www.khadas.com/vim (Amlogic s905 s912 a31
 ## supported Boards
 
 + khadas vim1 - OK
-+ khadas vim2 - WIP - test mode
++ khadas vim2 - OK (wifi chip AP6356S 02D0:4356 OK)
 
 ## Build
 
@@ -32,9 +32,9 @@ just write iamge to SD card
 
 ```
 cd /tmp
-wget https://github.com/hyphop/khadas-openwrt/releases/download/0.1/vim1.OPENWRT.sd.img.gz || \
-wget https://dl.khadas.com/Firmware/VIM1/OpenWrt/vim1.OPENWRT.sd.img.gz
-gzip -dc vim1.OPENWRT.sd.img.gz | sudo dd bs=1M of=/dev/SD_PATH
+wget https://github.com/hyphop/khadas-openwrt/releases/download/0.1/VIM1.OPENWRT.sd.img.gz || \
+wget https://dl.khadas.com/Firmware/VIM1/OpenWrt/VIM1.OPENWRT.sd.img.gz
+gzip -dc VIM1.OPENWRT.sd.img.gz | sudo dd bs=1M of=/dev/SD_PATH
 sync
 ```
 

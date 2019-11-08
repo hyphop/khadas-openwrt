@@ -1,0 +1,31 @@
+#!/bin/sh
+
+## hyphop ##
+
+MODES=
+
+w=0
+
+while [ "1" ] ; do
+
+pgrep -f /usr/bin/mpd 1>/dev/null 2>/dev/null || {
+    echo "[i] $(date) wait mpd"
+    sleep 1
+    continue
+}
+
+#stty rows $R cols $C
+
+#export TERM=linux
+export TERM=xterm-color
+export USER=root
+export HOME=/root
+
+#/opt/colors.sh
+
+#ncmpc -h /var/run/mpd.socket -f ~/.ncmpc/config_web
+ncmpc -f ~/.ncmpc/config_web
+
+sleep 1
+
+done

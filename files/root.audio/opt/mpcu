@@ -1,0 +1,72 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= mpcu simple alternative to mpc
+
+. /opt/mpd.config  2>/dev/null
+
+MPD_CMD=
+
+case "$1" in
+    v*)
+    MPD_CMD="volume \"$2\""
+    ;;
+    setv*)
+    MPD_CMD="setvol \"$2\""
+    ;;
+    seek)
+    MPD_CMD="seek 0 \"$2\""
+    ;;
+    mut*)
+    MPD_CMD="setvol \"0\""
+    ;;
+    repe*)
+    MPD_CMD="repeat $2"
+    ;;
+    ran*)
+    MPD_CMD="random $2"
+    ;;
+    ne*)
+    MPD_CMD="next"
+    ;;
+    pl*)
+    MPD_CMD="play"
+    ;;
+    pa*)
+    MPD_CMD="pause $2"
+    ;;
+    to*)
+    MPD_CMD="pause"
+    ;;
+    st*)
+    MPD_CMD="stop"
+    ;;
+    pr*)
+    MPD_CMD="previous"
+    ;;
+    update|rescan|seekcur)
+    MPD_CMD="$1 $2"
+    ;;
+    disableoutput|enableoutput|toggleoutput)
+    MPD_CMD="$1 $2"
+    ;;
+    decoders|config|commands|urlhandlers|notcommands|outputs|kill|ping|listneighbors|listmounts)
+    MPD_CMD="$1"
+    ;;
+    *)
+    ;;
+esac
+
+
+[ "$MPD_CMD" ] || {
+    echo "[i] undef cmd">&2
+    exit 0
+}
+
+echo "[i] send mcd $MPD_CMD">&2
+
+echo "[
+>$MPD_CMD
+<
+" | usc $SOCKET

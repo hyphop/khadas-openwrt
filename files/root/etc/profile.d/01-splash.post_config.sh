@@ -4,6 +4,13 @@
 
 ## display post config setup
 
+UPTIME=$(cat /proc/uptime)
+UPTIME=${UPTIME% *}
+
+[ -f /tmp/uptime.boot ] || {
+echo $UPTIME > /tmp/uptime.boot
+}
+
 INFO="[i] POST_CONFIG: "
 
 for a in $(cat /proc/cmdline); do
@@ -14,4 +21,6 @@ for a in $(cat /proc/cmdline); do
     esac
 done
 
+
 echo "$INFO"
+echo "[i] BOOTINFO: uptime: $UPTIME sec,  bootup: $(cat /tmp/uptime.boot)"

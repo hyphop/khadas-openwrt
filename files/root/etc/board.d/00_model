@@ -6,8 +6,8 @@
 
 board_config_update
 
-ucidef_set_board_id "vim3"
-ucidef_set_model_name "VIM3"
+ucidef_set_board_id "VIM"
+ucidef_set_model_name "VIM"
 
 board_config_flush
 

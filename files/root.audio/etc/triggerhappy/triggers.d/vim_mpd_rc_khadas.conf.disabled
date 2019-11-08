@@ -1,0 +1,18 @@
+
+# mpd controll via khadas rc
+
+KEY_LEFT	1	mpcu prev
+KEY_RIGHT	1	mpcu next
+KEY_UP	1	mpc seek +10
+KEY_DOWN	1	mpc seek -10
+KEY_ENTER	1	mpcu toggle
+KEY_ESC	1	mpcu stop
+KEY_MUTE	1	mpcu mute
+KEY_TAB	1	/opt/mpd2airplay 2>&1 >>/tmp/mpd2air.log
+KEY_PAGEUP	1	/opt/mpd_vol down
+#mpc vol -10
+KEY_PAGEDOWN	1	/opt/mpd_vol up
+#mpc vol +10
+KEY_HOME	1	/opt/mpd_playall
+KEY_POWER	1	/opt/power_off
+

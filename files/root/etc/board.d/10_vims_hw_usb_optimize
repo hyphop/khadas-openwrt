@@ -1,0 +1,75 @@
+#!/bin/sh
+
+## hyphop ##
+
+#=
+
+SOC=$(cat /sys/devices/soc0/soc_id)
+
+
+
+# set smp_affinity
+#            Binary       Hex
+#    CPU 0    0001         1
+#    CPU 1    0010         2
+#    CPU 2    0100         4
+#    CPU 3    1000         8
+
+case "$SOC" in
+    *A311D*)
+    echo "[i] optimize VIM3: $SOC">&2
+
+    # c9100000.usb, c9100000.usb
+    echo 4 > /proc/irq/24/smp_affinity   
+    # xhci-hcd:usb1
+    echo 8 > /proc/irq/25/smp_affinity   
+    ;;
+
+    *SM1*)
+    echo "[i] optimize VIM3L: $SOC">&2
+
+    # c9100000.usb, c9100000.usb
+    echo 4 > /proc/irq/22/smp_affinity   
+    # xhci-hcd:usb1
+    echo 8 > /proc/irq/23/smp_affinity   
+    ;;
+
+    VVVV*)
+    ##VIM2
+    echo "[i] optimize DEF: $SOC">&2
+
+    echo 4 > /proc/irq/33/smp_affinity
+    echo 8 > /proc/irq/34/smp_affinity
+
+    ;;
+
+esac
+
+<<END
+#VIM3
+root@openwrt-vim:/# irq_show 
+           CPU0       CPU1       CPU2       CPU3       CPU4       CPU5       
+  1:          0          0          0          0          0          0     GICv2  25 Level     vgic
+  3:      31199      34496      32240      34949      37883      38338     GICv2  30 Level     arch_timer
+  4:          0          0          0          0          0          0     GICv2  27 Level     kvm guest vtimer
+  6:        726        526          0          0          0          0     GICv2  40 Level     eth0
+  7:        256          0          0          0          0          0     GICv2  89 Edge      dw_hdmi_top_irq, ff600000.hdmi-tx
+ 11:       1350          0          0          0          0          0     GICv2 225 Edge      ttyAML0
+ 12:         10          0          0          0          0          0     GICv2 227 Edge      ff805000.i2c
+ 14:        922          0          0          0          0          0     GICv2 232 Edge      ff809000.adc
+ 15:        317          0          0          0          0          0     GICv2  35 Edge      meson
+ 17:        418          0          0          0          0          0     GICv2 221 Edge      ffe03000.sd
+ 18:       2959          0          0          0          0          0     GICv2 222 Edge      ffe05000.sd
+ 19:        123          0          0          0          0          0     GICv2 223 Edge      ffe07000.mmc
+ 24:          1          0       2137          0          0          0     GICv2  63 Level     ff400000.usb, ff400000.usb
+ 25:         90          0          0        121          0          0     GICv2  62 Level     xhci-hcd:usb1
+ 26:          3          0          0          0          0          0  meson-gpio-irqchip  26 Level     0.0:00
+IPI0:     16366      17376      13213      14003      14179      12972       Rescheduling interrupts
+IPI1:       561        550        516       1195        362        443       Function call interrupts
+IPI2:         0          0          0          0          0          0       CPU stop interrupts
+IPI3:         0          0          0          0          0          0       CPU stop (for crash dump) interrupts
+IPI4:         0          0          0          0          0          0       Timer broadcast interrupts
+IPI5:      8163      12359       7643      10496      16165      15084       IRQ work interrupts
+IPI6:         0          0          0          0          0          0       CPU wake-up interrupts
+END
+

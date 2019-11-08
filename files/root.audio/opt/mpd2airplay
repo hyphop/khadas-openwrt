@@ -1,0 +1,42 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= mpd airplay trigger
+
+#MPD=$(pgrep /usr/bin/mpd 2>/dev/null)
+SHAIRPLAY=$(pgrep /usr/bin/shairplay 2>/dev/null)
+
+MPD_AUDIO_DEV_ID=1
+
+## shairplay mode 
+
+MPD_PLAY_RESTORE=/tmp/mpd.play.restore
+
+[ "$SHAIRPLAY" ] || {
+logger -s -t "$0" "AIR MODE"
+#/etc/init.d/mpd stop
+#sleep 1
+mpc disable $MPD_AUDIO_DEV_ID
+rm $MPD_PLAY_RESTORE 1>/dev/null 2>/dev/null
+
+mpc pause-if-playing && echo 1 > $MPD_PLAY_RESTORE
+/etc/init.d/shairplay start
+
+exit 0
+
+}
+
+## mpd mode
+
+logger -s -t "$0" "MPD MODE"
+
+/etc/init.d/shairplay stop
+#sleep 1
+#/etc/init.d/mpd start
+mpc enable $MPD_AUDIO_DEV_ID
+[ -s $MPD_PLAY_RESTORE ] && mpc play
+
+exit 0
+
+

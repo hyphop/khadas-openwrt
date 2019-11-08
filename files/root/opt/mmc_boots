@@ -10,7 +10,7 @@ HELP(){ echo "ABOUT
 
 USAGE
 
-    mmc_boots [erase|forcerase|eraseparts]
+    mmc_boots [erase|forcerase|eraseparts|forceraseparts]
 
 "
 }
@@ -38,6 +38,7 @@ done
 
 [ "$boot_blank" ] || \
 CMD dd if=/dev/zero of=$(mmcdisk MMC) bs=512 seek=1 count=4 2>/dev/null
+
 
 sync
 
@@ -85,6 +86,13 @@ echo "[i] boot1_blank: $boot1_blank ($boot1_md5)">&2
 }
 
 case "$1" in
+    *erasep*)
+    ERASE
+
+    CMD dd if=/dev/zero of=$(mmcdisk MMC) bs=512 seek=0 count=1 2>/dev/null
+    CMD sync
+
+    ;;
     *erase*)
     ERASE
     ;;

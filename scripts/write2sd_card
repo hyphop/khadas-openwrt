@@ -21,9 +21,11 @@ sudo=$(which sudo)
 }
 
 for IMG in $IMGS; do
+    echo "[i] test $IMG">&2
     [ -f $IMG ] && {
 
     echo "[i] burn image $IMG > $SD">&2
+    ls -la1 $IMG
 
     $sudo dd if=$IMG bs=1M of=$SD
     sync
@@ -33,4 +35,5 @@ for IMG in $IMGS; do
     }
 done
 
+sleep 1
 

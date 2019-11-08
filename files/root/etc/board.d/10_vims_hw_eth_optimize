@@ -1,0 +1,43 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= eth optimize
+
+SOC=$(cat /sys/devices/soc0/soc_id)
+
+IFACE=eth0
+
+[ -d /sys/class/net/$IFACE ] || {
+
+    echo "[w] dev $IFACE not found">&2
+    exit 1
+
+}
+
+# set smp_affinity
+#            Binary       Hex
+#    CPU 0    0001         1
+#    CPU 1    0010         2
+#    CPU 2    0100         4
+#    CPU 3    1000         8
+
+# 
+case "$SOC" in
+    *A311D*)
+    echo "[i] optimize VIM3: $SOC">&2
+    echo 2 > /proc/irq/6/smp_affinity
+    ;;
+
+    *SM1*)
+    echo "[i] optimize VIM3L: $SOC">&2
+    echo 2 > /proc/irq/6/smp_affinity
+    ;;
+    
+    *)
+    echo "[i] optimize DEF: $SOC">&2
+    echo 2 > /proc/irq/23/smp_affinity
+
+    ;;
+
+esac

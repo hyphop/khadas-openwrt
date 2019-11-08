@@ -1,0 +1,123 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= samba openwrt perfomance test
+
+CONFIG=/etc/config/samba
+
+CMD(){
+    echo "# $@">&2
+    "$@"
+}
+
+[ -f $CONFIG.org ] || {
+    echo "[i] back up original config">&2
+    CMD mv $CONFIG $CONFIG.org
+}
+
+H="$(hostname)"
+#H=$(uci get system.@system[0].hostname)
+
+
+SHARE_NAME=tmp
+SHARE_PATH=/tmp/mounts
+
+[ -d $SHARE_PATH ] || {
+    CMD mkdir -p $SHARE_PATH
+}
+
+CMD chmod -R 0777 $SHARE_PATH
+
+FATOPTS="-o user,uid=nobody,fmask=0000,dmask=0000"
+EXTOPTS="-o user"
+
+# usb fat fs 
+for d in /dev/sd?? /dev/sd?; do
+    [ -b $d ] && {
+        CMD mkdir -p $SHARE_PATH/usb_disk 1>/dev/null 2>&1
+	CMD chmod  0777 $SHARE_PATH/usb_disk
+	CMD umount $SHARE_PATH/usb_disk 2>/dev/null
+	CMD mount $FATOPTS $d $SHARE_PATH/usb_disk && break
+    }
+done
+
+# ext emmc fs // need format ext4 by manual before
+for d in /dev/mmcblk? ; do
+    [ -b $d ] && {
+        CMD mkdir -p $SHARE_PATH/emmc_disk 1>/dev/null 2>&1
+	CMD chmod 0777 $SHARE_PATH/emmc_disk
+	CMD umount $SHARE_PATH/emmc_disk 2>/dev/null
+	CMD mount $EXTOPTS $d $SHARE_PATH/emmc_disk && break
+    }
+done
+
+echo "[i] create test config $CONF">&2
+echo "======================"
+echo "
+config samba
+        option name '$H'
+        option workgroup 'WORKGROUP'
+        option description '$H'
+	option 'interface' 'loopback lan wan'
+        option homes '0'
+
+config sambashare
+        option browseable 'yes'
+        option name '$SHARE_NAME'
+        option path '$SHARE_PATH'
+        option read_only 'no'
+        option guest_ok 'yes'
+
+" | tee $CONFIG
+
+
+EXTRA="socket options = TCP_NODELAY SO_RCVBUF=524288 SO_SNDBUF=524288 IPTOS_LOWDELAY"
+
+TPL=/etc/samba/smb.conf.template
+
+grep -q socket $TPL || {
+
+echo "[i] add extra opts
+$EXTRA >> $TPL">&2
+
+echo "		$EXTRA" >> $TPL
+
+}
+
+echo "====================="
+
+CMD /etc/init.d/samba restart
+
+TESTUSER=test
+
+echo "[i] add samba user: $TESTUSER">&2
+
+CMD useradd $TESTUSER
+echo -e "$TESTUSER\n$TESTUSER" | CMD passwd $TESTUSER 2>/dev/null 1>&2
+echo -e "$TESTUSER\n$TESTUSER" | CMD smbpasswd -s -a $TESTUSER 2>/dev/null 1>&2
+
+echo "[i] setup optimize (disable all rules) iptables">&2
+
+CMD iptables -F
+CMD iptables -t nat -F
+CMD iptables -I INPUT -j ACCEPT
+
+#iptables -t raw -I PREROUTING -p tcp --mport 80 -j NOTRACK
+#iptables -t raw -I OUTPUT -p tcp --dport 80 -j NOTRACK
+
+ips="$(ipaddr br-lan) $(ipaddr eth0) $(uci get system.@system[0].hostname).local"
+
+
+echo "[i] client mount cmd examples, user auth">&2
+
+for h in $ips; do
+echo "$ sudo mount //$h/$SHARE_NAME /mnt/test -t cifs -o user,rw,vers=1.0,username=$TESTUSER,password=$TESTUSER"
+done
+
+echo "[i] client mount cmd examples, guest mode">&2
+
+for h in $ips; do
+    echo "$ sudo mount //$h/$SHARE_NAME /mnt/test -t cifs -o user,rw,vers=1.0,user=,guest"
+done
+

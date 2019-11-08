@@ -1,0 +1,11 @@
+#!/bin/sh
+
+## hyphop ##
+
+do_init_hw() {
+
+sh /etc/board.d/10_vims_hw_init
+
+}
+
+boot_hook_add preinit_main do_init_hw

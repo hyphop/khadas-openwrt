@@ -6,15 +6,18 @@
 + wan -> eth0 (dhcp)
 + serial console enabled -> ttyAML0
 + hdmi output -> tty0
-+ web interface http://vim.lan
-+ ssh root@vim.lan -p 22
++ web interface http://openwrt-vim.local
++ web interface http://172.23.0.1.local
++ ssh root@openwrt-vim.local -p 22
++ ssh root@172.23.0.1 -p 22
 
 # LAN ip resolve to local openwrt hosts
 
-    172.23.0.1 openwrt.lan vim.lan
+    172.23.0.1 openwrt-vim.local
 
 # mDNS
 
++ openwrt-vim.local
 + OpenWrt._ssh._tcp.local
 + OpenWrt._http._tcp.local
 

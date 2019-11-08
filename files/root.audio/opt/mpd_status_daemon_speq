@@ -1,0 +1,29 @@
+#!/bin/sh
+
+## hyphop ##
+
+# system mpd status daemon
+
+CONF=/opt/mpd.config
+
+. $CONF
+
+[ "$$MPD_STATUS_DATA" ] || {
+    echo "[e] undef mpd config">&2
+    exit 1
+}
+
+S=$MPD_STATUS_DATA.sh
+
+[ -f $S ] && {
+    echo "" > $S
+}
+
+inotifywait -m -e close_write $S  | while read l; do
+
+    source "$S"
+#    echo "[i] $l">&2
+    F="$MPD_MUSIC_DIR/$mpd_file"
+    echo "[i] $mpd_volume // $F">&2
+
+done

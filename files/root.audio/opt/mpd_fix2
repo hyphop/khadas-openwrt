@@ -1,0 +1,114 @@
+#!/bin/sh
+
+## hyphop ##
+
+# mpd fix vol for dsd
+
+. /opt/mpd.config  2>/dev/null
+
+#export DEBUG=$DEBUG
+
+#cd $MPDS
+
+FIXED=
+FIXED2=
+
+VOL2=100
+
+while [ "1" ] ; do
+
+FIX=
+VOL=
+
+echo "[
+>command_list_ok_begin
+>status
+>command_list_end
+<
+" | usc $SOCKET > /tmp/mpd.state.data || {
+    echo "[i] wait mpd">&2
+    sleep 5
+    continue
+}
+
+while read l ; do
+
+    case "$l" in
+
+    volume:*|audio:*)
+        val=${l#*: }
+        var=${l/:*/}
+
+        echo "$var: $val">&2
+
+	[ "$var" = "volume" ] && {
+	    VOL=$val
+	    continue
+	}
+
+	[ "$var" = "audio" ] && {
+
+	    case $val in
+		ds*)
+		FIXED2=1
+		[ "$VOL" = "100" ] || {
+		    echo "[i] fix vol"
+		    FIX="100"
+		    FIXED=1
+		    continue
+		}
+		;;
+		*)
+		[ "$FIXED" ] && {
+		    echo "[i] fix vol back"
+		    FIXED=
+		    FIX="$VOL2"
+		    continue
+		}
+
+		[ "$FIXED2" ] || \
+		VOL2=$VOL
+
+		FIXED2=
+		
+		;;
+	    esac
+
+	}
+
+    ;;
+    esac
+
+
+done < /tmp/mpd.state.data
+
+echo "[i] $VOL $FIX // $VOL2">&2
+## wait changes
+
+[ "$FIX" ] && {
+#echo "[i] SEND FIX">&2
+
+echo "[
+>setvol \"$FIX\"
+<
+" | usc $SOCKET
+
+}
+
+
+echo "[
+>command_list_ok_begin
+>idle mixer player
+>command_list_end
+<
+" | usc $SOCKET | while read l ; do
+
+    echo "[i] $l"
+
+done
+
+#sleep 1
+
+## return
+
+done

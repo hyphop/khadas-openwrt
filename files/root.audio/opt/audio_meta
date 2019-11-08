@@ -1,0 +1,16 @@
+#!/bin/sh
+
+## hyphop ##
+
+for f in "$@"; do
+
+[ -f "$f" ] && {
+
+echo "[i] $f">&2
+
+ffmpeg \
+    -hide_banner \
+    -i "$f" -f ffmetadata - 2>/dev/null
+}
+
+done

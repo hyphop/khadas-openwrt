@@ -1,0 +1,53 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= board wifi init config
+
+IFACE=wlan0
+
+## wifi init 
+
+[ -d /sys/class/net/$IFACE ] || /opt/wifi.on
+
+for i in 1 2 3 4 5; do
+    [ -d /sys/class/net/$IFACE ] && break
+    echo "[i] $0 wait rise $IFACE">&2
+    sleep 1
+done
+
+[ -d /sys/class/net/$IFACE ] || {
+    echo "[i] may be wifi failed ! plz check it!!!">&2
+    exit 1
+}
+
+## wifi hack ap mode
+
+    echo "[i] preconfig wifi dev">&2
+
+    iw dev wlan0 set power_save off
+    iw phy phy0 interface add wlan1 type __ap
+
+## check wifi config
+
+[ -f /etc/config/wireless ] || {
+
+    echo "[i] wifi config missed">&2
+
+    OK=
+
+    grep /dev/root /proc/mounts | grep -q rw && OK=1
+    grep "overlayfs:/overlay" /proc/mounts && OK=1
+
+    [ "$OK" ] && {
+
+    echo "[i] setup wifi default config"
+
+    wifi config
+    uci set wireless.radio0.disabled=0
+    uci commit
+
+    }
+
+}
+

@@ -1,0 +1,108 @@
+#!/bin/sh
+
+## hyphop ##
+
+# system mpd status daemon
+
+CONF=/opt/mpd.config
+
+. $CONF  2>/dev/null
+
+[ "$MPD_STATUS_DATA" ] || {
+    echo "[i] plz fix config $CONF">&2
+    exit 1
+}
+
+while [ "1" ] ; do
+
+echo "[
+>command_list_ok_begin
+>status
+>currentsong
+>command_list_end
+<
+" | usc $SOCKET > $MPD_STATUS_DATA || {
+    echo "[i] wait mpd">&2
+    sleep 2
+    continue
+    }
+
+#sleep 1
+
+echo "[i] loop "
+
+[ "" ] && {
+while read l ; do
+    case "$l" in
+    *:*)
+        val=${l#*: }
+        var=${l/:*/}
+        echo "$var: $val">&2
+	;;
+    esac
+done < $MPD_STATUS_DATA
+}
+
+#mpd_Last-Modified=
+
+grep ":" $MPD_STATUS_DATA \
+    | sed -e 's/\(^.*\)-\(.*\): /mpd_\1_\2="/ig' \
+    | sed -e 's/\(^.*\): /mpd_\1="/ig' \
+    | sed -e 's/$/"/ig' \
+    > $MPD_STATUS_DATA.sh
+
+echo "[
+>command_list_ok_begin
+>idle mixer player
+>command_list_end
+<
+" | usc $SOCKET | while read l ; do
+    echo "[i] $l"
+    done
+
+# main loop
+
+done
+
+
+
+exit 0
+
+### cue 
+
+<< EOF
+
+mpd_volume="73"
+mpd_repeat="0"
+mpd_random="0"
+mpd_single="1"
+mpd_consume="0"
+mpd_playlist="2"
+mpd_playlistlength="16"
+mpd_mixrampdb="0.000000"
+mpd_state="play"
+mpd_song="1"
+mpd_songid="2"
+mpd_time="297:315"
+mpd_elapsed="296.564"
+mpd_bitrate="0"
+mpd_duration="315.000"
+mpd_audio="44100:16:2"
+mpd_nextsong="2"
+mpd_nextsongid="3"
+mpd_file="tmp/LAKKA_ROMS-9A42-00BF/music/Super_ Best_Ballads_[torrents.ru]/Super Best Ballads/Various - Super Best Ballads.ape"
+mpd_Range="282.866-597.866"
+mpd_Last_Modified="2019-10-25T11:45:00Z"
+mpd_Genre="Slow Rock"
+mpd_Date="1997"
+mpd_AlbumArtist="Various"
+mpd_Album="Super Best Ballads"
+mpd_Track="02"
+mpd_Title="R.E.M.-Everybody Hurts"
+mpd_Artist="R.E.M.-Everybody Hurts"
+mpd_Time="315"
+mpd_duration="315.000"
+mpd_Pos="1"
+mpd_Id="2"
+
+EOF

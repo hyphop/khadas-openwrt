@@ -4,20 +4,38 @@
 
 #= build demo openwrt khadas vims image
 
+## HOW TO
+
+## ./build -1|-2|-3|-3l
+
 PR=$(dirname $0)
 PA=$(realpath $PR)
 
 . $0.conf
 
+APPS=""
+
 for p in $@; do
 
     case $p in
 	-vim2|-2)
-	BOARD=vim2
+	BOARD=VIM2
+	;;
+	-3)
+	BOARD=VIM3
+	;;
+	-3l)
+	BOARD=VIM3L
 	;;
 	-vim1|-1)
-	BOARD=vim1
+	BOARD=VIM1
 	;;
+
+	'+'*)
+	A="${p#+}"
+	APPS="$APPS $A"
+	;;
+
 	*)
 	echo "[w] unknown param $p">&2
 	exit 1
@@ -26,14 +44,15 @@ for p in $@; do
 
 done
 
-echo "[i] config board: $BOARD rel : $REL">&2
+echo "[i] config board: $BOARD rel : $REL // apps:$APPS">&2
 
 IMG_EXT4_NO=1
-IMG_EXT4=/tmp/$BOARD.$LABEL.$REL.ext4.sd.img
-IMG_VFAT=/tmp/$BOARD.$LABEL.$REL.sd.img
+
+IMG_EXT4=/tmp/${BOARD}.$LABEL.$REL.$VER.ext4.sd.img
+IMG_VFAT=/tmp/${BOARD}.$LABEL.$REL.$VER.sd.img
 
 ## check
-REQUIRED="rsync fdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
+REQUIRED="rsync sfdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
 
 echo "[i] check required: $REQUIRED">&2
 
@@ -44,15 +63,7 @@ for t in $REQUIRED ; do
     }
 done
 
-FAIL(){
-    echo "[i] stop fail">&2
-    exit 1
-}
-
-CMD(){
-    echo "[#] $@">&2
-    "$@"
-}
+. $0.lib
 
 BIN="$PR/../bin"
 
@@ -144,7 +155,9 @@ echo "$OWBASE_TAR"
 
 #exit 
 
-OWTMP=/tmp/openwrt_khadas
+#OWTMP=/tmp/openwrt_khadas
+
+[ "$OWTMP" ] || FAIL OWTMP undefined
 
 rm -rf $OWTMP
 
@@ -177,7 +190,7 @@ CMD tar -xf $FW_BIN -C $OWTMP
 
 TMPMOD=/tmp/
 
-ln -s $TMPMOD $OWTMP/lib/modules/$REP_MOD
+CMD ln -s $TMPMOD $OWTMP/lib/modules/$REP_MOD
 
 [ -d $TMPMOD ] || mkdir $TMPMOD
 
@@ -200,7 +213,16 @@ CMD cp $PR/../files/user.env $OWTMP/boot/user.env
 
 #echo cmdline= > $OWTMP/boot/user.env
 
-$PR/post_install
+$PR/post_install || FAIL
+
+CMD rsync -a --inplace $PR/../files/root/* $OWTMP
+
+for a in $APPS; do
+    [ -f $PR/post_install_$a ] && {
+    echo "[i] add apps $a">&2
+    $PR/post_install_$a || FAIL
+    }
+done
 
 ## INSTALL EXTRA openwrt packages
 
@@ -208,15 +230,47 @@ DL https://github.com/hyphop/pkg/releases/download/bins/openwrt_extra_bins.tar.g
 
 CMD tar -xf $R -C $OWTMP || FAIL
 
-CMD rsync -a --inplace $PR/../files/root/* $OWTMP
+$PR/post_install.services || FAIL
+
+
+for a in $APPS; do
+    [ -f $PR/post_install_$a.services ] && {
+    echo "[i] add apps $a">&2
+    $PR/post_install_$a.services || FAIL
+    }
+done
+
+
+## FAILSAFE
+[ "$NO_FAILSAFE" ] && {
+    echo "[i] disable failsafe | preinit ">&2
+#    sed -i s/pi_preinit_no_failsafe=\"\"/pi_preinit_no_failsafe=\"1\"/ $OWTMP/lib/preinit/00_preinit.conf
+#    chmod 0644 $OWTMP/etc/preinit
+
+[ "" ] && {
+    mv $OWTMP/etc/preinit $OWTMP/etc/preinit.disabled
+
+echo "#!/bin/sh
+## hyphop ##
+#= preinit disabled
+" > $OWTMP/etc/preinit
+
+    mv $OWTMP/lib/preinit $OWTMP/lib/preinit.disabled
+}
+
+    CMD cp -a $PR/../files/preinit/* $OWTMP
+
+}
 
 # clean wrong kernel modules
 
 #CMD rm -rf $OWTMP/lib/modules/4*
 
-echo "[i] BUILD: $LABEL $REL $BOARD $(tz=date)" > $OWTMP/etc/banner.mod
+echo "[i] BUILD: $LABEL $REL $VER $BOARD $(TZ= date)" | tee $OWTMP/etc/banner.mod
 
 CMD mkimage -C none -A arm -T script -d $PR/../files/openwrt_ext4.cmd $OWTMP/s905_autoscript
+CMD cp $OWTMP/s905_autoscript  $OWTMP/aml_autoscript
+cat $PR/../files/openwrt_ext4.cmd > $OWTMP/boot.ini
 
 [ "$IMG_EXT4_NO" ] || {
 
@@ -225,17 +279,8 @@ CMD dd if=/dev/zero bs=1M count=$PART1SIZE of=$IMG_EXT4
 CMD dd if=$UBOOT_BIN of=$IMG_EXT4 conv=fsync,notrunc bs=444 count=1
 CMD dd if=$UBOOT_BIN of=$IMG_EXT4 conv=fsync,notrunc bs=512 skip=1 seek=1
 
-P1OFFSET=2048
-
-echo "n
-p
-1
-$P1OFFSET
-
-
-w
-q
-" | fdisk $IMG_EXT4 2>/dev/null || FAIL
+echo "label:dos" | sfdisk -q $IMG_EXT4 || FAIL
+echo "$P1OFFSET, " | sfdisk -q $IMG_EXT4 -a || FAIL
 
 CMD mkfs.ext4 -F -L ${LABEL} -d $OWTMP -E offset=$((P1OFFSET*512)) $IMG_EXT4 || FAIL
 CMD sync
@@ -245,10 +290,22 @@ CMD sync
 ## some triks for size
 
 CMD cp $PR/../files/user_squash.env $OWTMP/boot/user.env
+CMD cp $PR/../files/.auto* $OWTMP
+
+case $BOARD in
+    VIM3*)
+    CMD sed -i s/mmcblk0/mmcblk1/ $OWTMP/boot/user.env
+    ;;
+esac
+
 CMD cp $PR/../files/docs/* $OWTMP
 CMD cp -a $PR/../files/scripts $OWTMP
+#CMD cp $PR/../files/docs/* $OWTMP
+CMD cp $PR/../README.changes.md $OWTMP
 
-CMD dd if=/dev/zero bs=1M count=1 of=$IMG_VFAT
+echo "[i] UBOOT WRITE $UBOOT_BIN">&2
+
+CMD dd if=/dev/zero bs=512 count=$P1OFFSET of=$IMG_VFAT
 CMD dd if=$UBOOT_BIN of=$IMG_VFAT conv=fsync,notrunc bs=444 count=1
 CMD dd if=$UBOOT_BIN of=$IMG_VFAT conv=fsync,notrunc bs=512 skip=1 seek=1
 
@@ -263,25 +320,23 @@ F="${IMG_VFAT}.vfat"
 CMD mdir -i $F ::
 #CMD mdir -i $F ::boot
 cd $OWTMP
-for f in boot LABEL OPENWRT.label s905* scripts README* ; do
+for f in boot LABEL OPENWRT.label s9* aml* boot.ini scripts README* .automount.no ; do
 ls -l1 $f
 CMD mcopy -i $F $f ::$f
 done
 cd $P
 
+#echo no | mcat -i $F ::.automount.no
+
+
 cat ${IMG_VFAT}.vfat >> $IMG_VFAT
 CMD rm ${IMG_VFAT}.vfat
 
-echo "n
-p
-1
-$P1OFFSET
+CMD sync
 
-t
-e
-w
-q
-" | fdisk $IMG_VFAT 2>/dev/null || FAIL
+echo "label:dos" | sfdisk -q  $IMG_VFAT || FAIL
+echo "$P1OFFSET, " | sfdisk -q $IMG_VFAT -a || FAIL
+sfdisk -q --part-type $IMG_VFAT 1 e || FAIL
 
 [ "$COMP" = "" ] && COMP=gzip
 #[ "$CMP_BLOCK_SIZE" ] || CMP_BLOCK_SIZE=1024k
@@ -293,9 +348,15 @@ q
 CMD rm -rf $OWTMP/boot
 CMD mkdir  $OWTMP/boot
 CMD rm  $OWTMP/s9* 
+[ -f $OWTMP/boot.ini ] && \
+CMD rm  $OWTMP/boot.ini
 CMD rm  $OWTMP/LABEL
 CMD rm  $OWTMP/*.label
 CMD rm -rf $OWTMP/scripts
+
+[ $COMP = "zstd" ] && {
+    mksquashfs 2>&1 | grep -q -m1 zstd || COMP=gzip
+}
 
 CMD mksquashfs \
     "$OWTMP" \
@@ -304,11 +365,19 @@ CMD mksquashfs \
     -b $CMP_BLOCK_SIZE \
     -comp $COMP $CMP_OPTS || FAIL
 
+S=$(stat -c%s $IMG_VFAT)
+
 cat $OWTMP.squashfs >> $IMG_VFAT
 rm $OWTMP.squashfs
 
 CMD dd if=/dev/zero bs=1M count=$PART2SIZE of=$IMG_VFAT.overlay
-CMD mkfs.ext4 -F -L rootfs_data $IMG_VFAT.overlay || FAIL
+
+[ "$OVERLAY_INIT" ] && {
+    echo "[i] INIT OVERLAY as ext4">&2
+    CMD mkfs.ext4 -F -L rootfs_data $IMG_VFAT.overlay || FAIL
+}
+
+CMD sync
 
 #BS=4096
 #mkdir /tmp/_empty
@@ -321,22 +390,14 @@ CMD ls -l1 $IMG_VFAT.overlay
 #CMD dd if=/tmp/image.jffs2 of=$IMG_VFAT.overlay conv=fsync,notrunc
 
 
-CMD sync
-
 cat $IMG_VFAT.overlay >> $IMG_VFAT
 rm $IMG_VFAT.overlay
 
 #dd if=/dev/zero bs=1M count=$PART2SIZE >> $IMG_VFAT
 
-echo "n
-p
-2
+CMD sync
 
-
-n
-w
-q
-" | fdisk $IMG_VFAT
+echo "$P1OFFSET, " | sfdisk -q $IMG_VFAT -a || FAIL
 
 md5sum $IMG_VFAT > $IMG_VFAT.md5sum
 
@@ -345,16 +406,22 @@ gzip -1 -c $IMG_VFAT > $IMG_VFAT.gz
 IMG=${IMG_VFAT%.img}
 IMGZ=$IMG.zip
 
+$PR/opkg list-installed | grep -v kmod- > /tmp/openwrt-pre-installed-packages.txt
+
 [ -f $IMG ] || rm $IMGZ
 
 CMD zip -1 -j $IMGZ \
     $IMG_VFAT \
     $IMG_VFAT.md5sum \
-    $PR/../README*txt
+    $PR/../README*txt \
+    /tmp/openwrt-pre-installed-packages.txt
 
-CMD cp $PR/../README.openwrt.vims.txt $IMG.readme.txt
+cat $PR/../README.openwrt.vims.txt \
+    $PR/../README.changes.txt \
+    > $IMG.readme.txt
 
 ls -l1 $IMG*
+
 
 echo "[i] DONE">&2
 

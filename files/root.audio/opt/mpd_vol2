@@ -1,0 +1,21 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= mpd vol control
+
+grep -q DSD_ /proc/asound/card?/pcm?p/sub?/hw_params && {
+    echo "[i] ignore DSD">&2
+    exit 0
+}
+
+exec mpc volume $1
+
+exit 0
+
+. /opt/mpd.config  2>/dev/null
+
+echo "[
+>setvol \"$1\"
+<
+" | usc $SOCKET

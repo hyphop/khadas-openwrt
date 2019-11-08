@@ -31,9 +31,6 @@ CMD(){
 MMC=$(mmcdisk mmc)
 SD=$(mmcdisk sd)
 
-MMC=$(mmcdisk mmc)
-SD=$(mmcdisk sd)
-
 #213288*512+2048*512
 
 BLOCKS=$(( $(cat /sys/class/block/${SD##*/}p1/size) + $(cat /sys/class/block/${SD##*/}p2/size) + 2048 ))
@@ -68,9 +65,14 @@ echo -e "q\n" | fdisk $MMC
 MNT=/tmp/mmc1
 CMD mkdir -p $MNT
 CMD mount -o rw ${MMC}p1 $MNT
-CMD sed -i 's/mmcblk0p2/mmcblk1p2/' $MNT/boot/user.env
+CMD sed -i "s/${SD##*/}/${MMC##*/}/" $MNT/boot/user.env
 CMD cat $MNT/boot/user.env
 CMD umount $MNT
+
+#sfdisk $(mmcdisk mmc ) --delete 2
+#echo "4096,+4G" sfdisk $(mmcdisk mmc) -a
+
+echo "[i] RUN `resize2fs /dev/loop0` after reboot for resize fs">&2
 
 echo "[i] DONE !! plz remove sd card and reboot from eMMC">&2
 

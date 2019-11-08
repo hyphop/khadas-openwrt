@@ -1,0 +1,10 @@
+## usb modems
+
+option
+usbserial
+usb_wwan
+cdc_ether
+usbnet
+cdc_ncm
+cdc_eem
+cdc_acm

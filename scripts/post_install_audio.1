@@ -1,0 +1,36 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= post install audio
+
+PR=$(dirname $0)
+opkg=$PR/opkg
+
+NAME=${0#*post_install_}
+
+. $PR/build.conf
+. $PR/build.lib
+
+echo "[i] add $NAME">&2
+
+CMD cp $PR/../files/splash/splash-tone.bmp.gz $OWTMP/boot/splash.bmp.gz
+
+[ -d $PR/../files/extra/bin ] && \
+CMD cp -a $PR/../files/extra/bin $OWTMP/usr || FAIL
+
+#$opkg --force-removal-of-dependent-packages remove libavahi-nodbus-support avahi-nodbus-daemon 
+
+$opkg install \
+    opus-tools \
+    mpd-mini libffmpeg-full ffmpeg mpc alsa-utils shairplay luci-app-shairplay \
+#    ffmpeg
+
+$opkg install $PR/../bin/opkg-extra/ympd_*.ipk
+
+[ -d $PR/../files/root.$NAME ] && {
+
+    CMD rsync -a --inplace $PR/../files/root.$NAME/* $OWTMP
+
+}
+

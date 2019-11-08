@@ -1,0 +1,31 @@
+#
+## mpd controll via  rc scan codes
+#
+#################
+### rc khadas 
+#################
+# power
+# EV_MSC	20	command
+# up
+# EV_MSC	3	command
+# left
+# EV_MSC	14	command
+# enter
+# EV_MSC	7	command
+# right
+# EV_MSC	26	command
+# down
+# EV_MSC	2	command
+# back
+# EV_MSC	1	command
+# mouse
+# EV_MSC	91	command
+# menu
+# EV_MSC	19	command
+# voldown
+# EV_MSC	88	command
+# volup
+# EV_MSC	11	command
+# volup
+# EV_MSC	72	command
+################

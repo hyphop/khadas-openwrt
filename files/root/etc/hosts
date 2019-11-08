@@ -5,4 +5,7 @@
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
-172.23.0.1 openwrt vim openwrt.lan vim.lan
+## may be need remove it ;) #####
+172.23.0.1 openwrt vim openwrt.lan vim.lan openwrt.local OpenWrt.local
+172.23.0.1 openwrt-vim openwrt-vim.local
+#################################

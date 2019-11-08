@@ -1,0 +1,10 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= rc.local.d script
+
+logger -t "$0" "$@"
+
+/etc/init.d/ifmonitor start
+/etc/init.d/fan start

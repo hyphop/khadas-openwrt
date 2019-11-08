@@ -1,0 +1,7 @@
+#!/bin/sh
+
+## hyphop ##
+
+cat /proc/asound/pcm
+echo "=="
+grep "" /proc/asound/card?/pcm??/sub?/hw_params | grep -v closed

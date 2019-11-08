@@ -1,13 +1,13 @@
-# Khadas OpenWrt Vim1
+# Khadas OpenWrt VIMs
 
 openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim
 
-![Khadas vims openwrt](pics/khadas_vim1_openwrt.jpg)
+![Khadas VIM openwrt](pics/khadas_vim1_openwrt.jpg)
 
 ## supported Boards
 
-+ khadas vim1 - OK
-+ khadas vim2 - WIP - test mode
++ khadas VIM1 - OK
++ khadas VIM2 - OK
 
 ## Download Images
 
@@ -21,12 +21,13 @@ openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim
 + wan -> eth0 (dhcp)
 + serial console enabled -> ttyAML0
 + hdmi output -> tty0
-+ web interface http://vim.lan or http://172.23.0.1/
-+ ssh `root@vim.lan -p 22` or `root@172.23.0.1 -p 22`
++ web luci      http://openwrt-vim.local or http://172.23.0.1/
++ web-terminal  http://openwrt-vim.local:8088/ or http://172.23.0.1:8088/
++ ssh `root@openwrt-vim.local -p 22` or `root@172.23.0.1 -p 22`
 
 # LAN ip resolve to local openwrt hosts
 
-    172.23.0.1 openwrt.lan vim.lan
+    172.23.0.1 openwrt-vim.local
 
 # mDNS
 
@@ -38,7 +39,7 @@ openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim
 + blink led mode started if openwrt was successful loaded
 + setup root password and wifi password at fist after installation!
 + usb net connection enabled by default in bridge mode with LAN
-+ if vim device connected by usb cable to your pc u can have network access to LAN via usb-net without any extra configuration
++ if VIM device connected by usb cable to your pc u can have network access to LAN via usb-net without any extra configuration
 
 ## Install
 
@@ -114,3 +115,4 @@ NOTE: All previous EMMC data will be lost!!!
 ## Build by
 
     ## hyphop ##
+

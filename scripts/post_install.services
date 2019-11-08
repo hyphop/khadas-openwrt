@@ -1,0 +1,11 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= post install base
+
+PR=$(dirname $0)
+
+$PR/service enable fan ifmonitor ttyd_terminal samba triggerhappy
+
+exit 0

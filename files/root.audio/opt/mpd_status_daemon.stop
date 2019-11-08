@@ -1,0 +1,6 @@
+#!/bin/sh
+
+## hyphop ##
+
+pkill -f ${0%.stop}
+

@@ -1,0 +1,42 @@
+#!/bin/sh
+
+## hyphop ##
+
+DEVIN=plughw:CARD=Loopback,DEV=1
+
+F=15
+
+W=1024
+H=120
+
+FILTER=showspectrum=s=${W}x$H:color=intensity:slide=replace:scale=cbrt
+
+X=0
+Y=800
+
+echo "$FILTER"
+
+show(){
+ffmpeg \
+    -hide_banner \
+    -re \
+    -r $F \
+    -f alsa -ac 2 -i "$DEVIN" \
+    -lavfi "$FILTER" \
+    -r $F \
+    -pix_fmt rgb32 -f fbdev -yoffset $Y -xoffset $X /dev/fb0
+}
+
+
+[ "$1" ] && {
+
+    while [ "1" ] ; do
+
+	show
+	sleep 1
+
+    done
+    
+}
+
+show

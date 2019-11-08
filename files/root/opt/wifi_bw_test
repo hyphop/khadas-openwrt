@@ -1,0 +1,23 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= simple bw network test
+
+PORT=12345
+INTERVAL=1
+
+TEST(){
+
+IP=$(ipaddr br-lan)
+
+echo "[i] simple bw network test #$ pv -i $INTERVAL /dev/zero | netcat -l -p $PORT">&2
+echo "[i] client side runs .................">&2
+echo "[i] nc $IP $PORT >/dev/null">&2
+echo "[i] nc $IP $PORT | pv > /dev/null">&2
+
+pv -i $INTERVAL /dev/zero | netcat -l -p $PORT
+
+}
+
+TEST

@@ -1,0 +1,44 @@
+#!/bin/sh
+
+## hyphop ##
+
+DEVIN=plughw:CARD=Loopback,DEV=1
+
+F=15
+
+W=1280
+H=120
+
+FILTER=showwaves=r=$F:s=${W}x${H}:scale=sqrt:mode=cline
+
+X=0
+Y=800
+
+echo "$FILTER"
+
+show(){
+
+arecord -fcd  -D $DEVIN |
+
+ffmpeg \
+    -hide_banner \
+    -re \
+    -f wav -i - \
+    -lavfi "$FILTER" \
+    -pix_fmt rgb32 -f fbdev -yoffset $Y -xoffset $X /dev/fb0
+
+}
+
+
+[ "$1" ] && {
+
+    while [ "1" ] ; do
+
+	show
+	sleep 1
+
+    done
+    
+}
+
+show

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+## hyphop ##
+
+#usbreset 20b1:000a
+usbreset "Khadas Tone Control"

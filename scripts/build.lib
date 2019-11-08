@@ -1,0 +1,16 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= build lib
+
+FAIL(){
+    echo "[i] stop fail $@">&2
+    exit 1
+}
+
+CMD(){
+    echo "[#] $@">&2
+    "$@"
+}
+

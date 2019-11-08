@@ -1,0 +1,24 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= test streams for diff codecs
+
+mpc stop
+mpc clear
+
+mpc add http://ai-radio.org/128.ogg
+mpc add http://ai-radio.org/320.opus
+mpc add http://ai-radio.org/48.aacp
+mpc add http://ai-radio.org/192.mp3
+mpc add http://ai-radio.org/44.flac
+
+mpc add https://ai-radio.org/128.ogg
+mpc add https://ai-radio.org/320.opus
+mpc add https://ai-radio.org/48.aacp
+mpc add https://ai-radio.org/192.mp3
+mpc add https://ai-radio.org/44.flac
+
+
+mpc play
+

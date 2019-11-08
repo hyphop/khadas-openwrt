@@ -1,0 +1,13 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= mount fat with wide perms
+
+CMD(){
+echo "# $@"
+"$@"
+}
+
+CMD mount -o user,uid=nobody,fmask=0000,dmask=0000 $@
+

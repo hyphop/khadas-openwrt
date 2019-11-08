@@ -1,0 +1,9 @@
+#!/bin/sh
+
+## hyphop ##
+
+# system mpd status daemon
+
+CONF=/opt/mpd.config
+
+$MPD_STATUS_DATA

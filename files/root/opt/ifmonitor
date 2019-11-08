@@ -1,0 +1,116 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= net interface monitor daemon + dhcp renew if down or lost signal
+
+#DEV=eth0
+
+NAME="$(basename $0)"
+
+#PID=$$
+
+DAEMON() {
+
+## ugly way get correct pid))))
+PIDF=/var/run/$NAME-$DEV.pid
+
+#cat > $PID < /proc/self/stat
+#pid=$(cat $PID)
+#for pid in $pid; do
+#    break
+#done
+
+pid=$(cut -d' ' -f4 < /proc/self/stat)
+
+echo $pid > $PIDF
+
+echo "[i] start monitor for $DEV as $pid // $PIDF">&2
+
+while [ "1" ] ;do
+
+D=/sys/class/net/$DEV
+
+[ -d $D ] || {
+    sleep 2
+    continue
+}
+
+inotifywait -m -e close_nowrite $D 2>/dev/null | while read e; do
+
+	case $e in
+		*\ carrier)
+		logger -t $0 "[i] event $e"
+		# dhcp renew
+		#/sys/class/net/eth0 CLOSE_NOWRITE,CLOSE carrier
+		grep up $D/operstate && pkill -USR1 -f "$DEV.pid"
+		;;
+	esac
+
+	sleep 1
+
+done
+
+    sleep 1
+
+done
+
+}
+
+ACTION=start
+
+for c in $@; do
+
+case "$c" in
+    stop|off|0|kill)
+    ACTION=stop
+    ;;
+    eth*|wlan*|usb*|tun*)
+	DEV=$c
+    ;;
+    *)
+    [ -f /sys/class/net/$c ] && {
+	DEV=$c
+    }
+    ;;
+esac
+
+done
+
+[ "$DEV" ] || {
+    echo "[e] undef device">&2
+    exit 1
+}
+
+PIDF=/var/run/$NAME-$DEV.pid
+
+CMD(){
+    echo "[#] $@">&2
+    "$@"
+}
+
+[ "$ACTION" = "stop" ] && {
+    rm $PID 1>/dev/null 2>/dev/null
+    CMD pkill -f "/sys/class/net/$DEV"
+    CMD pkill -f "ifmonitor $DEV"
+    exit
+}
+
+[ -f "$PIDF" ] && {
+
+    PID="$(cat $PIDF)"
+
+    [ -d /proc/$PID ] && {
+	echo "[e] monitor started already as $PID <= $PIDF">&2
+	exit 1
+    }
+
+    rm $PIDF
+
+}
+
+DAEMON
+
+#DAEMON &
+#>/dev/null 2>/dev/null < /dev/null
+

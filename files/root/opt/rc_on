@@ -6,22 +6,22 @@
 
 IRK=$(which ir-keytable)
 
-MODS=" ir-nec-decoder rc-core meson-ir"
+MODS=" ir_nec_decoder rc_core meson_ir"
 
-[ "$IRK" ] || {
-    MODS="rc-krescue $MODS"
-}
+#[ "$IRK" ] || {
+#    MODS="rc-krescue $MODS"
+#}
 
-LOG=/tmp/rc.log
+#LOG=/tmp/rc.log
 
 CMD(){
-    echo "$0 [#] $@" >>$LOG
-    $@ >>$LOG
+    echo "$0 [#] $@" #>>$LOG
+    $@ #>>$LOG
 }
 
 while [ "1" ]; do
     [ -d /sys/module ] && break
-    echo "[i] $0 wait sys init">> $LOG
+    echo "[i] $0 wait sys init"
     sleep 1
 done
 
@@ -29,26 +29,26 @@ for m in $MODS; do
     [ -d /sys/module/$m ] || CMD modprobe $m
 done
 
+
 [ -f /sys/class/rc/rc0/protocols ] || {
-
-    echo "[w] rc not loaded ">>$LOG
+    echo "[w] $0 rc not loaded " #>>$LOG
 }
-
 
 for t in 1 2 3 4 5; do
     cat /sys/class/rc/rc0/protocols && break
-	echo "[i] wait loading $t">>$LOG
+	echo "[i] $0 wait loading $t" #>>$LOG
 #	exit 1
     sleep 1
 done
 
-echo nec > /sys/class/rc/rc0/protocols
 
+echo nec > /sys/class/rc/rc0/protocols
 
 cat /sys/class/rc/rc?/input?/uevent
 
 [ "$IRK" ] && {
     CMD $IRK -c
-    CMD $IRK -w /etc/ir-keytable.conf
-
+    [ -f /etc/ir-keytable.conf ] && {
+	CMD $IRK -w /etc/ir-keytable.conf
+    }
 }

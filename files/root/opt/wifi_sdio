@@ -2,6 +2,8 @@
 
 ## hyphop ##
 
+dtc /sys/firmware/fdt 2>/dev/null | grep -m1 mmc@ -A30
+
 for s in /sys/class/mmc_host/mmc*; do
 
     type="$(cat $s/mmc*/type)"

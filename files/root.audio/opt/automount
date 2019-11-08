@@ -1,0 +1,119 @@
+#!/bin/sh
+
+## hyphop ##
+CONF=/etc/automount.conf
+CONF2=/tmp/automount.conf
+
+
+[ -f "$CONF" ] && {
+    . $CONF
+}
+
+[ -f "$CONF2" ] && {
+    . $CONF2
+}
+
+[ "$MNT2" ] || MNT2=/tmp/mounts
+
+state=off
+[ "$OFF" ] && state=off
+[ "$ON" ] && state=on
+[ "$OPTS" ] && OPTS="-o ro"
+
+
+case "$1" in
+
+    on|e*)
+    echo "[i] $0 on">&2
+    OLD=$(grep -v "OFF=" $CONF 2>/dev/null)
+    echo "$OLD
+ON=1" > $CONF
+    ;;
+
+    off|d*)
+    echo "[i] $0 off">&2
+    OLD=$(grep -v "ON=" $CONF 2>/dev/null)
+    echo "$OLD
+OFF=1" > $CONF
+    ;;
+
+    c*)
+	echo "# source $CONF">&2
+	cat $CONF  2>/dev/null
+	echo "# source $CONF2">&2
+	cat $CONF2 2>/dev/null
+	exit 0
+    ;;
+
+
+    m)
+
+	case "$2" in
+	    /dev/*)
+	    [ -b $2 ] && {
+		DE=${2#/dev/}
+		[ -d "$MNT2/$DEV" ] || mkdir -p $MNT2/$DE
+		cmd="mount $OPTS $2 $MNT2/$DE"
+		echo "# $cmd">&2
+		$cmd
+	    }
+	    ;;
+	    LABEL|label)
+		B=`blkid | grep LABEL=\"$3\"`
+		DEV=${B/: */}
+		DE=${DEV#/dev/}
+		echo "[i] find: $B">&2
+		cmd="mount $OPTS $DEV $MNT2/$DE"
+		echo "# $cmd">&2
+		$cmd
+	    ;;
+	esac
+
+	;;
+    
+    u*)
+
+	for m in $(egrep -o /tmp/mounts/\\S+ /proc/mounts); do
+	    echo "[i] umount $m">&2
+	    umount $m || {
+		echo "[i] try force umount $m">&2
+		    lsof | grep $m | while read l ; do
+			for pp in $l; do
+			    break
+			done
+			echo "# $pp | $l">&2
+			kill $pp
+			
+			for t in 1 2 3 4 5; do
+			    [ -d /proc/$pp ] || break
+			    sleep 1
+			    [ -d /proc/$pp ] && kill -9 $pp
+			done
+		    done
+		
+		    umount $m
+		
+	    }
+	done
+
+	exit 0
+    ;;
+
+    m*)
+	grep $MNT2 /proc/mounts
+	exit 0
+    ;;
+
+    l*)
+	tail /tmp/automount.log
+	exit 0
+    ;;
+
+
+    ""|status)
+	echo "$state"
+    ;;
+
+    *)
+    echo "[i] USAGE $NAME  [on|off|status|config|umount|mounts]">&2
+esac

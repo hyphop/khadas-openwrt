@@ -1,0 +1,9 @@
+#!/bin/sh
+
+## hyphop ##
+
+/etc/init.d/mpd stop
+
+play.events info
+
+poweroff

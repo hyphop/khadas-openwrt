@@ -1,0 +1,16 @@
+#!/bin/sh
+
+## hyphop ##
+
+. /opt/mpd.config
+
+echo "# usb $SOCKET">&2
+
+echo "[
+>command_list_ok_begin
+>status
+>currentsong
+>command_list_end
+<
+" | usc $SOCKET
+

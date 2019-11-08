@@ -2,11 +2,13 @@
 
 ## hyphop ##
 
+#= wifi modules loader
+
 DEV=wlan0
 
 for m in cfg80211; do
     [ -d /sys/module/$m ] || {
-	echo "[i] load $m">&2
+#	echo "[i] load $m">&2
 	insmod $m
     }
 done
@@ -14,9 +16,9 @@ done
 #for m in dhd; do
 for m in brcmutil brcmfmac; do
     [ -d /sys/module/$m ] || {
-	echo "[i] load $m">&2
-	insmod $m ap_mode=2
+#	echo "[i] load $m">&2
+	insmod $m
+#	insmod $m ap_mode=2
     }
 done
-
 

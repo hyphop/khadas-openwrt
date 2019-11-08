@@ -1,18 +1,32 @@
 #!/bin/sh
+
 [ -e /tmp/.failsafe ] && export FAILSAFE=1
 
 [ -f /etc/banner ] && cat /etc/banner
 #[ -n "$FAILSAFE" ] && cat /etc/banner.failsafe
 
-HOSTNAME=$(cat /proc/sys/kernel/hostname)
-
-#echo "[i] HOSTNAME $HOSTNAME"
+HOSTNAME="$(cat /proc/sys/kernel/hostname)"
 
 case "$HOSTNAME" in
-    "(none)")
-    cat /etc/hostname > /proc/sys/kernel/hostname
+    "(none)"|"")
+     H=$(grep -m1 hostname /etc/config/system)
+     H=${H#*\'}
+     H=${H%\'*}
+     H=${H#*\"}
+     H=${H%\"*}
+     [ "$H" ] && {
+	export HOSTNAME=$H
+	echo "$HOSTNAME"  > /proc/sys/kernel/hostname
+     }
+     [ "$H" ] || {
+	H=$(cat /etc/hostname)
+	export HOSTNAME=$H
+	echo "$HOSTNAME"  > /proc/sys/kernel/hostname
+     }
+
     ;;
 esac
+
 
 export PATH="/opt:/tmp/opt:/usr/sbin:/usr/bin:/sbin:/bin"
 export HOME=$(grep -e "^${USER:-root}:" /etc/passwd | cut -d ":" -f 6)

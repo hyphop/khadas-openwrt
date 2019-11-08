@@ -53,6 +53,8 @@ echo "[i] new wifi confi SID: $SID | PASS: $PASS"
 
 CMD uci set "wireless.$D.ssid=$SID"
 
+CMD uci set "wireless.radio0.disabled="
+
 [ "$PASS" ] || {
     echo "[i] password not set">&2
     CMD uci set "wireless.$D.key="

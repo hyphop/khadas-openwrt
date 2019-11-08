@@ -1,0 +1,20 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= post install volumio
+#= WIP
+#= BROKEN
+
+PR=$(dirname $0)
+opkg=$PR/opkg
+
+. $RP/build.conf
+
+echo "[i] $0">&2
+
+$opkg install \
+    git git-http \
+    node node-npm 
+
+# ..........

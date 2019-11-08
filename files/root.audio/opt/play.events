@@ -1,0 +1,12 @@
+#!/bin/sh
+
+## hyphop ##
+
+
+for F in /usr/share/sound/events/$1*.opus; do
+
+echo "[i] $1 => $F">&2
+[ -f "$F" ] && play.opus "$F"
+
+done
+

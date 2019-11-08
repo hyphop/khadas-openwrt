@@ -1,0 +1,6 @@
+#!/bin/sh
+
+## hyphop ##
+
+ffmpeg -t 5 -i "$1" -lavfi showspectrumpic=s=800x400:mode=separate -s 1920x1080 -f rawvideo -pix_fmt rgb32 - > /dev/fb0
+

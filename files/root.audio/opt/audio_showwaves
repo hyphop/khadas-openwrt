@@ -1,0 +1,84 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= show waves realtime from audio loop
+
+. /opt/mpd.config
+
+F=20
+W=1280
+H=120
+X=0
+Y=800
+
+FILTER="showwaves=r=$F:s=${W}x${H}:scale=sqrt:mode=cline:colors=green|blue"
+BLANK=color=s=${W}x${H}
+
+echo "$FILTER"
+
+CMD(){
+    echo "$@"
+    "$@"
+}
+
+show(){
+
+pkill -f showwaves=
+mpc enable ALSA_loop
+
+CMD ffmpeg \
+    -hide_banner \
+    -re \
+    -f alsa -ac 2 -i "$LOOP_IN" \
+    -lavfi "$FILTER" \
+    -pix_fmt rgb32 -f fbdev -yoffset $Y -xoffset $X /dev/fb0
+
+}
+
+clean(){
+
+CMD ffmpeg \
+    -hide_banner \
+    -f lavfi -i "$BLANK" \
+    -frames 1 \
+    -pix_fmt rgb32 -f fbdev -yoffset $Y -xoffset $X /dev/fb0
+
+}
+
+case "$1" in
+    stop)
+	echo "[i] STOP">&2
+	pkill -f showwaves=
+	clean
+	pkill showwaves
+    ;;
+    bg)
+	echo "[i] BG MODE">&2
+	show 1>/dev/null 2>/dev/null </dev/null &
+	exit 
+    ;;
+    loop)
+	echo "[i] LOOP MODE">&2
+    while [ "1" ] ; do
+	show
+	sleep 1
+    done
+    ;;
+    bgloop)
+	echo "[i] BG LOOP MODE">&2
+    while [ "1" ] ; do
+	show 1>/dev/null 2>/dev/null </dev/null
+	sleep 1
+    done
+    ;;
+    "")
+    show
+    ;;
+    *)
+
+    echo "[i] undef mode">&2
+
+esac
+
+

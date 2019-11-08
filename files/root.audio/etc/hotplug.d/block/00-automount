@@ -1,0 +1,262 @@
+#!/bin/sh
+
+## hyphop ##
+
+for CONF in /etc/automount.conf /tmp/automount.conf; do
+    [ -f "$CONF" ] && {
+	. $CONF
+    }
+done
+
+
+
+
+#fatopts
+#-o user,uid=nobody,fmask=0000,dmask=0000
+
+[ "$OPTS" ] || OPTS="-o ro"
+#[ "$BG" ] || BG=
+#[ "$AUDIOD" ] || AUDIOD="/opt/audio.daemon"
+[ "$KILL" ] || KILL=1
+[ "$MNT2" ] || MNT2="/tmp/mounts"
+[ "$NOMARK" ] || NOMARK=.automount.no
+
+LOG=/tmp/automount.log
+
+#DATE=`date`
+#echo "==$DATE" >> $LOG
+#echo "ARGS: $@" >> $LOG
+#env >> $LOG
+
+#cat /sys/block/mmcblk1/size
+#cat /sys/block/mmcblk1/force_ro
+VARS="$ACTION	$SUBSYSTEM $DEVTYPE $DEVNAME"
+
+
+case $DEVNAME in
+	mmcblk?boot*)
+	exit 0
+	;;
+	sd*)
+	# add usb
+	;;
+	mmcblk*)
+	# add usb
+	;;
+	*)
+	exit 0
+esac
+
+log() {
+	echo "[$SEQNUM] $VARS $@" >> $LOG
+}
+
+
+export PATH=/tmp/opt:/tmp/bin:/tmp/sbin:/tmp/usr/bin:/opt:/usr/sbin:/usr/bin:/sbin:/bin
+
+#echo "ARGS: $@ / $VARS" >> $LOG
+
+
+[ "$ON" ] || OFF=1
+[ "$OFF" ] && {
+    log "DISABLED by $CONF"
+    exit 0
+}
+
+DEVNAME2=$DEVNAME
+
+E=/tmp/automount.export
+blkid /dev/$DEVNAME -o export > $E
+[ -s $E ] && \
+. $E
+
+DEV=$DEVNAME
+DEVNAME=$DEVNAME2
+
+#DEVNAME=/dev/mmcblk1p1
+#SEC_TYPE=msdos
+#LABEL=OW_BOOT
+#UUID=DEAD-BEEF
+#TYPE=vfat
+#PARTUUID=3b331017-01
+
+[ "$nofs" ] && {
+[ "$TYPE" ] && {
+for t in $nofs; do
+    [ "$t" = "$TYPE" ] && {
+    log FS "$DEV ignore fs $TYPE // $nofs"
+    exit 0
+    }
+done
+}
+}
+
+MNT=
+
+[ "$LABEL" ] && {
+    MNT="$MNT2/$LABEL-$UUID"
+}
+
+[ "$UUID" ] && {
+    [ "$MNT" ] || \
+	MNT="$MNT2/$UUID-$TYPE"
+}
+
+[ "$MNT" ] || \
+    MNT="$MNT2/$DEVNAME-$TYPE"
+
+#echo "!!: ADD / $VARS" >> $LOG
+
+[ "$ACTION" = "add" ] && {
+
+	
+	[ -f /opt/modules.fs.load ] && \
+	    /opt/modules.fs.load
+	
+	FS="D:$DEVNAME L:$LABEL U:$UUID T:$TYPE"
+#	FS="$(blkid /dev/$DEVNAME)"
+	
+	[ "$DEVTYPE" = "disk" ] && {
+		SIZE="$(cat /sys/block/$DEVNAME/size)"
+		SIZE=$((SIZE*512))
+		RO="$(cat /sys/block/$DEVNAME/force_ro)"
+		TYPE="$(cat /sys/block/$DEVNAME/device/type)"
+		log $TYPE size $SIZE ro $RO FS $FS
+	}
+	[ "$DEVTYPE" = "disk" ] || {
+		log FS "$FS"
+	}
+
+		[ -b /dev/${DEVNAME}1 ] && {
+		    log FS "skip $DEVNAME"
+		    return
+		}
+
+	
+	grep "/$DEVNAME " /proc/mounts || {
+		[ -d $MNT ] || mkdir -p $MNT
+
+		[ "$BG" ] && {
+			log BG MOUNT /dev/$DEVNAME $MNT
+			mount $OPTS /dev/$DEVNAME $MNT &
+			exit 0
+		}
+		[ "$BG" ] || {
+			mount $OPTS /dev/$DEVNAME $MNT && {
+
+				[ -f $MNT/$NOMARK ] && {
+				    log FS "$DEV ignore $NOMARK"
+				    umount $MNT
+				    exit 0
+				}
+
+				log MOUNTED $(grep "/$DEVNAME " /proc/mount)
+
+		for s in /etc/automount.d/*.sh; do
+		    [ -f "$s" ] && {
+		        log "SCRIPT $s $ACTION $MNT"
+			sh "$s" "$ACTION" "$MNT" >> $LOG
+		    }
+		done
+
+#				[ "$AUDIOD" ] && {
+#					$AUDIOD MOUNT $MNT $DEVNAME 1>/dev/null 2>/dev/null &
+#				}
+				exit 0
+			}
+			log MOUNT ERROR $MNT
+		}
+
+		exit 1
+	}
+}
+
+[ "$ACTION" = "remove" ] && {
+
+	MNT3=$(grep "/$DEVNAME " /proc/mounts)
+
+	MNT=${MNT3#* }
+	MNT=${MNT%% *}
+
+
+#	/tmp/mounts/videos-1E35-0CF2
+
+
+	[ "$MNT" ] && {
+
+
+
+		[ "$BG" ] && {
+			log BG UMOUNT /dev/$DEVNAME $MNT
+			umount $MNT &
+			exit 0
+		}
+
+#		[ "$BG" ] || {
+
+#		[ "$AUDIOD" ] && {
+#			$AUDIOD UMOUNT $MNT $DEVNAME 1>/dev/null 2>/dev/null
+#			sleep 0.2
+#		}
+
+		[ "$KILL" ] && {
+
+		NEED_TO_KILL=`lsof | grep $MNT | egrep -o ^\\d+`
+
+		[ "$NEED_TO_KILL" ] && {
+		echo "[i] KILL $NEED_TO_KILL" >> $LOG
+
+		for p in $NEED_TO_KILL; do
+			kill $p
+		done
+
+		}
+
+		}
+
+		for s in /etc/automount.d/*.sh; do
+		    [ -f "$s" ] && {
+		        log "SCRIPT $s $ACTION $MNT"
+			sh "$s" "$ACTION" "$MNT" >> $LOG
+		    }
+		done
+
+		umount -f $MNT	|| {
+			log UMOUNT ERROR $MNT
+			exit 1
+		}
+
+		log UMOUNT $MNT
+
+#		}
+		exit 0
+	}
+
+	log
+}
+
+## ADD
+##
+## ARGS: block
+## DEVNAME=mmcblk0p1
+## ACTION=add
+## HOTPLUG_TYPE=block
+## SUBSYSTEM=block
+## DEVICENAME=mmcblk0p1
+# PARTN=1
+# PWD=/
+# DEVTYPE=partition
+# 
+# DEVTYPE=disk
+
+
+## REMOVE
+## ACTION=remove
+
+
+#/sys/block/mmcblk0/device/serial:0x00003a00
+#/sys/block/mmcblk0/device/type:SD
+#/sys/block/mmcblk0/device/uevent:DRIVER=mmcblk
+#/sys/block/mmcblk0/device/uevent:MMC_TYPE=SD
+#/sys/block/mmcblk0/device/uevent:MMC_NAME=
+#/sys/block/mmcblk0/device/uevent:MODALIAS=mmc:block

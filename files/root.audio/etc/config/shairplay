@@ -1,0 +1,7 @@
+config shairplay 'main'
+	option respawn '1'
+	option apname 'AirPlay'
+	option port '5000'
+	option disabled '0'
+	option ao_driver 'alsa'
+

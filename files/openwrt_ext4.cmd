@@ -6,6 +6,8 @@
 
 ## PREPARE
 
+  BOOT_DELAY=2
+
   LINUX_ADDR=0x1080000
   IMAGE_ADDR=0x1080000
 
@@ -47,9 +49,12 @@ test "$hwver" = "" && setenv Cdtb /boot/krescue-vim1.dtb
 test "$hwver" = "VIM1.V12" && setenv Cdtb /boot/krescue-vim1.dtb
 test "$hwver" = "VIM1.V13" && setenv Cdtb /boot/krescue-vim1.dtb
 test "$hwver" = "VIM1.V14" && setenv Cdtb /boot/krescue-vim1.dtb
+test "$hwver" = "VIM2.V12" && setenv Cdtb /boot/krescue-vim2.dtb
 test "$hwver" = "VIM2.V14" && setenv Cdtb /boot/krescue-vim2.dtb
 test "$hwver" = "VIM3.V10" && setenv Cdtb /boot/krescue-vim3-s922x.dtb
 test "$hwver" = "VIM3.V11" && setenv Cdtb /boot/krescue-vim3-a311d.dtb
+test "$hwver" = "VIM3.V12" && setenv Cdtb /boot/krescue-vim3l-s905d3.dtb
+test "$hwver" = "VIM3.V12" && test "$maxcpus" = "6" && setenv Cdtb /boot/krescue-vim3-a311d.dtb
 
 ##############################################################
 
@@ -99,6 +104,7 @@ setenv bootargs "${bootargs} console=tty0 console=ttyAML0,115200n8 console=ttyS0
 
 setenv bootargs "${bootargs} dtb=$Cdtb"
 setenv bootargs "${bootargs} booted=$BOOTED hwver=$hwver ${cmdline}"
+setenv bootargs "${bootargs} vt.default_utf8=1"
 
 #echo "activate emmc before run"
 #mmc dev 1
@@ -107,8 +113,8 @@ setenv bootargs "${bootargs} booted=$BOOTED hwver=$hwver ${cmdline}"
 echo "[i] bootargs: $bootargs"
 echo "[i] bootcmd:  $bootcmd"
 
-echo "[i] sleep 2 sec Ctrl+C for break boot"
-sleep 2
+echo "[i] sleep $BOOT_DELAY sec Ctrl+C for break boot"
+sleep $BOOT_DELAY
 
 echo bootm $UIMAGE_ADDR - $DTB_ADDR
 bootm $UIMAGE_ADDR - $DTB_ADDR
