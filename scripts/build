@@ -63,6 +63,9 @@ for t in $REQUIRED ; do
     }
 done
 
+echo "[i] check sfdisk">&2
+sfdisk -v
+
 . $0.lib
 
 BIN="$PR/../bin"
@@ -338,8 +341,8 @@ SFDISK_ARGS=-q
 SFDISK_ARGS=
 
 echo "[i] pake parts">&2
-echo "label:dos | sfdisk $SFDISK_ARGS  $IMG_VFAT ">&2
-echo "label:dos" | sfdisk $SFDISK_ARGS  $IMG_VFAT #|| FAIL
+echo "label:dos | sfdisk $SFDISK_ARGS $IMG_VFAT ">&2
+echo "label:dos" | sfdisk $SFDISK_ARGS $IMG_VFAT #|| FAIL
 
 echo "[i] pake part 1">&2
 echo "$P1OFFSET,  | sfdisk $SFDISK_ARGS $IMG_VFAT -a">&2
