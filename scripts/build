@@ -332,7 +332,7 @@ cd $P
 cat ${IMG_VFAT}.vfat >> $IMG_VFAT
 CMD rm ${IMG_VFAT}.vfat
 
-CMD sync
+#CMD sync
 
 echo "label:dos" | sfdisk -q  $IMG_VFAT || FAIL
 echo "$P1OFFSET, " | sfdisk -q $IMG_VFAT -a || FAIL
