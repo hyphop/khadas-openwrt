@@ -338,18 +338,18 @@ CMD rm ${IMG_VFAT}.vfat
 CMD sync
 
 SFDISK_ARGS=-q
-SFDISK_ARGS=
+SFDISK_ARGS="-f --no-reread --no-tell-kernel"
 
 echo "[i] pake parts">&2
 echo "label:dos | sfdisk $SFDISK_ARGS $IMG_VFAT ">&2
-echo "label:dos" | sfdisk $SFDISK_ARGS $IMG_VFAT #|| FAIL
+echo "label:dos" | sfdisk $SFDISK_ARGS $IMG_VFAT || FAIL
 
 echo "[i] pake part 1">&2
 echo "$P1OFFSET,  | sfdisk $SFDISK_ARGS $IMG_VFAT -a">&2
-echo "$P1OFFSET, " | sfdisk $SFDISK_ARGS $IMG_VFAT -a #|| FAIL
+echo "$P1OFFSET, " | sfdisk $SFDISK_ARGS $IMG_VFAT -a || FAIL
 
 echo "sfdisk $SFDISK_ARGS --part-type $IMG_VFAT 1 e">&2
-sfdisk $SFDISK_ARGS --part-type $IMG_VFAT 1 e #|| FAIL
+sfdisk $SFDISK_ARGS --part-type $IMG_VFAT 1 e || FAIL
 
 [ "$COMP" = "" ] && COMP=gzip
 #[ "$CMP_BLOCK_SIZE" ] || CMP_BLOCK_SIZE=1024k
