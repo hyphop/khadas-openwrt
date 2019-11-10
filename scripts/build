@@ -52,7 +52,7 @@ IMG_EXT4=/tmp/${BOARD}.$LABEL.$REL.$VER.ext4.sd.img
 IMG_VFAT=/tmp/${BOARD}.$LABEL.$REL.$VER.sd.img
 
 ## check
-REQUIRED="rsync sfdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
+REQUIRED="rsync sync sfdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
 
 echo "[i] check required: $REQUIRED">&2
 
