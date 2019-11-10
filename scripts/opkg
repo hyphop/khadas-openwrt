@@ -20,5 +20,5 @@ CACHE=$PR/../bin/opkg-cache
 
 [ -d $CACHE ] || mkdir -p $CACHE
 
-$EXT/lib/libc.so $EXT/bin/opkg --force-space --conf $PR/$0.conf --cache $CACHE $@
+$EXT/lib/libc.so $EXT/bin/opkg --force-space --conf $0.conf --cache $CACHE $@
 

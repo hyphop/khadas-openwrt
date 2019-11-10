@@ -109,6 +109,7 @@ NOTE: All previous EMMC data will be lost!!!
 
 + https://www.khadas.com/vim
 + https://dl.khadas.com/Firmware/VIM1/OpenWrt
++ https://dl.khadas.com/Firmware/VIM2/OpenWrt
 + https://docs.khadas.com
 + https://openwrt.org/
 

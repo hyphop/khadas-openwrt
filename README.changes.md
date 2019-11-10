@@ -1,4 +1,4 @@
-# OpenWrt VIM Changes
+# OpenWrt VIMs Change log
 
 ## Khadas Vims OpenWrt rel 0.3
 
