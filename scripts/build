@@ -397,6 +397,7 @@ rm $IMG_VFAT.overlay
 
 CMD sync
 
+echo "[i] echo $P1OFFSET,  | sfdisk -q $IMG_VFAT -a || FAIL">&2
 echo "$P1OFFSET, " | sfdisk -q $IMG_VFAT -a || FAIL
 
 md5sum $IMG_VFAT > $IMG_VFAT.md5sum
