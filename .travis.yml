@@ -1,3 +1,5 @@
 language: c
+dist: bionic
+#dist: xenial
 before_install: sudo apt-get install util-linux u-boot-tools mtools squashfs-tools e2fsprogs dosfstools
 script:  scripts/build
