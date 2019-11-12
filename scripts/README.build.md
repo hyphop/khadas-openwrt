@@ -4,9 +4,9 @@
 
 rsync sfdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy
 
-## UBUNTU install
+## UBUNTU pre-install
 
 ```
-sudo apt-get install sync sfdisk u-boot-tools mtools squashfs-tools e2fsprogs dosfstools
+sudo apt-get install sync u-boot-tools mtools squashfs-tools e2fsprogs dosfstools util-linux
 
 ```

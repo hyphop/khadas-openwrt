@@ -1,8 +1,12 @@
-# OpenWrt VIM Changes
+# OpenWrt VIMs Change log
+
+## Khadas Vims OpenWrt rel 0.3.1
+
++ ethernet for VIM2 fixed, hotplug & reinit without bugs! OK
 
 ## Khadas Vims OpenWrt rel 0.3
 
-+ added support for VIM2 ( with wifi chip AP6356S VIM2.V14 tested )
++ added support for VIM2 ( with wifi chip AP6356S VIM2.V14 test mode )
 + preinstalled samba, mdns, ttyd, thd + many other packages
 + fix ethernet for VIM2, but still not possible reinit ethernet interface for VIM2
 + improve startup speed - now is about 7 sec

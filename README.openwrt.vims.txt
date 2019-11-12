@@ -9,9 +9,13 @@ openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim
 + khadas VIM1 - OK
 + khadas VIM2 - OK
 
+NOTE:	this openwrt build works properly only with U-Boot 2015.01-g377aea7bb8 (Oct 15 2019 - 12:18:07)
+	openwrt can boot with another uboots but not works properly!!!
+
 ## Download Images
 
 + https://dl.khadas.com/Firmware/VIM1/OpenWrt
++ https://dl.khadas.com/Firmware/VIM2/OpenWrt
 
 # OpenWrt Access
 
@@ -72,14 +76,14 @@ Just select the IMAGE.img.gz or IMAGE.img.zip image, and select your SD card as 
 + If your EMMC is empty, openwrt will automatically boot from your SD card.
 + Else, Uboot will start from EMMC by default - it can boot from SD card, but only with the proper version and config!
 
-### VIM1_v12 (old)
+### VIM1 v12 (old) VIM2 v12 old
 
 * Power on VIM1.
 * Short-circuit the two pads of the M register (back PCB side), and without releasing it… https://docs.khadas.com/images/vim1/MRegister_ShortCircuit.png
 * Short press the Reset key, then release it to force boot from SD card
 https://docs.khadas.com/vim1/HowtoBootIntoUpgradeMode.html#MRegister-Mode-Maskrom-Mode
 
-### VIM1 v14 (current)
+### VIM1 v14 (current) VIM2 v14 (current)
 
 Just triple-press `KEY_F` (middle button) to force SD bootup!
 
@@ -109,10 +113,10 @@ NOTE: All previous EMMC data will be lost!!!
 
 + https://www.khadas.com/vim
 + https://dl.khadas.com/Firmware/VIM1/OpenWrt
++ https://dl.khadas.com/Firmware/VIM2/OpenWrt
 + https://docs.khadas.com
 + https://openwrt.org/
 
 ## Build by
 
     ## hyphop ##
-

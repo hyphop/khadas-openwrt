@@ -23,8 +23,8 @@ cd khadas-openwrt
 + https://github.com/hyphop/khadas-openwrt/releases/
 + https://dl.khadas.com/Firmware/VIM1/OpenWrt
 + https://dl.khadas.com/Firmware/VIM2/OpenWrt
-+ https://dl.khadas.com/Firmware/VIM3/OpenWrt
-+ https://dl.khadas.com/Firmware/VIM3L/OpenWrt
++ https://dl.khadas.com/Firmware/VIM3/OpenWrt - WIP
++ https://dl.khadas.com/Firmware/VIM3L/OpenWrt - WIP
 
 ## Installation
 

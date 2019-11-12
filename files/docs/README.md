@@ -9,6 +9,7 @@ openwrt for Khadas VIMs boards
 + [](README.download.write.sd.md)
 + [](README.install.to.emmc.md)
 + [](README.extra.md)
++ [](README.uboot.md)
 + [](README.fs.md)
 
 
