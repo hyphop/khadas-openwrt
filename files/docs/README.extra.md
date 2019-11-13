@@ -2,7 +2,12 @@
 
 + `mmc_boots erase`	- erase emmc boot loaders
 + `mmc_install_from_sd`	- install openwrt system from sd to emmc
-+ `overlay_clear`	- clear root fs overlay user data
++ `overlay_clean`	- clear root-fs overlay user data
++ `overlay_refresh`	- refresh root-fs overlay user data
++ `wifi.status`		- display wifi interface status
++ `eth_status`		- ethernet interface status
++ `samba_test`		- samba server perfomance test script
++ `fan`			- khadas fan control tool 
 
 #   /scripts/
 

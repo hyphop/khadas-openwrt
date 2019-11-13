@@ -4,13 +4,13 @@ openwrt for Khadas VIMs boards
 
 ## how to ...
 
-+ [](README.access.md)
-+ [](README.boot.from.sd.md)
-+ [](README.download.write.sd.md)
-+ [](README.install.to.emmc.md)
-+ [](README.extra.md)
-+ [](README.uboot.md)
-+ [](README.fs.md)
++ [README.access.md](README.access.md)
++ [README.boot.from.sd.md](README.boot.from.sd.md)
++ [README.download.write.sd.md](README.download.write.sd.md)
++ [README.install.to.emmc.md](README.install.to.emmc.md)
++ [README.extra.md](README.extra.md)
++ [README.uboot.md](README.uboot.md)
++ [README.fs.md](README.fs.md)
 
 
 ## related projects

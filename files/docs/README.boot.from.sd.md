@@ -8,7 +8,7 @@
 
 Just triple-press `KEY_F` (middle button) to force SD bootup!
 
-### VIM1 v12 (old) VIM2 v12
+### VIM1 v12 (old) VIM2 v12 (old)
 
 * Power on VIM device
 * Short-circuit the two pads of the M register (back PCB side), and without releasing it… https://docs.khadas.com/images/vim1/MRegister_ShortCircuit.png
@@ -27,4 +27,3 @@ https://docs.khadas.com/vim1/HowtoBootIntoUpgradeMode.html#MRegister-Mode-Maskro
 * OK! Well done! EMMC boot will occur automatically.
 
 NOTE: All previous EMMC data will be lost!!!
-
