@@ -211,7 +211,10 @@ CMD tar -xf $FW_BIN -C $OWTMP
 
 TMPMOD=/tmp/
 
-CMD ln -s $TMPMOD $OWTMP/lib/modules/$REP_MOD
+for RRR in $REP_MOD; do
+    echo "[i] block original modules $RRR">&2
+    CMD ln -s $TMPMOD $OWTMP/lib/modules/$RRR
+done
 
 [ -d $TMPMOD ] || mkdir $TMPMOD
 
