@@ -11,6 +11,7 @@
 PR=$(dirname $0)
 PA=$(realpath $PR)
 
+. $0.lib
 . $0.conf
 
 APPS=""
@@ -18,6 +19,24 @@ APPS=""
 for p in $@; do
 
     case $p in
+	-r)
+
+	echo "[i] force refresh">&2
+
+	[ -d $OPKG_LIST ] && {
+	    CMD rm -rf $OPKG_LIST
+	}
+
+	[ -f $OPKG_CONF.$REL ] && {
+	    CMD rm $OPKG_CONF.$REL
+	}
+
+	;;
+	-rel=*)
+	## REL
+	export REL=${p#*=}
+	echo "[i] force REL: $REL">&2
+	;;
 	-vim2|-2)
 	BOARD=VIM2
 	;;
@@ -66,7 +85,6 @@ done
 echo "[i] check sfdisk">&2
 sfdisk -v
 
-. $0.lib
 
 BIN="$PR/../bin"
 

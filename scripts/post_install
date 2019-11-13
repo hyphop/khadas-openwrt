@@ -5,6 +5,9 @@
 #= post install base
 
 PR=$(dirname $0)
+
+. $PR/build.conf
+
 opkg=$PR/opkg
 
 echo "[i] install packages">&2
@@ -36,7 +39,7 @@ done
 $opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
     fdisk sfdisk i2c-tools usbutils evtest netcat aria2 \
     shadow-useradd shadow-userdel shadow-usermod \
-    gzip tar unzip zip unrar coreutils-dd \
+    gzip tar unzip unrar coreutils-dd \
     inotifywatch inotifywait \
     coreutils-stty \
     avahi-dbus-daemon avahi-utils \
@@ -55,6 +58,15 @@ $opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
     iptables-mod-trace \
     shadowsocks-libev-ss-redir shadowsocks-libev-ss-local shadowsocks-libev-ss-rules shadowsocks-libev-config luci-app-shadowsocks-libev \
     wpan-tools
+
+case $REL in
+    18*)
+    $opkg install zip
+    ;;
+    19)
+    echo ""
+    ;;
+esac
 
 #
 #

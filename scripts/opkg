@@ -8,6 +8,20 @@ PR=$(dirname $0)
 
 EXT="$PR/../bin/x86_64"
 
+#CONF="$PR/opkg.conf"
+
+. $PR/build.conf
+
+OPKG_CONF_TPL=$PR/opkg.conf.tpl
+#OPKG_CONF=/tmp/openwrt.opkg.conf
+
+CONF="$OPKG_CONF.$REL"
+
+[ -s "$CONF" ] || {
+    echo "[i] create opkg config : $CONF">&2
+    sh $OPKG_CONF_TPL > $CONF
+}
+
 [ -d "$EXT" ] || {
     echo "[i] opkg not prepared $EXT $0">&2
     echo "[i] use ./build at first !!!">&2
@@ -20,5 +34,5 @@ CACHE=$PR/../bin/opkg-cache
 
 [ -d $CACHE ] || mkdir -p $CACHE
 
-$EXT/lib/libc.so $EXT/bin/opkg --force-space --conf $0.conf --cache $CACHE $@
+$EXT/lib/libc.so $EXT/bin/opkg --force-space --conf $CONF --cache $CACHE $@
 
