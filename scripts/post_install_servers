@@ -2,7 +2,7 @@
 
 ## hyphop ##
 
-#= post install audio
+#= post install servers variant
 
 PR=$(dirname $0)
 opkg=$PR/opkg
@@ -16,5 +16,14 @@ echo "[i] add $NAME">&2
 
 $opkg install luci-app-sqm
 $opkg install samba36-server luci-app-samba
-$opkg install nfs-kernel-server nfs-kernel-server-utils
+$opkg install mountd blockd
+
+case $REL in
+    18*)
+    echo "[i] nfs broken not usable plz use 19.X series">&2
+    ;;
+    19)
+    $opkg install nfs-kernel-server nfs-kernel-server-utils
+    ;;
+esac
 

@@ -2,7 +2,7 @@
 
 ## hyphop ##
 
-#= post install audio
+#= post install audio variant
 
 PR=$(dirname $0)
 opkg=$PR/opkg
