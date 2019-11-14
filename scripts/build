@@ -118,8 +118,14 @@ DL() {
     }
 
     [ -f "$S" ] || {
-#	CMD wget "$1" -O"$S" || return 1
-	CMD curl "$1" -o "$S" -# || return 1
+	case "$DL_PROG" in
+	    curl)
+	    CMD curl -jkL "$1" -o "$S" -# || return 1
+	    ;;
+	    *)
+	    CMD wget "$1" -O"$S" || return 1
+	    ;;
+	esac
 	R=$S
     }
 
