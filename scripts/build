@@ -218,9 +218,16 @@ CMD tar -xf $FW_BIN -C $OWTMP || FAIL
 
 TMPMOD=/tmp/
 
-for RRR in $REP_MOD; do
+#for RRR in $REP_MOD; do
+#    echo "[i] block original modules $RRR">&2
+#    CMD ln -s $TMPMOD $OWTMP/lib/modules/$RRR
+#done
+
+for RRR in $OWTMP/lib/modules/4*; do
+    [ -d "$RRR" ] && {
     echo "[i] block original modules $RRR">&2
-    CMD ln -s $TMPMOD $OWTMP/lib/modules/$RRR
+    CMD ln -s $TMPMOD $RRR
+    }
 done
 
 [ -d $TMPMOD ] || mkdir $TMPMOD
