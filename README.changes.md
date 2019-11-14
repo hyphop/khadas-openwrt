@@ -4,9 +4,9 @@
 
 + add SQM support https://openwrt.org/docs/guide-user/network/traffic-shaping/sqm
 + rebuild linux kernel and modules config
-+ change build scripts
-+ prepare build scripts for openwrt 19.07.X series
-+ `./build +server` - build server variant
++ improve build scripts | `scripts/build +server` - build server variant
++ prepare build scripts for openwrt 19.07.X series `cat scripts/build_last_rel.md`
++ add NFS-kernel-server only for 19.07.X server series - `nfsd_test` script test
 
 ## Khadas Vims OpenWrt rel 0.3.1
 

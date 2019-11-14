@@ -1,0 +1,117 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= nfsd test
+
+S=/tmp/mounts/tmp
+S4=/tmp
+F=/etc/exports
+FT=/tmp/exports
+T=/tmp/nfsd_test
+
+CMD(){
+    echo "# $@">&2
+    $@
+}
+
+echo "[i] nfsd test">&2
+
+echo "# USER MANUALS
+
+https://openwrt.org/docs/guide-user/services/nas/nfs.server
+
+">&2
+
+IPT=iptables
+IFA="-i eth0"
+
+#-s $NET_LAN
+
+CMD $IPT -D INPUT -j ACCEPT 2>/dev/null
+CMD $IPT -D INPUT -j ACCEPT $IFA -p tcp --dport 111		2>/dev/null
+CMD $IPT -D INPUT -j ACCEPT $IFA -p udp --dport 111		2>/dev/null
+CMD $IPT -D INPUT -j ACCEPT $IFA -p tcp --dport 32777:32780	2>/dev/null
+CMD $IPT -D INPUT -j ACCEPT $IFA -p udp --dport 32777:32780	2>/dev/null
+CMD $IPT -D INPUT -j ACCEPT $IFA -p tcp --dport 2049	2>/dev/null
+CMD $IPT -D INPUT -j ACCEPT $IFA -p udp --dport 2049	2>/dev/null
+
+#CMD $IPT -I INPUT -j ACCEPT # allow all ;)
+CMD $IPT -I INPUT -j ACCEPT $IFA -p tcp --dport 111 #--------- portmap
+CMD $IPT -I INPUT -j ACCEPT $IFA -p udp --dport 111 #--------- portmap
+CMD $IPT -I INPUT -j ACCEPT $IFA -p tcp --dport 32777:32780 #- nfsd
+CMD $IPT -I INPUT -j ACCEPT $IFA -p udp --dport 32777:32780 #- nfsd
+CMD $IPT -I INPUT -j ACCEPT $IFA -p tcp --dport 2049
+CMD $IPT -I INPUT -j ACCEPT $IFA -p udp --dport 2049
+
+[ -d $S ] || \
+CMD mkdir -p $S
+[ -d $T ] || \
+CMD mkdir -p $T
+
+grep -q $S /proc/mounts || \
+CMD mount -t tmpfs tmpfs $S
+
+
+
+#|| {
+#echo "$S *(rw,sync,no_subtree_check,fsid=66)" tee $F
+grep -v "$S4" $F > $FT
+(
+cat $FT
+echo "$S4 *(rw,sync,insecure,no_subtree_check,fsid=0)"
+echo "$S *(rw,sync,insecure,no_subtree_check,fsid=1)"
+) > $F
+
+cat $F
+
+exportfs -ar
+
+#}
+
+localhost=127.0.0.1
+
+CMD cat /proc/fs/nfsd/max_block_size
+CMD cat /proc/fs/nfsd/portlist
+CMD cat /proc/fs/nfsd/versions
+
+# nfs4 test
+
+CMD mount -t nfs4 -vvv $localhost:/ $T || {
+    echo "[i] FAIL">&2
+    exit 1
+}
+
+CMD dd if=/dev/zero bs=1M count=100 of=$T/zero.bin
+echo "NFSd4 test $(date)!!!" | CMD tee $T/hello.txt
+CMD umount -fl $T
+
+CMD umount -fl $T
+
+# nfs3 test
+
+CMD mount -t nfs -vvv $localhost:$S $T || {
+    echo "[i] FAIL">&2
+    exit 1
+}
+
+CMD dd if=/dev/zero bs=1M count=100 of=$T/zero.bin
+echo "NFSd4 test $(date)!!!" | CMD tee $T/hello.txt
+CMD umount -fl $T
+
+ls -lh1 $S
+
+ips="$(ipaddr br-lan) $(ipaddr eth0) $(uci get system.@system[0].hostname).local"
+
+echo "[i] client mount cmd examples, user auth">&2
+echo "# mkdir -p $T">&2
+echo "# NFSv3">&2
+for h in $ips; do
+echo "$ sudo mount $h:$S $T -o user"
+done
+echo "# NFSv4">&2
+for h in $ips; do
+echo "$ sudo mount $h:/ $T -o user"
+done
+
+echo "# umount -lf $T">&2

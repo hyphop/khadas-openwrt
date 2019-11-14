@@ -1,5 +1,13 @@
 # OpenWrt VIMs Change log
 
+## Khadas Vims OpenWrt rel 0.4
+
++ add SQM support https://openwrt.org/docs/guide-user/network/traffic-shaping/sqm
++ rebuild linux kernel and modules config
++ improve build scripts | `scripts/build +server` - build server variant
++ prepare build scripts for openwrt 19.07.X series `cat scripts/build_last_rel.md`
++ add NFS-kernel-server only for 19.07.X server series - `nfsd_test` script test
+
 ## Khadas Vims OpenWrt rel 0.3.1
 
 + ethernet for VIM2 fixed, hotplug & reinit without bugs! OK
