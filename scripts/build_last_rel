@@ -2,18 +2,25 @@
 
 ## hyphop ##
 
-#= build khadas openwrt example
-
 # download source again
 
+#[ -d khadas-openwrt ] && \
+#    rm -rf khadas-openwrt
+
+[ -d khadas-openwrt ] || \
 git clone https://github.com/hyphop/khadas-openwrt.git
 
 cd khadas-openwrt
+git pull
 
-# change to 19.07.0-rc1 series
+#exit 0
+
+# prepare new rel
 
 echo REL=19.07.0-rc1 > scripts/build.conf.user
 
-# rebuild all for VIM2 + servers variant
+# rebuild all for VIM2
 
 ./scripts/build -r -2 +servers
+
+
