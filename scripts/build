@@ -118,7 +118,7 @@ DL() {
     }
 
     [ -f "$S" ] || {
-	CMD wget "$1" -O"$S" || return 1
+#	CMD wget "$1" -O"$S" || return 1
 	CMD curl "$1" -o "$S" -# || return 1
 	R=$S
     }
