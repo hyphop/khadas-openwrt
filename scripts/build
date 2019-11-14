@@ -207,8 +207,8 @@ FW_BIN=$R
 CMD tar -xf $OWBASE_TAR -C $OWTMP
 
 CMD rm -rf $OWTMP/lib/modules/*
-CMD tar -xf $MODULES_TAR -C $OWTMP
-CMD tar -xf $FW_BIN -C $OWTMP
+CMD tar -xf $MODULES_TAR -C $OWTMP || FAIL
+CMD tar -xf $FW_BIN -C $OWTMP || FAIL
 
 TMPMOD=/tmp/
 
