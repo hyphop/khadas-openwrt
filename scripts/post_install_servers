@@ -1,0 +1,20 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= post install audio
+
+PR=$(dirname $0)
+opkg=$PR/opkg
+
+NAME=${0#*post_install_}
+
+. $PR/build.conf
+. $PR/build.lib
+
+echo "[i] add $NAME">&2
+
+$opkg install luci-app-sqm
+$opkg install samba36-server luci-app-samba
+$opkg install nfs-kernel-server nfs-kernel-server-utils
+

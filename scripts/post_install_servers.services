@@ -1,0 +1,15 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= post install base
+
+PR=$(dirname $0)
+
+$PR/service enable nfsd
+
+$PR/service enable portmap
+$PR/service enable rpcbind
+$PR/service enable sqm
+
+exit 0

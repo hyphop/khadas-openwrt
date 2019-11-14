@@ -50,7 +50,7 @@ $opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
     wireless-tools iwinfo \
     iperf pv \
     ttyd \
-    samba36-server samba36-client luci-app-samba \
+    samba36-client \
     nfs-utils \
     ppp-mod-pptp \
     openvpn-mbedtls luci-app-openvpn \
@@ -62,14 +62,10 @@ $opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
 case $REL in
     18*)
     $opkg install zip
+
     ;;
     19)
     echo ""
     ;;
 esac
 
-#
-#
-# nfs broken - not usable
-#
-#    nfs-kernel-server nfs-kernel-server-utils nfs-utils \
