@@ -21,6 +21,7 @@ echo REL=19.07.0-rc1 > scripts/build.conf.user
 
 # rebuild all for VIM2
 
-./scripts/build -r -2 +servers
+./scripts/build -r -1 +servers
+./scripts/build  -2 +servers
 
 
