@@ -18,10 +18,16 @@ openwrt for Khadas VIMs boards https://www.khadas.com/vim (Amlogic s905 s912 a31
 ```
 git clone https://github.com/hyphop/khadas-openwrt.git
 cd khadas-openwrt
+
 # ./scripts/build_prepare
+
+# build usage examples
+
 ./scripts/build -1 # build openwrt for VIM1
 ...
 ./scripts/build -2 # build openwrt for VIM2
+...
+./scripts/build -2 +server # build openwrt server variant for VIM2
 
 ```
 
