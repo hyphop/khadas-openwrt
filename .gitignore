@@ -3,6 +3,7 @@ files/extra/bin
 bin/*
 bin.tmp/*
 share/*
+scripts/build.conf.user
 tmp/*
 work
 !README.md

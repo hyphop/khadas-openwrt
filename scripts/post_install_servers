@@ -16,7 +16,7 @@ echo "[i] add $NAME">&2
 
 $opkg install luci-app-sqm
 $opkg install samba36-server luci-app-samba
-$opkg install mountd blockd
+$opkg install blockd
 
 case $REL in
     18*)
