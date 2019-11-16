@@ -15,6 +15,7 @@ PA=$(realpath $PR)
 . $0.conf
 
 APPS=""
+ITYPE=sd
 
 for p in $@; do
 
@@ -31,6 +32,12 @@ for p in $@; do
 	    CMD rm $OPKG_CONF.$REL
 	}
 
+	;;
+	mmc|emmc)
+	ITYPE=emmc
+	;;
+	sd)
+	ITYPE=sd
 	;;
 	-rel=*)
 	## REL
@@ -67,8 +74,8 @@ echo "[i] config board: $BOARD rel : $REL // apps:$APPS">&2
 
 IMG_EXT4_NO=1
 
-IMG_EXT4=/tmp/${BOARD}.$LABEL.$REL.$VER.ext4.sd.img
-IMG_VFAT=/tmp/${BOARD}.$LABEL.$REL.$VER.sd.img
+IMG_EXT4=/tmp/${BOARD}.$LABEL.$REL.$VER.ext4.$ITYPE.img
+IMG_VFAT=/tmp/${BOARD}.$LABEL.$REL.$VER.$ITYPE.img
 
 ## check
 REQUIRED="rsync curl wget sync sfdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
@@ -332,9 +339,20 @@ CMD cp $PR/../files/.auto* $OWTMP
 
 case $BOARD in
     VIM3*)
+
+    [ "$ITYPE" == "emmc" ] || {
     CMD sed -i s/mmcblk0/mmcblk1/ $OWTMP/boot/user.env
+    }
+    ;;
+    *)
+    [ "$ITYPE" == "emmc" ] && {
+        CMD sed -i s/mmcblk0/mmcblk1/ $OWTMP/boot/user.env
+    }
+
     ;;
 esac
+
+
 
 CMD cp $PR/../files/docs/* $OWTMP
 CMD cp -a $PR/../files/scripts $OWTMP
