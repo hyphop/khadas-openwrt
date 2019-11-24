@@ -14,6 +14,7 @@ NAME=${0#*post_install_}
 
 echo "[i] add $NAME">&2
 
+$opkg install openssh-client openssh-sftp-server
 $opkg install luci-app-sqm
 $opkg install samba36-server luci-app-samba
 $opkg install blockd
