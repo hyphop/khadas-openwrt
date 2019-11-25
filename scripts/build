@@ -315,7 +315,9 @@ echo "[i] BUILD: $LABEL $REL $VER $BOARD $(TZ= date)" | tee $OWTMP/etc/banner.mo
 
 CMD mkimage -C none -A arm -T script -d $PR/../files/openwrt_ext4.cmd $OWTMP/s905_autoscript
 CMD cp $OWTMP/s905_autoscript  $OWTMP/aml_autoscript
-cat $PR/../files/openwrt_ext4.cmd > $OWTMP/boot.ini
+
+cat $PR/../files/boot.ini \
+    $PR/../files/openwrt_ext4.cmd > $OWTMP/boot.ini
 
 [ "$IMG_EXT4_NO" ] || {
 
