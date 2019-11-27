@@ -5,7 +5,7 @@
 #= build lib
 
 FAIL(){
-    echo "[i] stop fail $@">&2
+    echo "[e] stop fail $@">&2
     exit 1
 }
 

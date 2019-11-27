@@ -127,7 +127,14 @@ DL() {
     [ -f "$S" ] || {
 	case "$DL_PROG" in
 	    curl)
-	    CMD curl -jkL "$1" -o "$S" -# || return 1
+	    CMD curl -f -jkL "$1" -o "$S" -#
+	    curl_code=$?
+	    [ "$curl_code" = "0" ] || {
+	        echo "[w] curl exit $curl_code">&2
+		[ -f $S ] && rm "$S"
+		return 1
+	    }
+	    return 0
 	    ;;
 	    *)
 	    CMD wget "$1" -O"$S" || return 1
