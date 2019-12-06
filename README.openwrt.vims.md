@@ -8,6 +8,8 @@ openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim
 
 + khadas VIM1 - OK
 + khadas VIM2 - OK
++ khadas VIM3 - initial
++ khadas VIM3L - initial
 
 NOTE:	this openwrt build works properly only with U-Boot 2015.01-g377aea7bb8 (Oct 15 2019 - 12:18:07)
 	openwrt can boot with another uboots but not works properly!!!
@@ -16,6 +18,9 @@ NOTE:	this openwrt build works properly only with U-Boot 2015.01-g377aea7bb8 (Oc
 
 + https://dl.khadas.com/Firmware/VIM1/OpenWrt
 + https://dl.khadas.com/Firmware/VIM2/OpenWrt
++ https://dl.khadas.com/Firmware/VIM3/OpenWrt
++ https://dl.khadas.com/Firmware/VIM3L/OpenWrt
++ https://dl.khadas.com/Firmware/Krescue/images/
 
 # OpenWrt Access
 
@@ -100,6 +105,35 @@ Just triple-press `KEY_F` (middle button) to force SD bootup!
 
 NOTE: All previous EMMC data will be lost!!!
 
+### VIM3 VIM3L
+
+#### Android default firmware
+
++ unplug usb cable
++ insert SD card with Krescue 
++ press and hold POWER_KEY 
++ plug usb cable and wait LED blinking after u can unpress POWER_KEY
++ ok Krescye system bootup from SD
+
+NOTE: be sure usb cable powered from adapter not from PC
+
+#### VIM3 VIM3L usb otg mode powered from PC
+
+same as previous , but usb plug in host machine
+
+need plug usb cable in two steps on host side
+
++ power without data pin connection - just slowly plug about 1/3 length usb header - before powerup
++ wait blinking leds and plug usb cable for full length for activate data pins
+
+### eMMC is cleared
+
++ start from sd without special preparation
+
+### multiboot instaled
+
++ start from sd without special preparation
+
 ### install to emmc inside openwrt booted from sd
 
     root@openwrt:/# mmc_install_from_sd
@@ -114,6 +148,9 @@ NOTE: All previous EMMC data will be lost!!!
 + https://www.khadas.com/vim
 + https://dl.khadas.com/Firmware/VIM1/OpenWrt
 + https://dl.khadas.com/Firmware/VIM2/OpenWrt
++ https://dl.khadas.com/Firmware/VIM3/OpenWrt
++ https://dl.khadas.com/Firmware/VIM3L/OpenWrt
++ https://dl.khadas.com/Firmware/Krescue/images
 + https://docs.khadas.com
 + https://openwrt.org/
 

@@ -1,5 +1,14 @@
 # OpenWrt VIMs Change log
 
+## Khadas Vims OpenWrt rel 0.5
+
++ add VIM3 and VIM3L initial support (without on board wifi)
++ add new kernel for VIM3L
++ prepare build scripts for openwrt 19.07.2 series
++ add RTL8153 Gigabit Ethernet Adapterv ( USB3.0 - 0bda:8153 - r8152 )
++ USB3.0 expand ready
++ network config add - USB eth1 bridged with usb0 as LAN
+
 ## Khadas Vims OpenWrt rel 0.4
 
 + add SQM support https://openwrt.org/docs/guide-user/network/traffic-shaping/sqm
