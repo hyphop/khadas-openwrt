@@ -206,7 +206,14 @@ rm -rf $OWTMP
 
 #https://github.com/hyphop/khadas-linux-kernel/releases/download/openwrt/vims.dtb.tar.gz
 
-for k in Image.gz krescue-vim1.dtb krescue-vim2.dtb krescue-vim3-a311d.dtb krescue-vim3-s922x.dtb modules.openwrt.tar.gz; do
+for k in \
+    Image.gz \
+    krescue-vim1.dtb \
+    krescue-vim2.dtb \
+    krescue-vim3-a311d.dtb \
+    krescue-vim3-s922x.dtb \
+    krescue-vim3-s905d3.dtb \
+    modules.openwrt.tar.gz; do
     DL https://github.com/hyphop/khadas-linux-kernel/releases/download/openwrt/$k || FAIL
 done
 
