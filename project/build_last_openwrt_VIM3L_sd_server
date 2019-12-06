@@ -1,0 +1,15 @@
+#!/bin/sh
+
+## hyphop ##
+
+echo "[i] BUILD VIM3L - 19.07.0-rc2 rel - SD image + servers mod"
+
+git pull
+
+cd $(dirname $0)/..
+echo $PWD
+
+echo KERNEL_REL=openwrt.new > scripts/build.conf.user
+echo REL=19.07.0-rc2 >> scripts/build.conf.user
+
+scripts/build sd -3l +servers
