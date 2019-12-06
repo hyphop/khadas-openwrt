@@ -214,7 +214,7 @@ for k in \
     krescue-vim3-s922x.dtb \
     krescue-vim3-s905d3.dtb \
     modules.openwrt.tar.gz; do
-    DL https://github.com/hyphop/khadas-linux-kernel/releases/download/openwrt/$k || FAIL
+    DL https://github.com/hyphop/khadas-linux-kernel/releases/download/$KERNEL_REL/$k || FAIL
 done
 
 #UNPACK $R 
