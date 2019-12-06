@@ -53,7 +53,7 @@ test "$hwver" = "VIM2.V12" && setenv Cdtb /boot/krescue-vim2.dtb
 test "$hwver" = "VIM2.V14" && setenv Cdtb /boot/krescue-vim2.dtb
 test "$hwver" = "VIM3.V10" && setenv Cdtb /boot/krescue-vim3-s922x.dtb
 test "$hwver" = "VIM3.V11" && setenv Cdtb /boot/krescue-vim3-a311d.dtb
-test "$hwver" = "VIM3.V12" && setenv Cdtb /boot/krescue-vim3l-s905d3.dtb
+test "$hwver" = "VIM3.V12" && setenv Cdtb /boot/krescue-vim3-s905d3.dtb
 test "$hwver" = "VIM3.V12" && test "$maxcpus" = "6" && setenv Cdtb /boot/krescue-vim3-a311d.dtb
 
 ##############################################################
