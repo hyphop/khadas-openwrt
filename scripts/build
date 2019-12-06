@@ -365,7 +365,7 @@ case $BOARD in
 
     [ "$ITYPE" = "emmc" ] || {
 	echo "[i] BOOT FROM SD">&2
-        CMD sed -i s/mmcblk0/mmcblk1/ $OWTMP/boot/user.env
+        CMD sed -i s/mmcblk0/mmcblk2/ $OWTMP/boot/user.env
     }
 
 
