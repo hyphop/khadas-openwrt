@@ -266,7 +266,16 @@ CMD cp $PR/../files/user.env $OWTMP/boot/user.env
 
 $PR/post_install || FAIL
 
-CMD rsync -a --inplace $PR/../files/root/* $OWTMP
+#CMD rsync -a --inplace $PR/../files/root/* $OWTMP
+CMD rsync -a --inplace $PR/../files/root/. $OWTMP
+
+for a in $APPS; do
+    [ -d $PR/../files/root.$a ] && {
+	echo "[i] copy files for $a">&2
+#	CMD rsync -a --inplace $PR/../files/root.$a/* $OWTMP
+	CMD rsync -a --inplace $PR/../files/root.$a/. $OWTMP
+    }
+done
 
 for a in $APPS; do
     [ -f $PR/post_install_$a ] && {
@@ -282,7 +291,6 @@ DL https://github.com/hyphop/pkg/releases/download/bins/openwrt_extra_bins.tar.g
 CMD tar -xf $R -C $OWTMP || FAIL
 
 $PR/post_install.services || FAIL
-
 
 for a in $APPS; do
     [ -f $PR/post_install_$a.services ] && {

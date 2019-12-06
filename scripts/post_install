@@ -39,7 +39,7 @@ done
 $opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
     fdisk sfdisk i2c-tools usbutils evtest netcat aria2 \
     shadow-useradd shadow-userdel shadow-usermod \
-    gzip tar unzip unrar coreutils-dd \
+    gzip tar unzip unrar coreutils-dd coreutils-stat \
     inotifywatch inotifywait \
     coreutils-stty \
     avahi-dbus-daemon avahi-utils \
