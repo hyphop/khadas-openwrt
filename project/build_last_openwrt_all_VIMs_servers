@@ -1,0 +1,31 @@
+#!/bin/sh
+
+## hyphop ##
+
+echo "[i] BUILD VIM1 VIM2 VIM3 VIM3L - 19.07.0-rc2 rel - eMMC and SD images + servers mod"
+
+cd $(dirname $0)/..
+git pull
+echo $PWD
+
+# prepare new rel
+
+echo REL=19.07.0-rc2 > scripts/build.conf.user
+
+# rebuild all for VIM1 VIM2
+
+./scripts/build -r -1 +servers
+./scripts/build -2 +servers
+./scripts/build mmc -1 +servers
+./scripts/build mmc -2 +servers
+
+# rebuild all for VIM3 VIM3L
+
+echo KERNEL_REL=openwrt.new >> scripts/build.conf.user
+
+./scripts/build -r -3 +servers
+./scripts/build -3l +servers
+./scripts/build mmc -3 +servers
+./scripts/build mmc -3l +servers
+
+rm /tmp/VIM*.img

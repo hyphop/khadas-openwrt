@@ -17,6 +17,9 @@ PA=$(realpath $PR)
 APPS=""
 ITYPE=sd
 
+#MAKE_KRESQ_IMAGE=1
+#NO_REMOVE_SQUASH=1
+
 for p in $@; do
 
     case $p in
@@ -394,12 +397,17 @@ CMD dd if=$UBOOT_BIN of=$IMG_VFAT conv=fsync,notrunc bs=444 count=1
 CMD dd if=$UBOOT_BIN of=$IMG_VFAT conv=fsync,notrunc bs=512 skip=1 seek=1
 
 CMD dd if=/dev/zero bs=1M count=$PART0SIZE of=$IMG_VFAT.vfat
-CMD mkfs.vfat -n OW_BOOT -i DEADBEEF ${IMG_VFAT}.vfat
+CMD mkfs.vfat -n $PART1_LABEL -i DEADBEEF ${IMG_VFAT}.vfat
 
 
 P=$(realpath $PWD)
 #F="${IMG_VFAT}@@$((1+$PART0SIZE))M"
 F="${IMG_VFAT}.vfat"
+
+[ -d $IMG_VFAT.boot ] && \
+    rm -rf $IMG_VFAT.boot
+
+mkdir -p $IMG_VFAT.boot
 
 CMD mdir -i $F ::
 #CMD mdir -i $F ::boot
@@ -407,8 +415,17 @@ cd $OWTMP
 for f in boot LABEL OPENWRT.label s9* aml* boot.ini scripts README* .automount.no ; do
 ls -l1 $f
 CMD mcopy -i $F $f ::$f
+CMD cp -a $f $IMG_VFAT.boot
 done
 cd $P
+
+[ "$MAKE_KRESQ_IMAGE" ] && {
+echo "[i] KRESQ for $BOARDS">&2
+for B in $BOARDS; do
+DL https://github.com/hyphop/khadas-uboot-spi/releases/download/openwrt/u-boot.$B.sd.bin || FAIL
+CMD cp $R $IMG_VFAT.boot/boot
+done
+}
 
 #echo no | mcat -i $F ::.automount.no
 
@@ -441,7 +458,8 @@ sfdisk $SFDISK_ARGS --part-type $IMG_VFAT 1 e || FAIL
 
 CMD rm -rf $OWTMP/boot
 CMD mkdir  $OWTMP/boot
-CMD rm  $OWTMP/s9* 
+CMD rm  $OWTMP/s9*
+CMD rm  $OWTMP/aml_*
 [ -f $OWTMP/boot.ini ] && \
 CMD rm  $OWTMP/boot.ini
 CMD rm  $OWTMP/LABEL
@@ -462,13 +480,15 @@ CMD mksquashfs \
 S=$(stat -c%s $IMG_VFAT)
 
 cat $OWTMP.squashfs >> $IMG_VFAT
-rm $OWTMP.squashfs
+
+[ "$NO_REMOVE_SQUASH" ] || \
+    CMD rm $OWTMP.squashfs
 
 CMD dd if=/dev/zero bs=1M count=$PART2SIZE of=$IMG_VFAT.overlay
 
 [ "$OVERLAY_INIT" ] && {
     echo "[i] INIT OVERLAY as ext4">&2
-    CMD mkfs.ext4 -F -L rootfs_data $IMG_VFAT.overlay || FAIL
+    CMD mkfs.ext4 -F -L $PART2_1_LABEL $IMG_VFAT.overlay || FAIL
 }
 
 CMD sync

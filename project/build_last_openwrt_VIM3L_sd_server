@@ -4,9 +4,8 @@
 
 echo "[i] BUILD VIM3L - 19.07.0-rc2 rel - SD image + servers mod"
 
-git pull
-
 cd $(dirname $0)/..
+git pull
 echo $PWD
 
 echo KERNEL_REL=openwrt.new > scripts/build.conf.user

@@ -8,6 +8,8 @@
 + add RTL8153 Gigabit Ethernet Adapterv ( USB3.0 - 0bda:8153 - r8152 )
 + USB3.0 expand ready
 + network config add - USB eth1 bridged with usb0 as LAN
++ https://github.com/hyphop/khadas-openwrt/releases/tag/19.07.0-rc2
++ https://www.reddit.com/r/openwrt/comments/e6uzmq/openwrt_19070rc2_for_khadas_vim3_vim3l_boards/
 
 ## Khadas Vims OpenWrt rel 0.4
 
