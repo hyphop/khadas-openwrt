@@ -366,9 +366,14 @@ CMD cp $PR/../files/.auto* $OWTMP
 case $BOARD in
     VIM3*)
 
-    [ "$ITYPE" = "emmc" ] || {
+    [ "$ITYPE" = "emmc" ] && {
 	echo "[i] BOOT FROM SD">&2
         CMD sed -i s/mmcblk0/mmcblk2/ $OWTMP/boot/user.env
+    }
+
+    [ "$ITYPE" = "sd" ] && {
+	echo "[i] BOOT FROM SD">&2
+        CMD sed -i s/mmcblk0/mmcblk1/ $OWTMP/boot/user.env
     }
 
 
@@ -494,8 +499,28 @@ CMD dd if=$OWTMP.squashfs bs=1M conv=sync,notrunc of=$IMG_VFAT.overlay
     CMD rm $OWTMP.squashfs
 
 [ "$OVERLAY_INIT" ] && {
+
+    #/dev/loop0: LABEL="rootfs_data" UUID="006fb1a0-7c35-4515-80f0-889d7a8a1ca1" TYPE="ext4"
+    #root@openwrt-vim:/# ls -l1 /overlay/
+    #drwxr-xr-x    3 root     root          1024 Jan  1  1970 upper
+    #drwxr-xr-x    4 root     root          1024 Jan  1  1970 work
+    TMP_OVL=/tmp/openwrt.ovl
+    mkdir -p $TMP_OVL || FAIL
+    mkdir -p $TMP_OVL/upper $TMP_OVL/work || FAIL
+    echo "overlay created $(TZ= date)" > $TMP_OVL/.OVERLAY
+    echo "overlay created $(TZ= date)" > $TMP_OVL/upper/.overlay
+    ln -s 2 $TMP_OVL/.fs_state
+
     echo "[i] INIT OVERLAY as ext4">&2
-    CMD mkfs.ext4 -F -E offset=$SQQ -L $PART2_1_LABEL $IMG_VFAT.overlay || FAIL
+    ARGS=
+    # ARGS="-U 12345678-dead-beef-0000-000011112222"
+
+    CMD mkfs.ext4 -F -d $TMP_OVL -E offset=$SQQ -L $PART2_1_LABEL $ARGS $IMG_VFAT.overlay || FAIL
+
+
+    rm -rf $TMP_OVL
+
+
 }
 
 CMD sync
