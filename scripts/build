@@ -485,7 +485,7 @@ SQ=$(stat -c%s $OWTMP.squashfs)
 
 # overlay padded offset calc
 SQQ=$((SQ/65536*65536))
-[ "$SQQ" -lt "$SQ" ] && SQQ=$((SQQ+1))
+[ "$SQQ" -lt "$SQ" ] && SQQ=$((SQQ+65536))
 
 CMD dd if=/dev/zero bs=1M count=$PART2SIZE of=$IMG_VFAT.overlay
 CMD dd if=$OWTMP.squashfs bs=1M conv=sync,notrunc of=$IMG_VFAT.overlay
