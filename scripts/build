@@ -479,16 +479,23 @@ CMD mksquashfs \
 
 S=$(stat -c%s $IMG_VFAT)
 
-cat $OWTMP.squashfs >> $IMG_VFAT
+#cat $OWTMP.squashfs >> $IMG_VFAT
+
+SQ=$(stat -c%s $OWTMP.squashfs)
+
+# overlay padded offset calc
+SQQ=$((SQ/65536*65536))
+[ "$SQQ" -lt "$SQ" ] && SQQ=$((SQQ+1))
+
+CMD dd if=/dev/zero bs=1M count=$PART2SIZE of=$IMG_VFAT.overlay
+CMD dd if=$OWTMP.squashfs bs=1M conv=sync,notrunc of=$IMG_VFAT.overlay
 
 [ "$NO_REMOVE_SQUASH" ] || \
     CMD rm $OWTMP.squashfs
 
-CMD dd if=/dev/zero bs=1M count=$PART2SIZE of=$IMG_VFAT.overlay
-
 [ "$OVERLAY_INIT" ] && {
     echo "[i] INIT OVERLAY as ext4">&2
-    CMD mkfs.ext4 -F -L $PART2_1_LABEL $IMG_VFAT.overlay || FAIL
+    CMD mkfs.ext4 -F -E offset=$SQQ -L $PART2_1_LABEL $IMG_VFAT.overlay || FAIL
 }
 
 CMD sync
@@ -502,7 +509,6 @@ CMD sync
 CMD ls -l1 $IMG_VFAT.overlay
 
 #CMD dd if=/tmp/image.jffs2 of=$IMG_VFAT.overlay conv=fsync,notrunc
-
 
 cat $IMG_VFAT.overlay >> $IMG_VFAT
 rm $IMG_VFAT.overlay
