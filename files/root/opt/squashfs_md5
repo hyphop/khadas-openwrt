@@ -1,0 +1,12 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= openwrt 64k pad overlay offset
+
+s=$(${0%2} "$@")
+[ "$s" ] && {
+echo "[i] md5 $1 $s bytes">&2
+dd if=$1 count=$((s/4096)) | md5sum
+}
+
