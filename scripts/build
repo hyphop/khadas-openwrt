@@ -37,7 +37,8 @@ for p in $@; do
 
 	[ "$p" = "-rr" ] && {
 	    echo "[i] clean opkg cache">&2
-	    CMD rm "$PR/../bin/opkg-cache"
+	    CMD rm -rf "$PR/../bin/opkg-cache"
+	    CMD mkdir -p "$PR/../bin/opkg-cache"
 	}
 
 	;;
