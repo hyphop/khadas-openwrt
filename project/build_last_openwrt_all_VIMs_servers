@@ -21,7 +21,8 @@ echo REL=19.07.0-rc2 > scripts/build.conf.user
 
 # rebuild all for VIM3 VIM3L
 
-echo KERNEL_REL=openwrt.new >> scripts/build.conf.user
+#echo KERNEL_REL=openwrt.new >> scripts/build.conf.user
+echo KERNEL_REL=openwrt.test >> scripts/build.conf.user
 
 ./scripts/build -r -3 +servers
 ./scripts/build -3l +servers
