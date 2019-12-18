@@ -23,7 +23,7 @@ ITYPE=sd
 for p in $@; do
 
     case $p in
-	-r)
+	-r|-rr)
 
 	echo "[i] force refresh">&2
 
@@ -33,6 +33,11 @@ for p in $@; do
 
 	[ -f $OPKG_CONF.$REL ] && {
 	    CMD rm $OPKG_CONF.$REL
+	}
+
+	[ "$p" = "-rr" ] && {
+	    echo "[i] clean opkg cache">&2
+	    CMD rm "$PR/../bin/opkg-cache"
 	}
 
 	;;
