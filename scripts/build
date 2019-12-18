@@ -481,6 +481,14 @@ CMD rm -rf $OWTMP/scripts
     mksquashfs 2>&1 | grep -q -m1 zstd || COMP=gzip
 }
 
+[ $COMP = "gzip" ] && {
+    CMP_OPTS="$CMP_OPTS_GZIP"
+}
+
+[ $COMP = "zstd" ] && {
+    CMP_OPTS="$CMP_OPTS_ZSTD"
+}
+
 CMD mksquashfs \
     "$OWTMP" \
     $OWTMP.squashfs \
