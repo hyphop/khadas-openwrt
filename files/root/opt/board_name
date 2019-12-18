@@ -1,0 +1,23 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= print board hw name and ver from uboot id
+
+case "$(cat /sys/devices/soc0/machine)" in
+    *VIM3L*)
+    echo VIM3L
+    ;;
+    *VIM3*)
+    echo VIM3
+    ;;
+    *VIM2*)
+    echo VIM2
+    ;;
+    *VIM*)
+    echo VIM1
+    ;;
+    *)
+    echo "_UNDEF_"
+    ;;
+esac

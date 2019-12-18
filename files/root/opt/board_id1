@@ -1,0 +1,26 @@
+#!/bin/sh
+
+## hyphop ##
+
+# print board ver
+
+BID=$(board_id)
+
+case $BID in
+    VIM3*)
+    cpus="$(cpunums)"
+    [ "4" = "$cpus" ] && {
+    echo "VIM3L.V12"
+    return
+    }
+    echo $BID
+    return
+    ;;
+    VIM*)
+    echo $BID
+    return
+    ;;
+esac
+
+echo "[e] unknown board">&2
+exit 1

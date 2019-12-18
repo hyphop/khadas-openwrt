@@ -1,0 +1,12 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= print board hw name and ver from uboot id
+
+P=$(cat /proc/cmdline)
+
+b=${P#*hwver=}
+b=${b%% *}
+
+echo $b
