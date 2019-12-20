@@ -14,11 +14,13 @@ USAGE(){ echo "image2sd.sh - simple commant line image writer
 
 USAGE
 
-image2sd.sh IMAGE [DEV] [-pt]
+image2sd.sh IMAGE [DEV] [-p]
 
     IMAGE - file.[gz|zip|7z|img]
     DEV   - /dev/mmcblk? or /dev/sdx
     -p    - bypass part table
+    -a 	  - auto detect sd card 
+    -no	  - no auto detect sd card 
 
 AUTHOR
 
@@ -26,6 +28,15 @@ AUTHOR
 "
 }
 
+uid=$(id -u)
+gid=$(id -g)
+
+sudo=sudo
+
+[ "$uid" = "0" ] && sudo=
+[ "$gid" = "0" ] && sudo=
+
+#echo "[i] UID: $uid GID: $gid SUDO: $sudo">&2
 
 SAVE_PT=
 
@@ -34,17 +45,8 @@ SAVE_PT=
     exit 1
 }
 
-for t in /sys/class/block/*/device/model; do
-    [ -f $t ] && {
-    d=${t#*block/}
-    d=${d%%/*}
-    egrep -q "Card Reader" $t && {
-    SD=/dev/$d
-    echo "[i] auto detected dev: $SD ($(cat $t))">&2
-    break
-    }
-    }
-done
+
+AUTO=
 
 #IN=
 #SD=
@@ -54,6 +56,14 @@ for a in "$@"; do
     case $a in
     -p)
     SAVE_PT=1
+    continue
+    ;;
+    -a)
+    AUTO=1
+    continue
+    ;;
+    -an|-no)
+    AUTO=
     continue
     ;;
     -h|--help)
@@ -70,6 +80,25 @@ for a in "$@"; do
     }
 
 done
+
+[ "$SD" ] || {
+[ "$AUTO" ] && {
+for t in \
+    /sys/class/block/mmc*/device/type \
+    /sys/class/block/*/device/model; \
+    do
+    [ -f $t ] && {
+    d=${t#*block/}
+    d=${d%%/*}
+    egrep -q "Card|^SD" $t && {
+    SD=/dev/$d
+    echo "[i] auto detected dev: $SD ($(cat $t))">&2
+    break
+    }
+    }
+done
+}
+}
 
 [ "$SD" ] || {
     echo "[e] target device not defined">&2
@@ -124,8 +153,9 @@ ARGS=bs=1M
 PTT=/tmp/image2sd.ptt
 
 [ "$SAVE_PT" ] && {
-    echo "[i] save part table">&2
-    dd if=$SD count=1 of=$PTT 1>/dev/null 2>/dev/null || FAIL save parts
+    echo "[i] save part table $SD -> $PTT">&2
+#   $sudo dd if=$SD count=1 of=$PTT 1>/dev/null 2>/dev/null || FAIL save parts
+    $sudo dd if=$SD count=1 of=$PTT 2>$PTT.log 1>/dev/null || FAIL "save parts $(cat $PTT.log)"
 }
 
 case "$IN" in
@@ -153,18 +183,17 @@ case "$IN" in
 
     ASK
 
-    gzip -dc "$IN" | pv -s $S | sudo dd $ARGS of=$SD || FAIL write data
+    gzip -dc "$IN" | pv -s $S | $sudo dd $ARGS of=$SD || FAIL write data
     ;;
     *.xz)
     echo "[i] xz image mode">&2
     ASK
-    xz -dc "$IN" | pv | sudo dd $ARGS of=$SD || FAIL write data
+    xz -dc "$IN" | pv | $sudo dd $ARGS of=$SD || FAIL write data
     ;;
     *.zip)
     echo "[i] zip image mode">&2
     unzip -l "$IN" "*.img" || FAIL wrong zip
-
-    S=$(unzip -l "$IN" "*.img" | head -4 | tail -1 | grep ".img" || FAIL)
+    S=$(unzip -l "$IN" | grep ".img" | tail -1)
     S=$(echo $S)
     S=${S%% *}
 
@@ -172,7 +201,7 @@ case "$IN" in
 
     ASK
 
-    unzip -p "$IN" "*.img" | pv -s $S | sudo dd $ARGS of=$SD || FAIL write data
+    unzip -p "$IN" "*.img" | pv -s $S | $sudo dd $ARGS of=$SD || FAIL write data
 
     ;;
     *.7z)
@@ -187,7 +216,7 @@ case "$IN" in
 
     ASK
 
-    7z x "$IN" "$IMG" -so | pv -s $S | sudo dd $ARGS of=$SD
+    7z x "$IN" "$IMG" -so | pv -s $S | $sudo dd $ARGS of=$SD
 
     ;;
     *)
@@ -195,13 +224,19 @@ case "$IN" in
 
     ASK
 
-    pv "$IN" | sudo dd $ARGS bs=1M of=$SD || FAIL write data
+    pv "$IN" | $sudo dd $ARGS bs=1M of=$SD || FAIL write data
 esac
 
 [ "$SAVE_PT" ] && {
     echo "[i] restore part table">&2
-    dd if=$SD count=1 conv=fsync,notrunc bs=444 of=$PTT 	1>/dev/null 2>/dev/null || FAIL restore parts
-    dd of=$SD count=1 conv=fsync,notrunc if=$PTT		1>/dev/null 2>/dev/null || FAIL restore parts
+    $sudo dd if=$SD count=1 conv=fsync,notrunc bs=444 of=$PTT 	1>/dev/null 2>$PTT.log || FAIL "restore parts $(cat $PTT.log)"
+    $sudo dd of=$SD count=1 conv=fsync,notrunc if=$PTT		1>/dev/null 2>$PTT.log || FAIL "restore parts $(cat $PTT.log)"
+    sync
+    echo "[i] refresh part tables">&2
+    echo "w\nq\n" | $sudo fdisk $SD 1>/dev/null 2>/dev/null
+
 }
 
 sync
+
+echo "[i] DONE"

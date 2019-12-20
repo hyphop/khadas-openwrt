@@ -3,7 +3,8 @@
 ## Khadas Vims OpenWrt rel 0.6
 
 + improbve openwrt 19.07.2 series
-+ add WIFI modules support for VIM3 VIM3L boards ( sido 02D0:4359 AP6398S)
++ add WIFI modules support for VIM2.pro VIM3 VIM3L boards ( sido 02D0:4359 AP6398S)
++ NOTE:	VIM3L wifi not stable
 + initial overlay build support
 + add f2fs overlay support
 

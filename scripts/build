@@ -407,13 +407,14 @@ CMD dd if=/dev/zero bs=512 count=$P1OFFSET of=$IMG_VFAT
 CMD dd if=$UBOOT_BIN of=$IMG_VFAT conv=fsync,notrunc bs=444 count=1
 CMD dd if=$UBOOT_BIN of=$IMG_VFAT conv=fsync,notrunc bs=512 skip=1 seek=1
 
-CMD dd if=/dev/zero bs=1M count=$PART0SIZE of=$IMG_VFAT.vfat
-CMD mkfs.vfat -n $PART1_LABEL -i DEADBEEF ${IMG_VFAT}.vfat
+F="${IMG_VFAT}.vfat"
+
+CMD dd if=/dev/zero bs=1M count=$PART0SIZE of=$F
+CMD mkfs.vfat -n $PART1_LABEL -i DEADBEEF $F
 
 
 P=$(realpath $PWD)
 #F="${IMG_VFAT}@@$((1+$PART0SIZE))M"
-F="${IMG_VFAT}.vfat"
 
 [ -d $IMG_VFAT.boot ] && \
     rm -rf $IMG_VFAT.boot
