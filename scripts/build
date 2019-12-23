@@ -139,7 +139,7 @@ DL() {
 	    CMD curl -f -jkL "$1" -o "$S" -#
 	    curl_code=$?
 	    [ "$curl_code" = "0" ] || {
-	        echo "[w] curl exit $curl_code">&2
+	        echo "[w] curl exit $curl_code :: $1">&2
 		[ -f $S ] && rm "$S"
 		return 1
 	    }
