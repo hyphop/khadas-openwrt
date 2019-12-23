@@ -233,8 +233,8 @@ DL https://github.com/hyphop/khadas-uboot-spi/releases/download/openwrt/u-boot.$
 UBOOT_BIN=$R
 
 #DL https://github.com/hyphop/pkg/releases/download/openwrt_khadas_fw/openwrt_khadas_fw.tar.gz || FAIL
-DL https://github.com/hyphop/pkg/releases/download/openwrt_khadas_fw_vims/openwrt_khadas_fw_vims.tar.xz || FAIL
-
+#DL https://github.com/hyphop/pkg/releases/download/openwrt_khadas_fw_vims/openwrt_khadas_fw_vims.tar.xz || FAIL
+DL https://github.com/hyphop/pkg/releases/download/wlan-firmware-khadas/openwrt_khadas_fw_vims.tar.xz || FAIL
 
 FW_BIN=$R
 
