@@ -1,0 +1,39 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= fix uboot env
+
+export PATH="/opt/:$PATH"
+
+tty_line
+
+echo "[i] fix uboot env">&2
+
+aml_emmc_env chk && {
+
+    echo "[i] env ok">&2
+    E=/tmp/emmc.env
+    N=/tmp/emmc.env.new
+    R=/tmp/emmc.env.new.raw
+    T=/tmp/emmc.env.var
+    aml_emmc_env print > $E
+#    aml_emmc_env export _ > /tmp/emmc.env.export
+#    . /tmp/emmc.env.export
+
+#    grep bootcmd= $E | tee $T
+#    grep bootsd= $E | tee $T
+    grep -v bootcmd= $E | grep -v bootsd= > $N
+    echo "bootsd=echo TRY_BOOT_FROM_SD; load mmc 0 20000000 s905_autoscript && autoscr 20000000; load mmc 1 20000000 s905_autoscript && autoscr 20000000 " >>$N
+    echo "bootcmd=run bootsd; run storeboot" >>$N
+    
+    mkenvimage -s 65536 -o $R $N && {
+	echo "[i] write new env back to emmc">&2
+	aml_emmc_env write $R
+    }
+
+
+#    echo "bootsd $_bootsd"
+#    echo "bootcmd $_bootcmd"
+
+}

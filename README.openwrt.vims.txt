@@ -21,6 +21,7 @@ NOTE:	this openwrt build works properly only with U-Boot 2015.01-g377aea7bb8 (Oc
 + https://dl.khadas.com/Firmware/VIM3/OpenWrt
 + https://dl.khadas.com/Firmware/VIM3L/OpenWrt
 + https://dl.khadas.com/Firmware/Krescue/images/
++ https://github.com/hyphop/khadas-openwrt/releases/
 
 # OpenWrt Access
 
@@ -151,6 +152,7 @@ need plug usb cable in two steps on host side
 + https://dl.khadas.com/Firmware/VIM3/OpenWrt
 + https://dl.khadas.com/Firmware/VIM3L/OpenWrt
 + https://dl.khadas.com/Firmware/Krescue/images
++ https://github.com/hyphop/khadas-openwrt/releases/
 + https://docs.khadas.com
 + https://openwrt.org/
 

@@ -1,0 +1,46 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= print squashfs size / rounded by 4096 bytes blocks
+
+# examples
+
+# squashfs_size /dev/mmcblk2p2
+# 29573120
+#
+
+    FILE=$1
+    OFFSET=$2
+
+    [ "$OFFSET" ] || OFFSET=0
+
+    OFF4=$((OFFSET/4096))
+    [ "$((OFF4*4096))" = "$OFFSET" ] || {
+	echo "[i] offset not div by 4096">&2
+	return 1
+    }
+
+    sk="dd count=1 if=$FILE bs=4096 skip=$OFF4"
+    
+    magic=$( $sk 2>/dev/null | dd bs=4 count=1 2>/dev/null)
+
+    [ "$magic" = "hsqs" ] || return 1
+
+    comp="$( $sk 2>/dev/null | dd skip=20 bs=1 count=1 2>/dev/null|hexdump -v -e '/1 "%u\n"')"
+    size="$(echo $( $sk 2>/dev/null | dd skip=5  bs=8 count=1 2>/dev/null|hexdump -v -e '4 "%u\n"'))"
+
+    size1=$(echo ${size% *})
+    size2=$(echo ${size#* })
+
+    [ "$size2" = "0" ] && size="$size1"
+    [ "$size2" = "0" ] || size="$((size1*$size2))"
+
+    sizer=$((($size/4096)*4096))
+    [ "$sizer" -lt "$size" ] && sizer=$((sizer+4096))
+
+    #rsize=$(stat -c%s $F)
+    #echo "SFS detected ($comp) $size=$size1*$size2"
+    #echo "file size $rsize == $sizer"
+    echo "$sizer"
+

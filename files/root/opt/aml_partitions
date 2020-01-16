@@ -1,0 +1,125 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= print amlogic partitions
+
+export PATH="/opt/:$PATH"
+
+USAGE(){ echo "USAGE EXAMPLE
+
+    aml_partitions [-k]
+
+parts 6
+[h] N         partname hex_offset   hex_size -    offset      size - 512off 512_sz
+----------------------------------------------------------------------------------
+[i] 0       bootloader 0x00000000 0x00400000 -         0   4194304 -      0   8192
+[i] 1         reserved 0x02400000 0x04000000 -  37748736  67108864 -  73728 131072
+[i] 2              env 0x06c00000 0x00800000 - 113246208   8388608 - 221184  16384
+[i] 3             logo 0x07c00000 0x00800000 - 130023424   8388608 - 253952  16384
+[i] 4          ramdisk 0x08c00000 0x02000000 - 146800640  33554432 - 286720  65536
+[i] 5           rootfs 0x0b400000 0x00000000 - 188743680         0 - 368640      0
+
+"
+exit 0
+}
+
+
+KRESCUE=
+
+for a in $@; do
+    case $a in
+	-k)
+	KRESCUE=1
+	;;
+	*)
+	USAGE
+	exit 1
+	;;
+    esac    
+done
+
+
+    FILE=$(mmcdisk mmc)
+    #OFFSET=$2
+    [ "$OFFSET" ] || OFFSET=0x02400000
+
+    OFF4=$((OFFSET/4096))
+
+    sk="dd count=1 if=$FILE bs=4096 skip=$OFF4"
+    
+    magic=$( $sk 2>/dev/null | dd bs=3 count=1 2>/dev/null)
+
+    [ "$magic" = "MPT" ] || {
+	echo "[e] not found valid HEADER">&2
+	exit 1
+    }
+
+    skip=16
+
+    parts="$( $sk 2>/dev/null | dd skip=$skip bs=1 count=1 2>/dev/null|hexdump -v -e '/1 "%u\n"')"
+
+    echo "# parts: $parts">&2
+
+    n=0
+    skip=$((skip+8))
+
+mul() {
+    [ "$2" = "0" ] && echo "$1"
+    [ "$2" = "0" ] || echo "$((0*$1))"
+}
+
+
+[ "$KRESCUE" ] && {
+
+    while [ "$n" -lt "$parts" ]; do
+        name="$( $sk 2>/dev/null | dd skip=$((skip+40*$n)) bs=1 count=16 2>/dev/null)"
+
+	s="$(echo $( $sk 2>/dev/null | dd skip=$((skip+40*$n+16)) bs=1 count=8 2>/dev/null|hexdump -v -e '4 "%u\n"'))"
+	o="$(echo $( $sk 2>/dev/null | dd skip=$((skip+40*$n+16+8)) bs=1 count=8 2>/dev/null|hexdump -v -e '4 "%u\n"'))"
+
+	offset=$(mul $o)
+	size=$(mul $s)
+
+	printf "# partition $n $name
+part: $n
+start: 0x%08x
+size:  0x%08x
+#end:  0x%08x
+sub:	1
+#data:	.boot/$n.$name
+
+" $offset $size $((offset+$size))
+
+	n=$((n+1))
+    done
+
+    exit 0
+
+}
+
+
+FMT="%02d %16s 0x%08x 0x%08x 0x%08x - %11s %11s - %7s %7s %7s"
+FMTh="%02s %16s 0x%08s 0x%08s 0x%08s - %11s %11s - %7s %7s %7s"
+
+    printf "[h] $FMTh\n" \
+    NN partname hex_offs hex_size hex_end_ offset size 512off 512_sz 512_end
+    echo "----------------------------------------------------------------------------------------------------"
+    while [ "$n" -lt "$parts" ]; do
+        name="$( $sk 2>/dev/null | dd skip=$((skip+40*$n)) bs=1 count=16 2>/dev/null)"
+
+	s="$(echo $( $sk 2>/dev/null | dd skip=$((skip+40*$n+16)) bs=1 count=8 2>/dev/null|hexdump -v -e '4 "%u\n"'))"
+	o="$(echo $( $sk 2>/dev/null | dd skip=$((skip+40*$n+16+8)) bs=1 count=8 2>/dev/null|hexdump -v -e '4 "%u\n"'))"
+
+	offset=$(mul $o)
+	size=$(mul $s)
+
+	printf "[i] $FMT\n" \
+	 $n $name $offset $size $((offset+$size)) $offset $size $((offset/512)) $((size/512)) $((size/512+offset/512))
+	n=$((n+1))
+    done
+
+    echo "[i] done">&2
+
+    exit 0
+

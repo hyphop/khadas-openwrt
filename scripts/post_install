@@ -66,6 +66,7 @@ case $REL in
     ;;
     19*)
     echo ""
+    $opkg install libzstd zstd
     ;;
 esac
 

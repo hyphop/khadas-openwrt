@@ -1,0 +1,29 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= openwrt 64k pad overlay offset
+
+USAGE(){ echo "USAGE HELP EXAMPLE
+==================
+
+root@openwrt-vim:~# squashfs_size /dev/mmcblk1p2
+29351936
+root@openwrt-vim:~# squashfs_size2 /dev/mmcblk1p2
+29360128
+root@openwrt-vim:~# losetup 
+NAME       SIZELIMIT   OFFSET AUTOCLEAR RO BACK-FILE  DIO LOG-SEC
+/dev/loop0         0 29360128         0  0 /mmcblk1p2   0     512
+"
+exit 1
+}
+
+[ "$1" ] || USAGE
+
+s=$(${0%2} "$@")
+[ "$s" ] && {
+s2=$((s/65536*65536))
+[ "$s2" -lt "$s" ] && s2=$((s2+65536))
+echo $s2
+}
+

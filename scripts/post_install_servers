@@ -25,6 +25,7 @@ case $REL in
     ;;
     19*)
     $opkg install nfs-kernel-server nfs-kernel-server-utils
+    $opkg install mkf2fs f2fs-tools
     ;;
 esac
 

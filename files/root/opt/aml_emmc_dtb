@@ -1,0 +1,101 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= read dtb from emmc amlogic
+
+export PATH="/opt/:$PATH"
+
+n=$(basename $0)
+#reserverd
+#	      02400000
+DTB_OFFSET1=0x02800000
+DTB_OFFSET2=0x02840000
+
+DTB_OFFSET=$DTB_OFFSET2
+
+MMC_DISK=$(mmcdisk mmc)
+SIZE=512
+
+CMD(){
+    echo "# $@">&2
+    $@
+}
+
+case "$1" in
+
+    block1)
+    echo "$(($DTB_OFFSET1/512))"
+    exit 0
+    ;;
+    block*)
+    echo "$(($DTB_OFFSET2/512))"
+    [ "$2" ] && echo "$(($DTB_OFFSET1/512))"
+    exit 0
+    ;;
+    end*)
+    echo "$(($DTB_OFFSET2/512+512))"
+    exit 0
+    ;;
+
+    off*)
+    echo "$(($DTB_OFFSET2))"
+    [ "$2" ] && echo "$(($DTB_OFFSET1))"
+    exit 0
+    ;;
+    hex)
+    echo "$DTB_OFFSET2"
+    [ "$2" ] && echo "$DTB_OFFSET1"
+    exit 0
+    ;;
+    hex1)
+    echo "$DTB_OFFSET1"
+    exit 0
+    ;;
+    dts)
+    CMD dd if=$MMC_DISK skip=$(($DTB_OFFSET/512)) count=$SIZE 2>/dev/null | dtc -q -I dtb
+    ;;
+
+    chk)
+    CMD dd if=$MMC_DISK skip=$(($DTB_OFFSET/512)) count=$SIZE 2>/dev/null | dtc -q -I dtb >/dev/null && {
+    #echo OK
+    exit 0
+    }
+    exit 1
+
+    ;;
+
+    write)
+    [ -f "$2" ] && {
+    echo "[i] read DTB from $2 write to $MMC_DISK">&2
+    CMD dd if=$2 of=$MMC_DISK seek=$(($DTB_OFFSET1/512)) 2>/dev/null
+    CMD dd if=$2 of=$MMC_DISK seek=$(($DTB_OFFSET2/512)) 2>/dev/null
+    }
+    [ -f "$2" ] || {
+    echo "[i] read DTB from stdin write to $MMC_DISK">&2
+    dd of=$MMC_DISK seek=$(($DTB_OFFSET1/512)) 2>/dev/null
+    dd of=$MMC_DISK seek=$(($DTB_OFFSET2/512)) 2>/dev/null
+    }
+    ;;
+    read|raw|dtb)
+    CMD dd if=$MMC_DISK skip=$(($DTB_OFFSET/512)) count=$SIZE 2>/dev/null 
+    ;;
+    head)
+    CMD dd if=$MMC_DISK skip=$(($DTB_OFFSET/512)) count=$SIZE 2>/dev/null | dtc -q -I dtb | grep model -m1 -A2
+    ;;
+    dump)
+    OUT="$2"
+    [ "$OUT" ] || OUT=/tmp/$(board_id).emmc.dtb
+
+    echo "[i] dump dtb to $OUT">&2
+    CMD dd if=$MMC_DISK skip=$(($DTB_OFFSET/512)) count=$SIZE 2>/dev/null  > $OUT
+
+    ;;
+
+    *)
+    echo "[i] $n - read dtb from emmc amlogic">&2
+    echo "[i] USAGE $n [dts|read|dtb|raw|write|head|dump|chk|offset|block?|end|help]">&2
+    ;;
+
+esac
+

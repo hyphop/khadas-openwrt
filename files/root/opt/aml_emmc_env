@@ -1,0 +1,169 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= read env from emmc amlogic
+
+export PATH="/opt/:$PATH"
+
+USAGE(){
+echo "USAGE EXAMPLES
+    aml_emmc_env print			# print all env
+    aml_emmc_env print bootcmd		# print only bootcmd= line
+    aml_emmc_env chk && echo OK		# check env exist
+    aml_emmc_env read			# print binary env splited by \0 
+    aml_emmc_env raw			# print raw env data with crc header
+    aml_emmc_env find [ARGS]		# find string in env
+    aml_emmc_env var bootargs		# print only bootargs value
+    aml_emmc_env write [FILE]		# write raw env data back to emmc
+    aml_emmc_env export			# print export env to shell format
+    ...
+"
+exit 0
+
+}
+
+n=$(basename $0)
+
+ENV_OFFSET=0x27400000
+
+#BID=$(board_id1)
+
+case $(board_name) in
+    VIM3L)
+    ENV_OFFSET=0x6c00000
+    ;;
+    VIM3)
+    ENV_OFFSET=0x6c00000
+    ;;
+esac
+
+aml_emmc_dtb dts | grep -q part-16 && {
+    ENV_OFFSET=0x4d400000
+}
+
+#VIM3l
+
+##
+##Saving Environment to aml-storage...
+##mmc env offset: 0x4d400000 
+
+MMC_DISK=$(mmcdisk mmc)
+SIZE=128
+
+OUT_RAW=/tmp/mmc.env.raw
+OUT_DAT=/tmp/mmc.env.dat
+
+CMD(){
+    echo "# $@">&2
+    $@
+}
+
+case "$1" in
+    off*)
+    echo "$(($ENV_OFFSET))"
+    exit 0
+    ;;
+    bl*)
+    echo "$(($ENV_OFFSET/512))"
+    exit 0
+    ;;
+    end*)
+    echo "$(($ENV_OFFSET/512+$SIZE))"
+    exit 0
+    ;;
+    hex)
+    echo "$ENV_OFFSET"
+    exit 0
+    ;;
+    read)
+    echo "[i] read bin env">&2
+    dd if=$MMC_DISK skip=$(($ENV_OFFSET/512)) count=$SIZE of=$OUT_RAW 2>/dev/null
+    dd if=$OUT_RAW bs=4 skip=1 2>/dev/null
+    ;;
+    chk)
+    echo "[i] chk env">&2
+    dd if=$MMC_DISK skip=$(($ENV_OFFSET/512)) count=$SIZE  2>/dev/null | grep -q "bootcmd=" && {
+#    echo "OK">&2
+    exit 0
+    }
+#    echo "ERROR">&2
+    exit 1
+
+    ;;
+    raw)
+    echo "[i] read raw env">&2
+    dd if=$MMC_DISK skip=$(($ENV_OFFSET/512)) count=$SIZE  2>/dev/null
+    ;;
+
+    dump)
+    OUT="$2"
+    [ "$OUT" ] || OUT=/tmp/$(board_id).emmc.env
+    echo "[i] dump env to $OUT">&2
+    dd if=$MMC_DISK skip=$(($ENV_OFFSET/512)) count=$SIZE  2>/dev/null 1>$OUT
+
+    ;;
+
+    write)
+
+    [ -f "$2" ] || {
+    echo "[i] write raw env from: stdin">&2
+    dd of=$MMC_DISK seek=$(($ENV_OFFSET/512)) count=$SIZE  2>/dev/null
+    }
+
+    [ -f "$2" ] && {
+    echo "[i] write raw env from: $2">&2
+    dd if="$2" of=$MMC_DISK seek=$(($ENV_OFFSET/512)) count=$SIZE  2>/dev/null
+    }
+
+    ;;
+    print)
+
+    echo "[i] print env $2">&2
+    dd if=$MMC_DISK skip=$(($ENV_OFFSET/512)) count=$SIZE 2>/dev/null | \
+    dd bs=4 skip=1 2>/dev/null | grep $2=
+    ;;
+
+    export)
+
+    pref="$2"
+
+    echo "[i] print env with pref: $pref">&2
+    dd if=$MMC_DISK skip=$(($ENV_OFFSET/512)) count=$SIZE 2>/dev/null | \
+    dd bs=4 skip=1 2>/dev/null | grep = | while read l; do
+	s=${l/=/=\'}
+	s="$s'"
+	echo "$pref$s"
+    done
+    ;;
+
+    find)
+    shift
+    echo "[i] find $@:">&2
+    dd if=$MMC_DISK skip=$(($ENV_OFFSET/512)) count=$SIZE 2>/dev/null | \
+    dd bs=4 skip=1 2>/dev/null | grep = | egrep $@
+    ;;
+
+    var)
+    [ "$2" ] || {
+	echo "[i] undef var name">&2
+	exit 1
+    }
+    echo "[i] var $2:">&2
+    v=$(dd if=$MMC_DISK skip=$(($ENV_OFFSET/512)) count=$SIZE 2>/dev/null | \
+    dd bs=4 skip=1 2>/dev/null | grep = | egrep -m1 ^$2)
+    echo ${v#*=}
+
+    ;;
+    *)
+
+    echo "[i] $n - read env from emmc amlogic">&2
+    echo "[i] USAGE $n [read|raw|print|write|find|var|export|dump|chk|offset|hex|block|end|help]">&2
+    echo
+
+    USAGE
+
+    ;;
+
+esac
+
