@@ -2,6 +2,7 @@
 
 ## Khadas Vims OpenWrt rel 0.6
 
++ Final release of OpenWrt 19.07.0
 + improbve openwrt 19.07.2 series
 + add WIFI modules support for VIM3 VIM3L boards ( sido 02D0:4359 AP6398S)
 + initial overlay build support

@@ -56,6 +56,12 @@ test "$hwver" = "VIM3.V11" && setenv Cdtb /boot/krescue-vim3-a311d.dtb
 test "$hwver" = "VIM3.V12" && setenv Cdtb /boot/krescue-vim3-s905d3.dtb
 test "$hwver" = "VIM3.V12" && test "$maxcpus" = "6" && setenv Cdtb /boot/krescue-vim3-a311d.dtb
 
+## emmc MAINLINE UBOOT 
+test "$fdtfile" = "amlogic/meson-sm1-khadas-vim3l.dtb" && setenv Cdtb /rescue/krescue-vim3-s905d3.dtb
+test "$fdtfile" = "amlogic/meson-gxl-s905x-khadas-vim.dtb" && setenv Cdtb /rescue/krescue-vim1.dtb
+test "$fdtfile" = "amlogic/meson-gxm-khadas-vim2.dtb" && setenv Cdtb /rescue/krescue-vim2.dtb
+test "$fdtfile" = "amlogic/meson-g12b-a311d-khadas-vim3.dtb" && setenv Cdtb /rescue/krescue-vim3-a311d.dtb
+
 ##############################################################
 
 echo "load env"
