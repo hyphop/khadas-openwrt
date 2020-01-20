@@ -2,7 +2,7 @@
 
 openwrt for Khadas VIMs boards https://www.khadas.com/vim (Amlogic s905 s912 a311D s905d3 )
 
-![khadas vims openwrt](pics/khadas_vim1_openwrt.jpg)
+![khadas vims openwrt](pics/khadas_vim_openwrt.jpg)
 
 ## Change logs
 
@@ -13,7 +13,7 @@ openwrt for Khadas VIMs boards https://www.khadas.com/vim (Amlogic s905 s912 a31
 + [khadas VIM1](https://docs.khadas.com/vim1/) - OK
 + [khadas VIM2](https://docs.khadas.com/vim2/) - OK
 + [khadas VIM3](https://docs.khadas.com/vim3/) - OK
-+ [khadas VIM3L](https://docs.khadas.com/vim3/) - OK
++ [khadas VIM3L](https://docs.khadas.com/vim3/#VIM3L) - OK
 
 ## Build
 
