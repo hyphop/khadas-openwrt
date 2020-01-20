@@ -8,8 +8,8 @@ openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim
 
 + khadas VIM1 - OK
 + khadas VIM2 - OK
-+ khadas VIM3 - initial
-+ khadas VIM3L - initial
++ khadas VIM3 - OK
++ khadas VIM3L - OK
 
 NOTE:	this openwrt build works properly only with U-Boot 2015.01-g377aea7bb8 (Oct 15 2019 - 12:18:07)
 	openwrt can boot with another uboots but not works properly!!!

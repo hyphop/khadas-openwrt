@@ -10,8 +10,10 @@ openwrt for Khadas VIMs boards https://www.khadas.com/vim (Amlogic s905 s912 a31
 
 ## supported Boards
 
-+ khadas vim1 - OK
-+ khadas vim2 - OK (wifi chip AP6356S 02D0:4356 OK)
++ [khadas VIM1](https://docs.khadas.com/vim1/) - OK
++ [khadas VIM2](https://docs.khadas.com/vim2/) - OK
++ [khadas VIM3](https://docs.khadas.com/vim3/) - OK
++ [khadas VIM3L](https://docs.khadas.com/vim3/) - OK
 
 ## Build
 
@@ -27,7 +29,20 @@ cd khadas-openwrt
 ...
 ./scripts/build -2 # build openwrt for VIM2
 ...
+./scripts/build -3 # build openwrt for VIM3
+...
+./scripts/build -3l # build openwrt for VIM3L
+...
+./scripts/build -emmc -3l # build openwrt for VIM3L emmc image
+...
 ./scripts/build -2 +server # build openwrt server variant for VIM2
+...
+echo REL=18.06.4 > scripts/build.conf.user # build openwrt 18.06.4 series
+./scripts/build -r -2
+...
+echo REL=19.07.0 > scripts/build.conf.user # build openwrt 19.07.0 series
+./scripts/build -r -2
+...
 
 ```
 

@@ -3,8 +3,8 @@
 ## Khadas Vims OpenWrt rel 0.6
 
 + Final release of OpenWrt 19.07.0
-+ improbve openwrt 19.07.2 series
-+ add WIFI modules support for VIM3 VIM3L boards ( sido 02D0:4359 AP6398S)
++ improve openwrt 19.07.X series
++ add WIFI modules support for VIM3 VIM3L boards ( sdio id 02D0:4359 AP6398S)
 + initial overlay build support
 + add f2fs overlay support
 
@@ -12,7 +12,7 @@
 
 + add VIM3 and VIM3L initial support (without on board wifi)
 + add new kernel for VIM3L
-+ prepare build scripts for openwrt 19.07.2 series
++ prepare build scripts for openwrt 19.07.X series
 + add RTL8153 Gigabit Ethernet Adapterv ( USB3.0 - 0bda:8153 - r8152 )
 + USB3.0 expand ready
 + network config add - USB eth1 bridged with usb0 as LAN

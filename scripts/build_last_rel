@@ -17,7 +17,7 @@ git pull
 
 # prepare new rel
 
-echo REL=19.07.0-rc1 > scripts/build.conf.user
+echo REL=19.07.0 > scripts/build.conf.user
 
 # rebuild all for VIM2
 
