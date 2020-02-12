@@ -1,0 +1,67 @@
+#!/bin/sh
+
+#= add next partition
+
+ABOUT(){
+    echo "patrs - simple command line display or manipulate a disk partition table"
+    exit 1
+}
+
+DISK=mmc
+DEV=$(mmcdisk $DISK)
+SIZE=
+PART=
+
+CMD(){
+    echo "# $@">&2
+    $@
+}
+
+FAIL(){
+    echo "[e] $@">&2
+    exit 1
+}
+
+PARTS(){
+PARTS=$(sfdisk --dump $DEV)
+LAST=$(echo $PARTS)
+START=${LAST##*start= }
+START=${START%%,*}
+}
+
+for a in $@; do
+    case $a in
+	-mmc|--mmc)
+	DISK=mmc
+	DEV=$(mmcdisk $DISK)
+	;;
+	-sd|--sd)
+	DISK=sd
+	DEV=$(mmcdisk $DISK)
+	;;
+	-d|--dev)
+	DEV=${a##*=}
+	;;
+	-s|--size)
+	SIZE=${a##*=}
+	;;
+	-a|--add)
+	;;
+	-d|--del)
+	PARTS=${a##*=}
+	[ "$PARTS" ] || FAIL "undef part num for del"
+	CMD sfdisk --del $DEV $PARTS
+	;;
+	""|-l|--list)
+	PARTS
+	echo "$PARTS"
+	*)
+	HELP
+	exit 1
+    esac
+done
+
+
+#echo $START
+#echo "$START, $SIZE" | sfdisk -f $DEV -a
+
