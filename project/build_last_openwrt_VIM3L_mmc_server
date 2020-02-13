@@ -2,14 +2,14 @@
 
 ## hyphop ##
 
-echo "[i] BUILD VIM3L - 19.07.0-rc2 rel - eMMC image + servers mod"
+echo "[i] BUILD VIM3L - 19.07.0 rel - eMMC image + servers mod"
 
 cd $(dirname $0)/..
 git pull
 echo $PWD
 
 #echo KERNEL_REL=openwrt.new > scripts/build.conf.user
-echo KERNEL_REL=openwrt.test > scripts/build.conf.user
+#echo KERNEL_REL=openwrt.test > scripts/build.conf.user
 echo REL=19.07.0-rc2 >> scripts/build.conf.user
 
 ./scripts/build mmc -3l +servers

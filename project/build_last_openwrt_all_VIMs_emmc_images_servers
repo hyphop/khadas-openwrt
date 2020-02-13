@@ -1,0 +1,23 @@
+#!/bin/sh
+
+## hyphop ##
+
+echo "[i] BUILD VIM1 VIM2 VIM3 VIM3L - 19.07.0 rel - eMMC images + servers mod"
+
+cd $(dirname $0)/..
+git pull
+echo $PWD
+
+# prepare new rel
+
+echo REL=19.07.0 > scripts/build.conf.user
+
+ARGS="mmc +servers"
+
+./scripts/build -r -1 $ARGS
+./scripts/build    -2 $ARGS
+./scripts/build    -3 $ARGS
+./scripts/build   -3l $ARGS
+
+rm /tmp/VIM*.img
+
