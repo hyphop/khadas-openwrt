@@ -1,5 +1,10 @@
 # OpenWrt VIMs Change log
 
+## Khadas Vims OpenWrt rel 0.61
+
++ change default rel to OpenWrt 19.07.1
++ update image build scripts
+
 ## Khadas Vims OpenWrt rel 0.6
 
 + Final release of OpenWrt 19.07.0
