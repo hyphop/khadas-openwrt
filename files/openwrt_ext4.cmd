@@ -9,7 +9,7 @@
 kbi hwver
 echo "** KRESCUE START hwver: $hwver hostname: $hostname maxcpus: $maxcpus **"
 
-  BOOT_DELAY=2
+  BOOT_DELAY=1
 
   LINUX_ADDR=0x1080000
   IMAGE_ADDR=0x1080000
@@ -25,7 +25,7 @@ dtb_mem_addr=0x1000000
     ENV_ADDR=0x32000000
  SCRIPT_ADDR=0x33000000
 
-    LABEL=openwrt
+    LABEL=OPENWRT
 
     ROOTFS=/dev/mmcblk0p1
     FSLOAD=load
@@ -35,9 +35,9 @@ dtb_mem_addr=0x1000000
     setenv CuInitrd /boot/uInitrd
     setenv CuImage  /boot/uImage.gzip
 
-test "$devnum" = "" && $FSLOAD mmc 0:1 100000 $LABEL.label && setenv devnum 0:1
-test "$devnum" = "" && $FSLOAD mmc 1:1 100000 $LABEL.label && setenv devnum 1:1
-test "$devnum" = "" && $FSLOAD mmc 2:1 100000 $LABEL.label && setenv devnum 2:1
+test "$devnum" = "" && $FSLOAD mmc 0:1 $loadaddr $LABEL.label && setenv devnum 0:1
+test "$devnum" = "" && $FSLOAD mmc 1:1 $loadaddr $LABEL.label && setenv devnum 1:1
+test "$devnum" = "" && $FSLOAD mmc 2:1 $loadaddr $LABEL.label && setenv devnum 2:1
 test "$devnum" = "" && setenv devnum 0
 
     test "X$devtype" = "X" && devtype=mmc
