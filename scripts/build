@@ -272,6 +272,7 @@ CMD mkimage -A $TARGET_KERNEL_ARCH \
 CMD cp $PR/../bin/*.dtb $OWTMP/boot
 CMD cp $UBOOT_BIN $OWTMP/boot
 CMD cp $PR/../files/splash/splash.bmp.gz $OWTMP/boot
+CMD cp $PR/../files/splash/splash.rgba.bmp.gz $OWTMP/boot
 
 echo $LABEL > $OWTMP/$LABEL.label
 echo $LABEL > $OWTMP/LABEL

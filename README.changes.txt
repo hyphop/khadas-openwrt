@@ -4,6 +4,8 @@
 
 + change default rel to OpenWrt 19.07.1
 + update image build scripts
++ improve uboot scripts and config
++ add mainline uboot support + root env store to emmc fat partition
 
 ## Khadas Vims OpenWrt rel 0.6
 
@@ -18,7 +20,7 @@
 + add VIM3 and VIM3L initial support (without on board wifi)
 + add new kernel for VIM3L
 + prepare build scripts for openwrt 19.07.X series
-+ add RTL8153 Gigabit Ethernet Adapterv ( USB3.0 - 0bda:8153 - r8152 )
++ add RTL8153 Gigabit Ethernet Adapter ( USB3.0 - 0bda:8153 - r8152 )
 + USB3.0 expand ready
 + network config add - USB eth1 bridged with usb0 as LAN
 + https://github.com/hyphop/khadas-openwrt/releases/tag/19.07.0-rc2
