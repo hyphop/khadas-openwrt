@@ -345,6 +345,8 @@ echo "[i] BUILD: $LABEL $REL $VER $BOARD $(TZ= date)" | tee $OWTMP/etc/banner.mo
 
 CMD mkimage -C none -A arm -T script -d $PR/../files/openwrt_ext4.cmd $OWTMP/s905_autoscript
 CMD cp $OWTMP/s905_autoscript  $OWTMP/aml_autoscript
+CMD cp $OWTMP/s905_autoscript  $OWTMP/boot.scr.uimg
+CMD cp $PR/../files/openwrt_ext4.cmd $OWTMP/boot.cmd
 
 cat $PR/../files/boot.ini \
     $PR/../files/openwrt_ext4.cmd > $OWTMP/boot.ini
@@ -424,7 +426,7 @@ mkdir -p $IMG_VFAT.boot
 CMD mdir -i $F ::
 #CMD mdir -i $F ::boot
 cd $OWTMP
-for f in boot LABEL OPENWRT.label s9* aml* boot.ini scripts README* .automount.no ; do
+for f in boot LABEL OPENWRT.label s9* aml* boot.* scripts README* .automount.no ; do
 ls -l1 $f
 CMD mcopy -i $F $f ::$f
 CMD cp -a $f $IMG_VFAT.boot
@@ -473,7 +475,7 @@ CMD mkdir  $OWTMP/boot
 CMD rm  $OWTMP/s9*
 CMD rm  $OWTMP/aml_*
 [ -f $OWTMP/boot.ini ] && \
-CMD rm  $OWTMP/boot.ini
+CMD rm  $OWTMP/boot.*
 CMD rm  $OWTMP/LABEL
 CMD rm  $OWTMP/*.label
 CMD rm -rf $OWTMP/scripts
