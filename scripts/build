@@ -229,7 +229,7 @@ done
 #UNPACK $R 
 MODULES_TAR=$R
 
-DL https://github.com/hyphop/khadas-uboot-spi/releases/download/openwrt/u-boot.$BOARD.sd.bin || FAIL
+DL https://github.com/hyphop/khadas-uboot-spi/releases/download/$UBOOT_REL/u-boot.$BOARD.sd.bin || FAIL
 UBOOT_BIN=$R
 
 #DL https://github.com/hyphop/pkg/releases/download/openwrt_khadas_fw/openwrt_khadas_fw.tar.gz || FAIL
