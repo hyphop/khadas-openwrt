@@ -21,6 +21,7 @@ UINITRD_ADDR=0x8000000
     DTB_ADDR=0x1000000
 dtb_mem_addr=0x1000000
 
+   LOGO_ADDR2=0x31000000
    LOGO_ADDR=0x30000000
     ENV_ADDR=0x32000000
  SCRIPT_ADDR=0x33000000
@@ -32,6 +33,9 @@ dtb_mem_addr=0x1000000
     setenv Cenv     /boot/user.env
     setenv Cdtb     /boot/linux.dtb
     setenv Csplash  /boot/splash.bmp.gz
+
+test "$distro_bootcmd" = "" || setenv Csplash /boot/splash.rgba.bmp
+
     setenv CuInitrd /boot/uInitrd
     setenv CuImage  /boot/uImage.gzip
 
@@ -83,6 +87,7 @@ if test "$Cdtb" = "/boot/krescue-vim.dtb"; then
     echo "[w] dtb not detected force use static: $Cdtb"
 fi
 
+test "$boot_source" = "" || setenv BOOTED $boot_source
 
 ##############################################################
 
@@ -105,10 +110,10 @@ fdt addr $DTB_ADDR || exit 1
 #osd open
 #osd clear
 
-echo "load logo"
-echo $LOADER $LOGO_ADDR $Csplash
-$LOADER $LOGO_ADDR $Csplash
-bmp display $LOGO_ADDR 0 0
+echo "load logo $Csplash or $Csplash.gz"
+test "$Csplash" = "" || $LOADER $LOGO_ADDR $Csplash && setenv $Csplash ""
+test "$Csplash" = "" || $LOADER $LOGO_ADDR2 $Csplash.gz && unzip $LOGO_ADDR2 $LOGO_ADDR && setenv $Csplash ""
+test "$Csplash" = "" || bmp display $LOGO_ADDR
 
 #echo "load packed initrd"
 #echo $LOADER $UNITRD_ADDR $CuInitrd
@@ -117,6 +122,10 @@ bmp display $LOGO_ADDR 0 0
 echo "load packed kernel"
 echo $LOADER $UIMAGE_ADDR $CuImage
 $LOADER $UIMAGE_ADDR $CuImage
+
+# mainline
+#BOOTED
+#boot_source
 
 #setenv bootargs "${cmdline} booted=$BOOTED hwver=$hwver root=$ROOTFS rootwait rw"
 

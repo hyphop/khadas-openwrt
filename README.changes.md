@@ -4,6 +4,8 @@
 
 + change default rel to OpenWrt 19.07.1
 + update image build scripts
++ improve uboot scripts
++ add mainline uboot support + root env store to emmc fat partition
 
 ## Khadas Vims OpenWrt rel 0.6
 
