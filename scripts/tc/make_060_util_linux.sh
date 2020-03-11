@@ -4,6 +4,8 @@
 
 #= make simg2img
 
+# need bison
+
 D=$(dirname $0)
 
 . $D/make_
