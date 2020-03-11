@@ -451,7 +451,8 @@ CMD rm ${IMG_VFAT}.vfat
 CMD sync
 
 SFDISK_ARGS=-q
-SFDISK_ARGS="-f --no-reread --no-tell-kernel"
+#SFDISK_ARGS="-f --no-reread --no-tell-kernel"
+SFDISK_ARGS="-f --no-reread "
 
 echo "[i] pake parts">&2
 echo "label:dos | sfdisk $SFDISK_ARGS $IMG_VFAT ">&2
