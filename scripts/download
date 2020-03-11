@@ -1,0 +1,83 @@
+#!/bin/sh
+
+## hyphop ##
+
+#GET(){
+
+    [ "$1" ] || { 
+	echo "[w] undef src">&2
+	return 1
+    }
+
+OK(){
+	md5sum "$O_" > "$O_.md5sum"
+	cd $P_
+	exit 0
+#	return 0
+}
+
+    O_="$2"
+    D_="$3"
+    echo "[i] DOWNLOAD $1 => $O_ DIR $D_">&2
+
+    T_=/tmp/dl.head
+    P_=$(pwd)
+    [ $D_ ] && {
+	cd $D_ || { echo "[e] change dir to $D_">&2
+	exit 1
+        }
+    }
+    [ -f "$O_.md5sum" ] && {
+	echo "[w] already downloaded">&2
+	cd $P_
+	return 0
+    }
+
+    case "$1" in
+	*//mega*)
+	[ "$megadl" ] || \
+	megadl=$(which megadl)
+	[ "$?" = 0 ] || {
+	    echo "[e] megadl not found">&2
+	    return 1
+	}
+	r_=0
+	$megadl --print-names "$1" | tee $T_
+	o_=$(tail -1 "$T_")
+	[ "$o_" = "$O_" ] || \
+	CMD mv "$o_" "$O_"
+	;;
+	*//*)
+	curl -f -jkL -C- -D "$O_.headers" "$1" -o "$O_"
+	r_=$?
+	case $r_ in
+	    22)
+	    echo "[i] curl ret code $r_">&2
+	    head -n1 "$O_.headers" | grep 416 && {
+	    echo "[i] file already downloaded">&2
+	    ##curl: (22) The requested URL returned error: 416
+	    OK
+	    }
+	    ;;
+	    0)
+	    OK
+	    ;;
+	    *)
+	    echo "[i] curl ret code $r_">&2
+	    cat "$O_.headers">&2
+	    ;;
+	esac
+	#echo "[i] curl ret $r_">&2
+	return $r_
+	#exit $r_
+	;;
+    esac
+
+    [ "$r_" = "0" ] && OK
+
+    cd $P_
+
+#}
+#
+#GET "$LINK" "$IMG" $DL || DIE
+

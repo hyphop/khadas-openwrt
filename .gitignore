@@ -5,5 +5,7 @@ bin.tmp/*
 share/*
 scripts/build.conf.user
 tmp/*
+opt
+dl
 work
 !README.md

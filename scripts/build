@@ -14,6 +14,11 @@ PA=$(realpath $PR)
 . $0.lib
 . $0.conf
 
+case $PATH in
+    */opt/bin:*);;
+    *)PATH="$PA/../opt/bin:$PATH";;
+esac
+
 APPS=""
 ITYPE=sd
 
@@ -98,9 +103,14 @@ for t in $REQUIRED ; do
     }
 done
 
-echo "[i] check sfdisk">&2
-sfdisk -v
+#echo "[i] check sfdisk">&2
+#sfdisk -v
 
+sfdisk=$(which sfdisk)
+[ "$sfdisk" ] || FAIL sfdisk
+
+mksquashfs=$(which mksquashfs)
+[ "$mksquashfs" ] || FAIL mksquashfs
 
 BIN="$PR/../bin"
 
@@ -359,8 +369,8 @@ CMD dd if=/dev/zero bs=1M count=$PART1SIZE of=$IMG_EXT4
 CMD dd if=$UBOOT_BIN of=$IMG_EXT4 conv=fsync,notrunc bs=444 count=1
 CMD dd if=$UBOOT_BIN of=$IMG_EXT4 conv=fsync,notrunc bs=512 skip=1 seek=1
 
-echo "label:dos" | sfdisk -q $IMG_EXT4 || FAIL
-echo "$P1OFFSET, " | sfdisk -q $IMG_EXT4 -a || FAIL
+echo "label:dos" | $sfdisk -q $IMG_EXT4 || FAIL
+echo "$P1OFFSET, " | $sfdisk -q $IMG_EXT4 -a || FAIL
 
 CMD mkfs.ext4 -F -L ${LABEL} -d $OWTMP -E offset=$((P1OFFSET*512)) $IMG_EXT4 || FAIL
 CMD sync
@@ -451,19 +461,19 @@ CMD rm ${IMG_VFAT}.vfat
 CMD sync
 
 SFDISK_ARGS=-q
-#SFDISK_ARGS="-f --no-reread --no-tell-kernel"
-SFDISK_ARGS="-f --no-reread "
+SFDISK_ARGS="-f --no-reread --no-tell-kernel"
+#SFDISK_ARGS="-f --no-reread "
 
 echo "[i] pake parts">&2
-echo "label:dos | sfdisk $SFDISK_ARGS $IMG_VFAT ">&2
-echo "label:dos" | sfdisk $SFDISK_ARGS $IMG_VFAT || FAIL
+echo "label:dos | $sfdisk $SFDISK_ARGS $IMG_VFAT ">&2
+echo "label:dos" | $sfdisk $SFDISK_ARGS $IMG_VFAT || FAIL
 
 echo "[i] pake part 1">&2
-echo "$P1OFFSET,  | sfdisk $SFDISK_ARGS $IMG_VFAT -a">&2
-echo "$P1OFFSET, " | sfdisk $SFDISK_ARGS $IMG_VFAT -a || FAIL
+echo "$P1OFFSET,  | $sfdisk $SFDISK_ARGS $IMG_VFAT -a">&2
+echo "$P1OFFSET, " | $sfdisk $SFDISK_ARGS $IMG_VFAT -a || FAIL
 
 echo "sfdisk $SFDISK_ARGS --part-type $IMG_VFAT 1 e">&2
-sfdisk $SFDISK_ARGS --part-type $IMG_VFAT 1 e || FAIL
+$sfdisk $SFDISK_ARGS --part-type $IMG_VFAT 1 e || FAIL
 
 [ "$COMP" = "" ] && COMP=gzip
 #[ "$CMP_BLOCK_SIZE" ] || CMP_BLOCK_SIZE=1024k
@@ -483,7 +493,7 @@ CMD rm  $OWTMP/*.label
 CMD rm -rf $OWTMP/scripts
 
 [ $COMP = "zstd" ] && {
-    mksquashfs 2>&1 | grep -q -m1 zstd || COMP=gzip
+    $mksquashfs 2>&1 | grep -q -m1 zstd || COMP=gzip
 }
 
 [ $COMP = "gzip" ] && {
@@ -494,7 +504,7 @@ CMD rm -rf $OWTMP/scripts
     CMP_OPTS="$CMP_OPTS_ZSTD"
 }
 
-CMD mksquashfs \
+CMD $mksquashfs \
     "$OWTMP" \
     $OWTMP.squashfs \
     -all-root \
@@ -562,7 +572,7 @@ rm $IMG_VFAT.overlay
 CMD sync
 
 echo "[i] echo $P1OFFSET,  | sfdisk -q $IMG_VFAT -a || FAIL">&2
-echo "$P1OFFSET, " | sfdisk -q $IMG_VFAT -a || FAIL
+echo "$P1OFFSET, " | $sfdisk -q $IMG_VFAT -a || FAIL
 
 md5sum $IMG_VFAT > $IMG_VFAT.md5sum
 
