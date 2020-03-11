@@ -21,7 +21,8 @@ openwrt for Khadas VIMs boards https://www.khadas.com/vim (Amlogic s905 s912 a31
 git clone https://github.com/hyphop/khadas-openwrt.git
 cd khadas-openwrt
 
-# ./scripts/build_prepare
+# ./scripts/build_prepare      # if some tools missed
+# ./build_prepare_from_sources # if some tools missed or wrong 
 
 # build usage examples
 
@@ -51,8 +52,8 @@ echo REL=19.07.0 > scripts/build.conf.user # build openwrt 19.07.0 series
 + https://github.com/hyphop/khadas-openwrt/releases/
 + https://dl.khadas.com/Firmware/VIM1/OpenWrt
 + https://dl.khadas.com/Firmware/VIM2/OpenWrt
-+ https://dl.khadas.com/Firmware/VIM3/OpenWrt - WIP
-+ https://dl.khadas.com/Firmware/VIM3L/OpenWrt - WIP
++ https://dl.khadas.com/Firmware/VIM3/OpenWrt
++ https://dl.khadas.com/Firmware/VIM3L/OpenWrt
 
 ## Installation
 

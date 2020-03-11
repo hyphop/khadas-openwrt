@@ -1,5 +1,11 @@
 # OpenWrt VIMs Change log
 
+## Khadas Vims OpenWrt rel 0.62
+
++ change default rel to OpenWrt 19.07.2
++ change default uboot to mainline
++ improve build tc
+
 ## Khadas Vims OpenWrt rel 0.61
 
 + change default rel to OpenWrt 19.07.1
