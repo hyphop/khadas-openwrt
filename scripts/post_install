@@ -56,8 +56,9 @@ $opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
     openvpn-mbedtls luci-app-openvpn \
     iptables-mod-tproxy \
     iptables-mod-trace \
-    shadowsocks-libev-ss-redir shadowsocks-libev-ss-local shadowsocks-libev-ss-rules shadowsocks-libev-config luci-app-shadowsocks-libev \
     wpan-tools
+
+#    shadowsocks-libev-ss-redir shadowsocks-libev-ss-local shadowsocks-libev-ss-rules shadowsocks-libev-config luci-app-shadowsocks-libev \
 
 case $REL in
     18*)

@@ -20,6 +20,8 @@ case $PATH in
 esac
 
 APPS=""
+apps=""
+
 ITYPE=sd
 
 #MAKE_KRESQ_IMAGE=1
@@ -88,8 +90,10 @@ echo "[i] config board: $BOARD rel : $REL // apps:$APPS">&2
 
 IMG_EXT4_NO=1
 
-IMG_EXT4=/tmp/${BOARD}.$LABEL.$REL.$VER.ext4.$ITYPE.img
-IMG_VFAT=/tmp/${BOARD}.$LABEL.$REL.$VER.$ITYPE.img
+[ "$apps" ] || apps=base
+
+IMG_EXT4=/tmp/${BOARD}.$LABEL.$REL.$VER.$apps.ext4.$ITYPE.img
+IMG_VFAT=/tmp/${BOARD}.$LABEL.$REL.$VER.$apps.$ITYPE.img
 
 ## check
 REQUIRED="rsync curl wget sync sfdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
