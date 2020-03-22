@@ -1,5 +1,11 @@
 # OpenWrt VIMs Change log
 
+## Khadas Vims OpenWrt rel 0.63
+
++ change default dns resolver all via https
++ change firewall users scripts /etc/firewall.user
++ small configs changes
+
 ## Khadas Vims OpenWrt rel 0.62
 
 + change default rel to OpenWrt 19.07.2

@@ -6,6 +6,6 @@
 
 PR=$(dirname $0)
 
-$PR/service enable fan ifmonitor ttyd_terminal samba triggerhappy
+$PR/service enable fan ifmonitor ttyd_terminal samba triggerhappy https-dns-proxy
 
 exit 0
