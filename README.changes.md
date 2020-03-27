@@ -2,9 +2,10 @@
 
 ## Khadas Vims OpenWrt rel 0.63
 
-+ change default dns resolver all via https
++ change default dns resolver all via https-dns
 + change firewall users scripts /etc/firewall.user
 + small configs changes
++ f2fs blacklisted - overlay troubles with f2fs usage
 
 ## Khadas Vims OpenWrt rel 0.62
 
