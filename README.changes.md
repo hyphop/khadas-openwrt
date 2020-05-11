@@ -6,6 +6,8 @@
 + linux kernel other fixes ... 
 + uboot changed to last mainline khadas version
 + green screen bug fixed for any uboot version
++ uboot script autodetect rootfs
++ boot from usb storages
 
 ## Khadas Vims OpenWrt rel 0.63
 
