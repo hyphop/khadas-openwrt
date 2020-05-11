@@ -25,20 +25,20 @@ IFACE=eth0
 # 
 case "$SOC" in
     *A311D*)
-    echo "[i] optimize VIM3: $SOC">&2
-    echo 2 > /proc/irq/6/smp_affinity
+#    echo "[i] optimize VIM3: $SOC">&2
+#    echo 2 > /proc/irq/6/smp_affinity
     ifconfig $IFACE up
     ;;
 
     *SM1*)
-    echo "[i] optimize VIM3L: $SOC">&2
-    echo 2 > /proc/irq/6/smp_affinity
+#    echo "[i] optimize VIM3L: $SOC">&2
+#    echo 2 > /proc/irq/6/smp_affinity
     ifconfig $IFACE up
     ;;
     
     *)
     echo "[i] optimize DEF: $SOC">&2
-    echo 2 > /proc/irq/23/smp_affinity
+#    echo 2 > /proc/irq/23/smp_affinity
 
     ;;
 

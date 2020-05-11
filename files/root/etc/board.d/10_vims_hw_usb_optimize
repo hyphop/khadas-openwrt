@@ -6,6 +6,7 @@
 
 SOC=$(cat /sys/devices/soc0/soc_id)
 
+#exit 0
 
 
 # set smp_affinity
@@ -20,18 +21,23 @@ case "$SOC" in
     echo "[i] optimize VIM3: $SOC">&2
 
     # c9100000.usb, c9100000.usb
-    echo 4 > /proc/irq/24/smp_affinity   
+    #echo 4 > /proc/irq/24/smp_affinity   
     # xhci-hcd:usb1
-    echo 8 > /proc/irq/25/smp_affinity   
+    #echo 8 > /proc/irq/25/smp_affinity   
     ;;
 
     *SM1*)
     echo "[i] optimize VIM3L: $SOC">&2
 
     # c9100000.usb, c9100000.usb
-    echo 4 > /proc/irq/22/smp_affinity   
+    #echo 4 > /proc/irq/22/smp_affinity   
     # xhci-hcd:usb1
-    echo 8 > /proc/irq/23/smp_affinity   
+    #echo 8 > /proc/irq/23/smp_affinity   
+
+    ## usb eth speed up
+    #echo performance > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+    #echo 8 > /proc/irq/24/smp_affinity
+
     ;;
 
     VVVV*)
