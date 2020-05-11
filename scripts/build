@@ -397,26 +397,25 @@ CMD cp $PR/../files/.auto* $OWTMP
 case $BOARD in
     VIM3*)
 
-    [ "$ITYPE" = "emmc" ] && {
-	echo "[i] BOOT FROM SD">&2
-        CMD sed -i s/mmcblk0/mmcblk2/ $OWTMP/boot/user.env
-    }
-
-    [ "$ITYPE" = "sd" ] && {
-	echo "[i] BOOT FROM SD">&2
-        CMD sed -i s/mmcblk0/mmcblk1/ $OWTMP/boot/user.env
-    }
-
+#    [ "$ITYPE" = "emmc" ] && {
+#	echo "[i] BOOT FROM SD">&2
+#        CMD sed -i s/mmcblk0/mmcblk2/ $OWTMP/boot/user.env
+#    }
+#
+#    [ "$ITYPE" = "sd" ] && {
+#	echo "[i] BOOT FROM SD">&2
+#        CMD sed -i s/mmcblk0/mmcblk1/ $OWTMP/boot/user.env
+#    }
 
     ;;
 
     *)
 
-    [ "$ITYPE" = "emmc" ] && {
-	echo "[i] BOOT FROM EMMC">&2
-    
-        CMD sed -i s/mmcblk0/mmcblk1/ $OWTMP/boot/user.env
-    }
+#    [ "$ITYPE" = "emmc" ] && {
+#	echo "[i] BOOT FROM EMMC">&2
+#    
+#        CMD sed -i s/mmcblk0/mmcblk1/ $OWTMP/boot/user.env
+#    }
 
     ;;
 esac
