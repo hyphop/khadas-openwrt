@@ -28,7 +28,7 @@ dtb_mem_addr=0x1000000
 
     LABEL=OPENWRT
 
-    ROOTFS=/dev/mmcblk0p1
+    ROOTFS=
     FSLOAD=load
     setenv Cenv     /boot/user.env
     setenv Cdtb     /boot/linux.dtb
@@ -39,15 +39,25 @@ test "$distro_bootcmd" = "" || setenv Csplash /splash.bmp
     setenv CuInitrd /boot/uInitrd
     setenv CuImage  /boot/uImage.gzip
 
-test "$devnum" = "" && $FSLOAD mmc 0:1 $loadaddr $LABEL.label && setenv devnum 0:1
-test "$devnum" = "" && $FSLOAD mmc 1:1 $loadaddr $LABEL.label && setenv devnum 1:1
-test "$devnum" = "" && $FSLOAD mmc 2:1 $loadaddr $LABEL.label && setenv devnum 2:1
-test "$devnum" = "" && setenv devnum 0
+test "$devnum" = "" && $FSLOAD mmc 0 $loadaddr $LABEL.label && setenv devnum 0
+test "$devnum" = "" && $FSLOAD mmc 1 $loadaddr $LABEL.label && setenv devnum 1
+test "$devnum" = "" && $FSLOAD mmc 2 $loadaddr $LABEL.label && setenv devnum 2
+test "$devnum" = "" && $FSLOAD usb 0 $loadaddr $LABEL.label && setenv devnum 0 && setenv devtype usb
 
-    test "X$devtype" = "X" && devtype=mmc
+test "$devnum"  = "" && setenv devnum 0
+test "$devtype" = "" && setenv devtype mmc
+
+test "$ROOTFS" = "" -a "$devtype" = "usb" && ROOTFS=root=/dev/sda1
+test "$ROOTFS" = "" -a "$devnum"  = "0"   && ROOTFS=root=/dev/mmcblk0p2
+test "$ROOTFS" = "" -a "$devnum"  = "1"   && ROOTFS=root=/dev/mmcblk1p2
+test "$ROOTFS" = "" -a "$devnum"  = "2"   && ROOTFS=root=/dev/mmcblk2p2
+test "$ROOTFS" = "" -a "$devnum"  = "0:1" && ROOTFS=root=/dev/mmcblk0p2
+test "$ROOTFS" = "" -a "$devnum"  = "1:1" && ROOTFS=root=/dev/mmcblk1p2
+test "$ROOTFS" = "" -a "$devnum"  = "2:1" && ROOTFS=root=/dev/mmcblk2p2
 
     setenv LOADER "$FSLOAD $devtype $devnum"
 
+    echo "[i] openwrt rootfs $ROOTFS"
     echo "[i] openwrt loaded $LOADER"
 
     setenv Cdtb     /boot/krescue-vim.dtb
@@ -140,6 +150,7 @@ setenv bootargs "${bootargs} console=tty0 console=ttyAML0,115200n8 console=ttyS0
 #setenv bootargs "${bootargs} video_reverse=${video_reverse} jtag=${jtag} ddr_size=${ddr_size}"
 
 setenv bootargs "${bootargs} dtb=$Cdtb"
+setenv bootargs "${bootargs} $ROOTFS"
 setenv bootargs "${bootargs} booted=$BOOTED hwver=$hwver ${cmdline}"
 setenv bootargs "${bootargs} vt.default_utf8=1"
 
