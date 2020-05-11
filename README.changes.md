@@ -1,5 +1,12 @@
 # OpenWrt VIMs Change log
 
+## Khadas Vims OpenWrt rel 0.66
+
++ linux kernel fix usb-starage uas bug (just disable uas)
++ linux kernel other fixes ... 
++ uboot changed to last mainline khadas version
++ green screen bug fixed for any uboot version
+
 ## Khadas Vims OpenWrt rel 0.63
 
 + change default dns resolver all via https-dns
