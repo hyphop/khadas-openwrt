@@ -47,7 +47,7 @@ test "$devnum" = "" && $FSLOAD usb 0 $loadaddr $LABEL.label && setenv devnum 0 &
 test "$devnum"  = "" && setenv devnum 0
 test "$devtype" = "" && setenv devtype mmc
 
-test "$ROOTFS" = "" -a "$devtype" = "usb" && ROOTFS=root=/dev/sda1
+test "$ROOTFS" = "" -a "$devtype" = "usb" && ROOTFS=root=/dev/sda2
 test "$ROOTFS" = "" -a "$devnum"  = "0"   && ROOTFS=root=/dev/mmcblk0p2
 test "$ROOTFS" = "" -a "$devnum"  = "1"   && ROOTFS=root=/dev/mmcblk1p2
 test "$ROOTFS" = "" -a "$devnum"  = "2"   && ROOTFS=root=/dev/mmcblk2p2
