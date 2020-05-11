@@ -449,7 +449,7 @@ mkdir -p $IMG_VFAT.boot
 CMD mdir -i $F ::
 #CMD mdir -i $F ::boot
 cd $OWTMP
-for f in boot LABEL OPENWRT.label s9* aml* boot.* scripts README* .automount.no ; do
+for f in boot splash.* LABEL OPENWRT.label s9* aml* boot.* scripts README* .automount.no ; do
 ls -l1 $f
 CMD mcopy -i $F $f ::$f
 CMD cp -a $f $IMG_VFAT.boot
@@ -497,6 +497,7 @@ $sfdisk $SFDISK_ARGS --part-type $IMG_VFAT 1 e || FAIL
 CMD rm -rf $OWTMP/boot
 CMD mkdir  $OWTMP/boot
 CMD rm  $OWTMP/s9*
+CMD rm  $OWTMP/splash*
 CMD rm  $OWTMP/aml_*
 [ -f $OWTMP/boot.ini ] && \
 CMD rm  $OWTMP/boot.*
