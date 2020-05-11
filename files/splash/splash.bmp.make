@@ -11,7 +11,7 @@ ffmpeg=$(which ffmpeg 2>/dev/null)
 [ "$IMG" ] || IMG="$1"
 [ "$IMG" ] || IMG="$(dirname $0)/splash.svg"
 
-FMT=rgba
+FMT=bgra
 
 OUT=${IMG%.*}.$FMT.bmp.gz
 PNG=${IMG%.*}.png
@@ -38,8 +38,9 @@ echo "[i] convert $IMG -> $OUT"
 
 ## simple one string way
 
-$ffmpeg -y -hide_banner -i $IMG $PNG
-$ffmpeg -y -hide_banner -i $IMG -pix_fmt $FMT -vcodec bmp -f image2 ${IMG%.*}.$FMT.bmp
-gzip -c ${IMG%.*}.bmp > $OUT
+#$ffmpeg -y -hide_banner -i $IMG $PNG
+O=${IMG%.*}.$FMT.bmp
+$ffmpeg -y -hide_banner -i $IMG -pix_fmt $FMT -vcodec bmp -f image2 $O
+gzip -c9 $O > $OUT
 
 

@@ -13,12 +13,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="1920"
-   height="1080"
-   viewBox="0 0 507.99999 285.75001"
+   width="800"
+   height="800"
+   viewBox="0 0 211.66666 211.66667"
    version="1.1"
    id="svg8"
-   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="splash.svg"
    inkscape:export-filename="splash.png"
    inkscape:export-xdpi="96"
@@ -27,10 +27,10 @@
      id="defs2">
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="-493.3938 : 175.39013 : 1"
+       inkscape:vp_x="-493.39379 : 175.39013 : 1"
        inkscape:vp_y="0 : 1714.8684 : 0"
        inkscape:vp_z="377.75935 : 175.39013 : 1"
-       inkscape:persp3d-origin="-57.817234 : 93.719514 : 1"
+       inkscape:persp3d-origin="-57.817233 : 93.719512 : 1"
        id="perspective1309" />
     <filter
        x="-0.25"
@@ -58,7 +58,10 @@
          result="result20"
          in2="result22"
          in="result22"
-         id="feComposite1247" />
+         id="feComposite1247"
+         k1="0"
+         k3="0"
+         k4="0" />
       <feComposite
          in2="result22"
          in="result20"
@@ -84,7 +87,9 @@
          result="fbSourceGraphic"
          k3="0.5"
          in="result4"
-         id="feComposite1255" />
+         id="feComposite1255"
+         k2="0"
+         k4="0" />
       <feComposite
          in2="result4"
          result="result12"
@@ -127,7 +132,10 @@
          operator="arithmetic"
          result="result17"
          in2="result8"
-         id="feComposite1293" />
+         id="feComposite1293"
+         k1="0"
+         k3="0"
+         k4="0" />
       <feOffset
          result="result18"
          in="result17"
@@ -147,7 +155,9 @@
          in="result4"
          k1="1"
          k3="1"
-         id="feComposite1299" />
+         id="feComposite1299"
+         k2="0"
+         k4="0" />
       <feComposite
          in2="fbSourceGraphic"
          result="result9"
@@ -167,10 +177,10 @@
     </filter>
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="6.7985444 : -63.097692 : 1"
-       inkscape:vp_y="0 : -631.0775 : 0"
-       inkscape:vp_z="605.20532 : -63.097692 : 1"
-       inkscape:persp3d-origin="306.00196 : -33.042627 : 1"
+       inkscape:vp_x="6.7985443 : -63.097691 : 1"
+       inkscape:vp_y="0 : -631.07749 : 0"
+       inkscape:vp_z="605.20531 : -63.097691 : 1"
+       inkscape:persp3d-origin="306.00196 : -33.042626 : 1"
        id="perspective1309-1" />
   </defs>
   <sodipodi:namedview
@@ -180,17 +190,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.3850222"
-     inkscape:cx="1153.0065"
-     inkscape:cy="296.56152"
+     inkscape:zoom="0.54450362"
+     inkscape:cx="175.35626"
+     inkscape:cy="278.82637"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
      showgrid="false"
      units="px"
      inkscape:window-width="1920"
-     inkscape:window-height="1021"
+     inkscape:window-height="1010"
      inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-y="33"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata5">
@@ -207,14 +217,15 @@
   <g
      inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="bg">
+     inkscape:label="bg"
+     transform="translate(0,-74.083333)">
     <rect
        style="fill:#000000;fill-rule:evenodd;stroke-width:0.26458332"
        id="rect4521"
        width="508"
        height="285.75"
-       x="7.5420331e-08"
-       y="-5.6843419e-14" />
+       x="-186.1796"
+       y="69.92865" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:19.7555542px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
@@ -239,24 +250,25 @@
          id="tspan4640-5" /></text>
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:30.86867523px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.3215487"
-       x="212.049"
-       y="237.13951"
+       style="font-style:normal;font-weight:normal;font-size:49.50078964px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.51563323"
+       x="37.933796"
+       y="238.11143"
        id="text4553"><tspan
          sodipodi:role="line"
          id="tspan4551"
-         x="212.049"
-         y="237.13951"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Dotimatrix 3';-inkscape-font-specification:'Dotimatrix 3, ';fill:#b3b3b3;stroke-width:0.3215487">OpenWrt</tspan></text>
+         x="37.933796"
+         y="238.11143"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Dotimatrix 3';-inkscape-font-specification:'Dotimatrix 3, ';fill:#b3b3b3;stroke-width:0.51563323">OpenWrt</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="ll"
-     style="opacity:1">
+     style="opacity:1"
+     transform="translate(0,-74.083333)">
     <g
        id="g5373"
-       transform="matrix(0.43474726,0,0,0.43474726,141.50518,81.780076)">
+       transform="matrix(0.43474726,0,0,0.43474726,-7.0457226,93.781479)">
       <path
          id="path973-0"
          d="m 132.9249,223.91818 c 2.01,0.5025 4.10376,1.25623 6.03,2.17748 1.92624,0.92127 3.76873,1.92627 5.52749,3.01499 1.75873,1.17251 3.43374,2.34502 5.10875,3.5175 1.08872,0.92127 1.75873,0.67001 2.26123,0.16744 0.33499,-0.33498 0.41875,-0.66997 0.41875,-1.08872 0,-0.25133 -0.0839,-0.5025 -0.16745,-0.67001 -0.25133,-0.33499 -0.5025,-0.58625 -0.83749,-0.83749 -1.08875,-0.83752 -2.01,-1.50749 -2.93124,-2.26126 -0.92124,-0.67001 -1.84249,-1.34002 -2.76373,-1.84252 -0.92128,-0.58622 -1.92628,-1.17248 -2.84752,-1.67497 -1.005,-0.5025 -2.01,-1.08876 -3.18247,-1.59126 l -2.5125,-1.17251 2.5125,-1.17247 c 1.08872,-0.58626 2.17747,-1.08876 3.18247,-1.59126 1.005,-0.5025 1.92624,-1.08875 2.84752,-1.67501 0.92124,-0.58625 1.84249,-1.17251 2.76373,-1.84248 0.92124,-0.67001 1.92624,-1.42375 2.93124,-2.17751 0.33502,-0.25133 0.67001,-0.5025 0.83752,-0.83749 0.16745,-0.16745 0.16745,-0.41874 0.16745,-0.67001 0,-0.41874 -0.16745,-0.75373 -0.41875,-1.08875 -0.58625,-0.58626 -1.25626,-0.66998 -2.26126,0.0839 -1.67501,1.17251 -3.34999,2.34502 -5.10875,3.51749 -1.75873,1.17251 -3.60125,2.17751 -5.52749,3.09875 -1.92624,0.92125 -3.93624,1.67501 -6.03,2.17751 -2.09375,0.58626 -4.27122,0.83749 -6.44873,0.83749 h -15.07499 v -8.62624 c 0,-0.41875 -0.16744,-0.75374 -0.41877,-1.08873 -0.58622,-0.58625 -1.42374,-0.67001 -2.09372,0 -0.33502,0.33499 -0.41878,0.66998 -0.41878,1.08873 v 20.18373 c 0,0.41874 0.16745,0.75373 0.41878,1.08875 0.58622,0.58626 1.42374,0.66998 2.09372,0 0.33502,-0.33502 0.41877,-0.67001 0.41877,-1.08875 v -8.62625 h 15.07499 c 2.26123,-0.16744 4.43874,0.0839 6.44873,0.67001 z"
@@ -323,6 +335,6 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-11.249983)"
+     transform="translate(0,-85.333316)"
      style="display:inline" />
 </svg>

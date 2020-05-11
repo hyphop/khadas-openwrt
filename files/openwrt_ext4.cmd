@@ -34,7 +34,7 @@ dtb_mem_addr=0x1000000
     setenv Cdtb     /boot/linux.dtb
     setenv Csplash  /boot/splash.bmp.gz
 
-test "$distro_bootcmd" = "" || setenv Csplash /boot/splash.rgba.bmp
+test "$distro_bootcmd" = "" || setenv Csplash /splash.bmp
 
     setenv CuInitrd /boot/uInitrd
     setenv CuImage  /boot/uImage.gzip
@@ -110,10 +110,10 @@ fdt addr $DTB_ADDR || exit 1
 #osd open
 #osd clear
 
-echo "load logo $Csplash or $Csplash.gz"
-test "$Csplash" = "" || $LOADER $LOGO_ADDR $Csplash && setenv $Csplash ""
-test "$Csplash" = "" || $LOADER $LOGO_ADDR2 $Csplash.gz && unzip $LOGO_ADDR2 $LOGO_ADDR && setenv $Csplash ""
-test "$Csplash" = "" || bmp display $LOGO_ADDR
+#echo "load logo $Csplash or $Csplash.gz"
+#test "$Csplash" = "" || $LOADER $LOGO_ADDR $Csplash && setenv $Csplash ""
+#test "$Csplash" = "" || $LOADER $LOGO_ADDR2 $Csplash.gz && unzip $LOGO_ADDR2 $LOGO_ADDR && setenv $Csplash ""
+#test "$Csplash" = "" || bmp display $LOGO_ADDR m m
 
 #echo "load packed initrd"
 #echo $LOADER $UNITRD_ADDR $CuInitrd
