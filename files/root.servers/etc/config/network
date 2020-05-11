@@ -4,7 +4,7 @@ config interface 'loopback'
 	option proto 'static'
 	option ipaddr '127.0.0.1'
 	option netmask '255.0.0.0'
-	option dns '8.8.8.8'
+#	option dns '8.8.8.8'
 
 config globals 'globals'
 	option ula_prefix 'fdae:4841:c683::/48'
@@ -14,8 +14,18 @@ config interface 'wan'
 	option force_link '1'
 	option proto 'dhcp'
 	option metric '200'
-	option dns '8.8.8.8'
+#	option dns '8.8.8.8'
+#       option peerdns '0'
 
+# pppoe wan
+
+#config interface 'wan'
+#    option ifname 'eth0'
+#    option proto 'pppoe'
+#    option password 'PASSWORD'
+#    option ipv6 'auto'
+#    option username 'USERNAME'
+#    option peerdns '0'
 
 config interface 'lan'
 	option type 'bridge'
