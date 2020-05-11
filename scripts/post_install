@@ -50,7 +50,7 @@ $opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
     wireless-tools iwinfo \
     iperf pv \
     ttyd \
-    samba36-client \
+    samba36-client cifsmount \
     nfs-utils \
     ppp-mod-pptp \
     openvpn-mbedtls luci-app-openvpn \
@@ -70,6 +70,7 @@ case $REL in
     19*)
     echo ""
     $opkg install libzstd zstd
+#   $opkg install mkf2fs f2fs-tools
     ;;
 esac
 

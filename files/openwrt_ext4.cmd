@@ -143,6 +143,11 @@ setenv bootargs "${bootargs} dtb=$Cdtb"
 setenv bootargs "${bootargs} booted=$BOOTED hwver=$hwver ${cmdline}"
 setenv bootargs "${bootargs} vt.default_utf8=1"
 
+# autodetect fix green
+osd12=
+test "$fdtfile" = "" || osd12=osd12
+setenv bootargs "${bootargs} $osd12"
+
 #echo "activate emmc before run"
 #mmc dev 1
 #mmc info

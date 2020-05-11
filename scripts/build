@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## hyphop ##
 
@@ -90,7 +90,13 @@ echo "[i] config board: $BOARD rel : $REL // apps:$APPS">&2
 
 IMG_EXT4_NO=1
 
-[ "$apps" ] || apps=base
+#[ "$apps" ] || apps=base
+
+apps=$(echo $APPS)
+apps="${apps// /.}"
+
+#echo $apps
+#exit 0
 
 IMG_EXT4=/tmp/${BOARD}.$LABEL.$REL.$VER.$apps.ext4.$ITYPE.img
 IMG_VFAT=/tmp/${BOARD}.$LABEL.$REL.$VER.$apps.$ITYPE.img
@@ -243,7 +249,8 @@ done
 #UNPACK $R 
 MODULES_TAR=$R
 
-DL https://github.com/hyphop/khadas-uboot-spi/releases/download/$UBOOT_REL/u-boot.$BOARD.sd.bin || FAIL
+#DL https://github.com/hyphop/khadas-uboot-spi/releases/download/$UBOOT_REL/u-boot.$BOARD.sd.bin || FAIL
+DL https://github.com/hyphop/khadas-uboot/releases/download/$UBOOT_REL/u-boot.$BOARD.sd.bin || FAIL
 UBOOT_BIN=$R
 
 #DL https://github.com/hyphop/pkg/releases/download/openwrt_khadas_fw/openwrt_khadas_fw.tar.gz || FAIL
