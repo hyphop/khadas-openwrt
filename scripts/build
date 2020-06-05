@@ -467,7 +467,8 @@ cd $P
 echo "[i] KRESQ for $BOARDS">&2
 for B in $BOARDS; do
 #DL https://github.com/hyphop/khadas-uboot-spi/releases/download/openwrt/u-boot.$B.sd.bin || FAIL
-DL https://github.com/hyphop/khadas-uboot/releases/download/openwrt/$B.u-boot.sd.bin || FAIL
+#DL https://github.com/hyphop/khadas-uboot/releases/download/openwrt/$B.u-boot.sd.bin || FAIL
+DL https://github.com/hyphop/khadas-uboot/releases/download/$UBOOT_REL/$BOARD.u-boot.sd.bin || FAIL
 CMD cp $R $IMG_VFAT.boot/boot
 done
 }
