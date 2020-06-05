@@ -4,7 +4,7 @@
 
 #= eth optimize
 
-SOC=$(cat /sys/devices/soc0/soc_id)
+SOC=$(cat /sys/devices/soc0/soc_id 2>/dev/null)
 
 IFACE=eth0
 

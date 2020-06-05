@@ -37,6 +37,6 @@ done
 ## optimize
 
 
-/etc/board.d/10_vims_hw_usb_optimize
+#/etc/board.d/10_vims_hw_usb_optimize
 #/etc/board.d/10_vims_hw_eth_optimize
 

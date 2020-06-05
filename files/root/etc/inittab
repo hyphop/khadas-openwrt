@@ -7,7 +7,9 @@
 ## no need enter password
 
 tty0::respawn:/bin/sh --login
-ttyS0::respawn:/bin/sh --login
+#ttyS0::respawn:/bin/sh --login
+ttyS2::respawn:/bin/sh --login
+#ttyS1::respawn:/bin/sh --login
 ttyAML0::respawn:/bin/sh --login
 
 #ttyGS0::respawn:/usr/libexec/login.sh
