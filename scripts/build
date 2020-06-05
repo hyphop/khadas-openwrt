@@ -60,17 +60,20 @@ for p in $@; do
 	export REL=${p#*=}
 	echo "[i] force REL: $REL">&2
 	;;
-	-vim2|-2)
+	-vim2|-2|-VIM2)
 	BOARD=VIM2
 	;;
-	-3)
+	-vim3|-3|-VIM2)
 	BOARD=VIM3
 	;;
-	-3l)
+	-vim3l|-3l|-VIM3L)
 	BOARD=VIM3L
 	;;
-	-vim1|-1)
+	-vim1|-1|-VIM1|-VIM|-vim)
 	BOARD=VIM1
+	;;
+	-Edge|-e|-EDGE)
+	BOARD=Edge
 	;;
 
 	'+'*)
