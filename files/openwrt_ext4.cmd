@@ -37,6 +37,7 @@ dtb_mem_addr=0x1000000
 test "$distro_bootcmd" = "" || setenv Csplash /splash.bmp
 
     setenv CuInitrd /boot/uInitrd
+    setenv CImage  /boot/Image
     setenv CuImage  /boot/uImage.gzip
 
 test "$devnum" = "" && $FSLOAD mmc 0 $loadaddr $LABEL.label && setenv devnum 0
@@ -60,7 +61,10 @@ test "$ROOTFS" = "" -a "$devnum"  = "2:1" && ROOTFS=root=/dev/mmcblk2p2
     echo "[i] openwrt rootfs $ROOTFS"
     echo "[i] openwrt loaded $LOADER"
 
+DTB_EDGE=/boot/rk3399-khadas-edge-v.dtb
+
     setenv Cdtb     /boot/krescue-vim.dtb
+
 
 if test "$hwver" = ""; then
     echo "[w] hwver not defined"
@@ -85,6 +89,7 @@ else
     test "$maxcpus" = "8" && setenv Cdtb /boot/krescue-vim2.dtb
 fi
 
+
 ## emmc MAINLINE UBOOT 
 test "$fdtfile" = "amlogic/meson-sm1-khadas-vim3l.dtb" && setenv Cdtb /boot/krescue-vim3-s905d3.dtb
 test "$fdtfile" = "amlogic/meson-gxl-s905x-khadas-vim.dtb" && setenv Cdtb /boot/krescue-vim1.dtb
@@ -100,9 +105,9 @@ fi
 
 VENDOR_=""
 
-test "$fdtfile" = "rockchip/rk3399-khadas-edge-v.dtb" && setenv Cdtb /rescue/krescue-edge.dtb && VENDOR_=rockchip
-test "$fdtfile" = "rockchip/rk3399-khadas-edge-captain.dtb" && setenv Cdtb /rescue/krescue-edge.dtb && VENDOR_=rockchip
-test "$fdtfile" = "rockchip/rk3399-khadas-edge.dtb" && setenv Cdtb /rescue/krescue-edge.dtb && VENDOR_=rockchip
+test "$fdtfile" = "rockchip/rk3399-khadas-edge-v.dtb"       && setenv Cdtb $DTB_EDGE && VENDOR_=rockchip
+test "$fdtfile" = "rockchip/rk3399-khadas-edge-captain.dtb" && setenv Cdtb $DTB_EDGE && VENDOR_=rockchip
+test "$fdtfile" = "rockchip/rk3399-khadas-edge.dtb"         && setenv Cdtb $DTB_EDGE && VENDOR_=rockchip
 
 test "$boot_source" = "" || setenv BOOTED $boot_source
 
@@ -197,12 +202,11 @@ sleep $BOOT_DELAY
 setenv UINITRD_ADDR -
 
 echo "try:: $LOADER $UIMAGE_ADDR $CImage"
-
 $LOADER $UIMAGE_ADDR $CImage && echo "booti $UIMAGE_ADDR $UINITRD_ADDR $DTB_ADDR" && booti $UIMAGE_ADDR $UINITRD_ADDR $DTB_ADDR
 
-echo bootm $UIMAGE_ADDR $UINITRD_ADDR $DTB_ADDR
 echo $LOADER $UIMAGE_ADDR $CuImage
 $LOADER $UIMAGE_ADDR $CuImage
+echo bootm $UIMAGE_ADDR $UINITRD_ADDR $DTB_ADDR
 bootm $UIMAGE_ADDR $UINITRD_ADDR $DTB_ADDR
 
 echo oooopsss fail not $LABEL
