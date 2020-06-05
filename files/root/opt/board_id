@@ -4,9 +4,32 @@
 
 #= print board hw name and ver from uboot id
 
+    case $(cat /sys/firmware/devicetree/base/model) in
+
+    *Edge-V*)
+    echo EDGEv
+    exit 
+    ;;
+    *Edge-C*)
+    echo EDGEc
+    exit 
+    ;;
+    *Edge*)
+    echo EDGE
+    exit 
+    ;;
+
+    esac
+
 P=$(cat /proc/cmdline)
 
 b=${P#*hwver=}
+
+[ "$b" = "$P" ] &&
+    echo "UNDEF"
+    exit 1
+}
+
 b=${b%% *}
 
 echo $b

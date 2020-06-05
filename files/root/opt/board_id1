@@ -20,6 +20,9 @@ case $BID in
     echo $BID
     return
     ;;
+    EDGE*)
+    echo $BID
+    return
 esac
 
 echo "[e] unknown board">&2

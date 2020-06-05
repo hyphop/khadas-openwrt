@@ -4,20 +4,80 @@
 
 #= print board hw name and ver from uboot id
 
-case "$(cat /sys/devices/soc0/machine)" in
-    *VIM3L*)
+#  simple method 1 - by cpu num + ...
+
+#VIM1 #cat /sys/devices/armv8_cortex_a53/
+#VIM3 #cat /sys/devices/
+
+ID="$(cat /sys/devices/soc0/soc_id 2>/dev/null)"
+
+case "$ID" in
+
+    "")
+    case $(cat /sys/firmware/devicetree/base/model) in
+
+    *Edge-V*)
+    echo EDGEv
+    exit 
+    ;;
+    *Edge-C*)
+    echo EDGEc
+    exit 
+    ;;
+    *Edge*)
+    echo EDGE
+    exit 
+    ;;
+
+    esac
+
+
+    ;;
+
+    *SM1*)
     echo VIM3L
+    exit 0
     ;;
-    *VIM3*)
+    *A311D*)
     echo VIM3
+    exit 0
     ;;
-    *VIM2*)
+    *S912*)
     echo VIM2
+    exit 0
     ;;
-    *VIM*)
+    *S905X*)
     echo VIM1
+    exit 0
     ;;
     *)
-    echo "_UNDEF_"
     ;;
 esac
+
+cpus="$(cpunums)"
+# 4 VIM1 VIM3L
+# 8 VIM2
+# 6 VIM3
+
+case "$cpus" in
+    8)
+    echo VIM2
+    exit 0
+    ;;
+    6)
+    echo VIM3
+    exit 0
+    ;;
+    *)
+    [ -d /sys/devices/armv8_cortex_a53/ ] && {
+    echo VIM1
+    exit 0
+    }
+    echo VIM3L
+    exit 0
+    ;;
+esac
+
+#exit 0
+
+echo "_UNDEF_ $ID"

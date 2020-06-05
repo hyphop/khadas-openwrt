@@ -1,5 +1,5 @@
 config system
-        option hostname 'openwrt-vim'
+        option hostname 'openwrt-khadas'
         option timezone 'UTC'
 #       option ttylogin '0'
         option log_size '64'
@@ -16,7 +16,7 @@ config timeserver 'ntp'
 config led
         option default '0'
         option name 'led1'
-        option sysfs 'vim:white'
+        option sysfs 'sys_led'
 #       option trigger 'heartbeat'
         option trigger 'default-on'
 
