@@ -93,9 +93,16 @@ test "$fdtfile" = "amlogic/meson-g12b-a311d-khadas-vim3.dtb" && setenv Cdtb /boo
 
 #boot_source=sd
 
+
 if test "$Cdtb" = "/boot/krescue-vim.dtb"; then
     echo "[w] dtb not detected force use static: $Cdtb"
 fi
+
+VENDOR_=""
+
+test "$fdtfile" = "rockchip/rk3399-khadas-edge-v.dtb" && setenv Cdtb /rescue/krescue-edge.dtb && VENDOR_=rockchip
+test "$fdtfile" = "rockchip/rk3399-khadas-edge-captain.dtb" && setenv Cdtb /rescue/krescue-edge.dtb && VENDOR_=rockchip
+test "$fdtfile" = "rockchip/rk3399-khadas-edge.dtb" && setenv Cdtb /rescue/krescue-edge.dtb && VENDOR_=rockchip
 
 test "$boot_source" = "" || setenv BOOTED $boot_source
 
@@ -110,12 +117,25 @@ env import -t $ENV_ADDR $filesize || exit
 
 ##############################################################
 
+test "$fdt_addr_r"     = "" || setenv DTB_ADDR     $fdt_addr_r
+test "$ramdisk_addr_r" = "" || setenv UINITRD_ADDR $ramdisk_addr_r
+test "$kernel_addr_r"  = "" || setenv UIMAGE_ADDR  $kernel_addr_r
+
+echo "addrs:  UIMAGE_ADDR ::  UINITRD_ADDR ::  DTB_ADDR"
+echo "addrs: $UIMAGE_ADDR :: $UINITRD_ADDR :: $DTB_ADDR"
+echo "setenv kernel_addr_r $kernel_addr_r; setenv ramdisk_addr_r $ramdisk_addr_r; setenv fdt_addr_r $fdt_addr_r;"
+
+echo ":::::::::::::::"
+
 echo "load dtb"
 echo $LOADER $DTB_ADDR $Cdtb
 $LOADER $DTB_ADDR $Cdtb
 fdt addr $DTB_ADDR || exit 1
 #
-# fdt set spifc status okay
+
+#SPI_=spifc
+#test "$VENDOR_" = "" || SPI_=spi1
+#fdt set $SPI_ status okay
 
 #osd open
 #osd clear
@@ -143,7 +163,11 @@ $LOADER $UIMAGE_ADDR $CuImage
 
 setenv bootargs ""
 
-setenv bootargs "${bootargs} console=tty0 console=ttyAML0,115200n8 console=ttyS0,115200n8 no_console_suspend consoleblank=0 module_blacklist=f2fs"
+CONSOLE_="console=ttyAML0,115200n8 console=ttyS0,115200n8"
+
+test "$VENDOR_" = "" || CONSOLE_="console=uart8250,mmio32,0xff1a0000"
+
+setenv bootargs "${bootargs} console=tty0 $CONSOLE_ no_console_suspend consoleblank=0 module_blacklist=f2fs"
 
 #setenv bootargs "${bootargs} vout=${outputmode},enable hdmitx=${cecconfig},${colorattribute}"
 #setenv bootargs "${bootargs} hdmimode=${hdmimode} cvbsmode=${cvbsmode} osd_reverse=${osd_reverse}"
@@ -169,11 +193,17 @@ echo "[i] bootcmd:  $bootcmd"
 echo "[i] sleep $BOOT_DELAY sec Ctrl+C for break boot"
 sleep $BOOT_DELAY
 
-echo bootm $UIMAGE_ADDR - $DTB_ADDR
-bootm $UIMAGE_ADDR - $DTB_ADDR
 
-#echo bootm $UIMAGE_ADDR $UINITRD_ADDR $DTB_ADDR
-#bootm $UIMAGE_ADDR $UINITRD_ADDR $DTB_ADDR
+setenv UINITRD_ADDR -
+
+echo "try:: $LOADER $UIMAGE_ADDR $CImage"
+
+$LOADER $UIMAGE_ADDR $CImage && echo "booti $UIMAGE_ADDR $UINITRD_ADDR $DTB_ADDR" && booti $UIMAGE_ADDR $UINITRD_ADDR $DTB_ADDR
+
+echo bootm $UIMAGE_ADDR $UINITRD_ADDR $DTB_ADDR
+echo $LOADER $UIMAGE_ADDR $CuImage
+$LOADER $UIMAGE_ADDR $CuImage
+bootm $UIMAGE_ADDR $UINITRD_ADDR $DTB_ADDR
 
 echo oooopsss fail not $LABEL
 

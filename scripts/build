@@ -237,11 +237,13 @@ rm -rf $OWTMP
 
 for k in \
     Image.gz \
-    krescue-vim1.dtb \
-    krescue-vim2.dtb \
-    krescue-vim3-a311d.dtb \
-    krescue-vim3-s922x.dtb \
-    krescue-vim3-s905d3.dtb \
+    vims.dtb.tar.gz \
+    DL https://github.com/hyphop/khadas-linux-kernel/releases/download/$KERNEL_REL/$k || FAIL
+done
+
+CMD tar -xf $R -C $OWTMP || FAIL
+
+for k in \
     modules.openwrt.tar.gz; do
     DL https://github.com/hyphop/khadas-linux-kernel/releases/download/$KERNEL_REL/$k || FAIL
 done
@@ -250,7 +252,7 @@ done
 MODULES_TAR=$R
 
 #DL https://github.com/hyphop/khadas-uboot-spi/releases/download/$UBOOT_REL/u-boot.$BOARD.sd.bin || FAIL
-DL https://github.com/hyphop/khadas-uboot/releases/download/$UBOOT_REL/u-boot.$BOARD.sd.bin || FAIL
+DL https://github.com/hyphop/khadas-uboot/releases/download/$UBOOT_REL/$BOARD.u-boot.sd.bin || FAIL
 UBOOT_BIN=$R
 
 #DL https://github.com/hyphop/pkg/releases/download/openwrt_khadas_fw/openwrt_khadas_fw.tar.gz || FAIL
@@ -286,8 +288,11 @@ done
 
 CMD mkdir $OWTMP/boot
 
+ENTER_ADDR=0x01080000
+ENTER_ADDR=0x0f080000
+
 CMD mkimage -A $TARGET_KERNEL_ARCH \
-    -O linux -C gzip -T kernel -a 0x01080000 -e 0x01080000 \
+    -O linux -C gzip -T kernel -a $ENTER_ADDR -e $ENTER_ADDR \
     -n kernel -d $PR/../bin/Image.gz $OWTMP/boot/uImage.gzip
 
 CMD cp $PR/../bin/*.dtb $OWTMP/boot
@@ -458,13 +463,13 @@ cd $P
 [ "$MAKE_KRESQ_IMAGE" ] && {
 echo "[i] KRESQ for $BOARDS">&2
 for B in $BOARDS; do
-DL https://github.com/hyphop/khadas-uboot-spi/releases/download/openwrt/u-boot.$B.sd.bin || FAIL
+#DL https://github.com/hyphop/khadas-uboot-spi/releases/download/openwrt/u-boot.$B.sd.bin || FAIL
+DL https://github.com/hyphop/khadas-uboot/releases/download/openwrt/$B.u-boot.sd.bin || FAIL
 CMD cp $R $IMG_VFAT.boot/boot
 done
 }
 
 #echo no | mcat -i $F ::.automount.no
-
 
 cat ${IMG_VFAT}.vfat >> $IMG_VFAT
 CMD rm ${IMG_VFAT}.vfat
