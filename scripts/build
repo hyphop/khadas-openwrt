@@ -244,6 +244,8 @@ for k in \
     DL https://github.com/hyphop/khadas-linux-kernel/releases/download/$KERNEL_REL/$k || FAIL
 done
 
+CMD mkdir $OWTMP/boot
+
 CMD tar -xf $R -C $OWTMP/boot || FAIL
 
 for k in \
@@ -289,7 +291,7 @@ done
 
 #exit 0
 
-CMD mkdir $OWTMP/boot
+#CMD mkdir $OWTMP/boot
 
 ENTER_ADDR=0x01080000
 ENTER_ADDR=0x0f080000
