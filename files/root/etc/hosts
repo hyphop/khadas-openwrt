@@ -8,4 +8,5 @@ ff02::2 ip6-allrouters
 ## may be need remove it ;) #####
 172.23.0.1 openwrt vim openwrt.lan vim.lan openwrt.local OpenWrt.local
 172.23.0.1 openwrt-vim openwrt-vim.local
+172.23.0.1 openwrt-khadas openwrt-khadas.local
 #################################

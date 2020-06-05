@@ -31,7 +31,7 @@ case "$M" in
 esac
 done
 
-echo "[i] LAN_IP: $LAN_IP WAN_IP: $WAN_IP MDNS: $MDNS
-WEB : http://$TTYIP $TTYD"
+echo "[$(board_name)] LAN_IP: $LAN_IP WAN_IP: $WAN_IP MDNS: $MDNS
+    WEB: http://$TTYIP $TTYD"
 #echo "[i] router gw: GW=$(ip route show default)"
 
