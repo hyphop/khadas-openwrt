@@ -68,7 +68,7 @@ type:	-
 start:	4194304
 size:	900M
 data:	#2
-data:	+@zero:1M
+data:	+@zero:64M
 uuid:	-
 
 ##END##
