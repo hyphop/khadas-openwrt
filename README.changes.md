@@ -1,5 +1,14 @@
 # OpenWrt VIMs Change log
 
+## Khadas Vims OpenWrt rel 0.7
+
++ add Khadas Edge (rockchip rk3399) - https://docs.khadas.com/edge/
++ linux kernel 5.7
++ one kernel for amlogic and rockchip
++ wireguard
++ pcie + nvme
++ some other fixes
+
 ## Khadas Vims OpenWrt rel 0.66
 
 + linux kernel fix usb-starage uas bug (just disable uas)
