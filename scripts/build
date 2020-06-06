@@ -101,8 +101,15 @@ apps="${apps// /.}"
 #echo $apps
 #exit 0
 
-IMG_EXT4=/tmp/${BOARD}.$LABEL.$REL.$VER.$apps.ext4.$ITYPE.img
-IMG_VFAT=/tmp/${BOARD}.$LABEL.$REL.$VER.$apps.$ITYPE.img
+OUT_=/tmp
+
+IMG_CNAME="$LABEL.$REL.$VER.$apps.$ITYPE"
+
+IMG_EXT4="$OUT_/${BOARD}.$LABEL.$REL.$VER.$apps.ext4.$ITYPE.img"
+
+IMG_VFAT="$OUT_/${BOARD}.$IMG_CNAME.img"
+
+IMG_="$OUT_/Khadas.$IMG_CNAME"
 
 ## check
 REQUIRED="rsync curl wget sync sfdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
@@ -594,11 +601,10 @@ CMD sync
 echo "[i] echo $P1OFFSET,  | sfdisk -q $IMG_VFAT -a || FAIL">&2
 echo "$P1OFFSET, " | $sfdisk -q $IMG_VFAT -a || FAIL
 
-md5sum $IMG_VFAT > $IMG_VFAT.md5sum
-
-gzip -1 -c $IMG_VFAT > $IMG_VFAT.gz
 
 IMG=${IMG_VFAT%.img}
+
+[ "$MKZIP" ] && {
 IMGZ=$IMG.zip
 
 $PR/opkg list-installed | grep -v kmod- > /tmp/openwrt-pre-installed-packages.txt
@@ -610,12 +616,11 @@ CMD zip -1 -j $IMGZ \
     $IMG_VFAT.md5sum \
     $PR/../README*txt \
     /tmp/openwrt-pre-installed-packages.txt
+}
 
 cat $PR/../README.openwrt.vims.txt \
     $PR/../README.changes.txt \
-    > $IMG.readme.txt
-
-ls -l1 $IMG*
+    > $IMG_.readme.txt
 
 
 [ "$MAKE_KRESQ_IMAGE" ] && {
@@ -642,7 +647,7 @@ CMD mv $IMG_VFAT.boot $KRESQ_PATH/OW_BOOT
 
     export DATE="$DATE"
     export LABEL="$LABEL"
-    export KRESQ_IMAGE_NAME="Khadas.$LABEL.$REL.$VER.$apps"
+    export KRESQ_IMAGE_NAME="$IMG_CNAME"
     export KRESQ_IMAGE_DESC="$LABEL $REL $VER $apps"
 
     sh $PR/../files/krescue.image.conf.tpl > $KRESQ_PATH/.krescue.image.conf
@@ -654,5 +659,35 @@ CMD mv $IMG_VFAT.boot $KRESQ_PATH/OW_BOOT
 
 }
 
+md5sum $IMG_VFAT > $IMG_VFAT.md5sum
+gzip -1 -c $IMG_VFAT > $IMG_VFAT.gz
+
+
+[ "$MAKE_ALL" ] && {
+
+echo "[i] make all $BOARDS">&2
+for B in $BOARDS; do
+
+[ "$B" = "$BOARD" ] && continue
+
+DL https://github.com/hyphop/khadas-uboot/releases/download/$UBOOT_REL/$B.u-boot.sd.bin || FAIL
+
+IMG2="$OUT_/$B.$IMG_CNAME.img"
+
+CMD cp $IMG_VFAT $IMG2
+CMD dd if=/dev/zero of=$IMG2 conv=fsync,notrunc bs=1M count=1 seek=1
+CMD dd if=$R of=$IMG2 conv=fsync,notrunc bs=444 count=1
+CMD dd if=$R of=$IMG2 conv=fsync,notrunc bs=512 skip=1 seek=1
+
+md5sum $IMG2 > $IMG2.md5sum
+gzip -1 -c $IMG2 > $IMG2.gz
+
+done
+
+
+}
+
 echo "[i] DONE">&2
+
+ls -l1 $IMG*
 
