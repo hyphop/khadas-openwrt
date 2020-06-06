@@ -466,12 +466,18 @@ done
 cd $P
 
 [ "$MAKE_KRESQ_IMAGE" ] && {
+
+[ "$KRESQ_PATH" ] || KRESQ_PATH=/tmp/openwrt_kresq
+[ -d "$KRESQ_PATH" ] && rm -rf $KRESQ_PATH
+[ -d "$KRESQ_PATH" ] || mkdir  $KRESQ_PATH
+
 echo "[i] KRESQ for $BOARDS">&2
 for B in $BOARDS; do
 #DL https://github.com/hyphop/khadas-uboot-spi/releases/download/openwrt/u-boot.$B.sd.bin || FAIL
 #DL https://github.com/hyphop/khadas-uboot/releases/download/openwrt/$B.u-boot.sd.bin || FAIL
 DL https://github.com/hyphop/khadas-uboot/releases/download/$UBOOT_REL/$B.u-boot.sd.bin || FAIL
 CMD cp $R $IMG_VFAT.boot/boot
+CMD mv $IMG_VFAT.boot $KRESQ_PATH/OW_BOOT
 done
 }
 
@@ -621,6 +627,13 @@ cat $PR/../README.openwrt.vims.txt \
 
 ls -l1 $IMG*
 
+
+[ "$MAKE_KRESQ_IMAGE" ] && {
+    
+    CMD mkdir $KRESQ_PATH/OW_DATA
+    CMD cp $OWTMP.squashfs $KRESQ_PATH/OW_DATA
+
+}
 
 echo "[i] DONE">&2
 
