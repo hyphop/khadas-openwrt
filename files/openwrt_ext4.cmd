@@ -56,7 +56,7 @@ test "$devtype" = "" && setenv devtype mmc
 
 DTB_EDGE=/boot/rk3399-khadas-edge-v.dtb
 
-    setenv Cdtb     /boot/krescue-vim.dtb
+    setenv Cdtb     /boot/openwrt.dtb
 
 
 if test "$hwver" = ""; then
@@ -92,15 +92,16 @@ test "$fdtfile" = "amlogic/meson-g12b-a311d-khadas-vim3.dtb" && setenv Cdtb /boo
 #boot_source=sd
 
 
-if test "$Cdtb" = "/boot/krescue-vim.dtb"; then
-    echo "[w] dtb not detected force use static: $Cdtb"
-fi
 
 VENDOR_=""
 
 test "$fdtfile" = "rockchip/rk3399-khadas-edge-v.dtb"       && setenv Cdtb $DTB_EDGE && VENDOR_=rockchip
 test "$fdtfile" = "rockchip/rk3399-khadas-edge-captain.dtb" && setenv Cdtb $DTB_EDGE && VENDOR_=rockchip
 test "$fdtfile" = "rockchip/rk3399-khadas-edge.dtb"         && setenv Cdtb $DTB_EDGE && VENDOR_=rockchip
+
+if test "$Cdtb" = "/boot/openwrt.dtb"; then
+    echo "[w] dtb not detected force use static: $Cdtb"
+fi
 
 test "$boot_source" = "" || setenv BOOTED $boot_source
 
@@ -112,7 +113,7 @@ test "$ROOTFS" = "" -a "$devnum"  = "0:1" && ROOTFS=root=/dev/mmcblk0p2
 test "$ROOTFS" = "" -a "$devnum"  = "1:1" && ROOTFS=root=/dev/mmcblk1p2
 test "$ROOTFS" = "" -a "$devnum"  = "2:1" && ROOTFS=root=/dev/mmcblk2p2
 
-test "$VENDOR" != "" -a "$ROOTFS" = "root=/dev/mmcblk2p2" && ROOTFS=root=/dev/mmcblk0p2
+test "$VENDOR" != "" -a "$ROOTFS" = "root=/dev/mmcblk0p2" && ROOTFS=root=/dev/mmcblk2p2
 
 echo "[i] openwrt rootfs $ROOTFS"
 
