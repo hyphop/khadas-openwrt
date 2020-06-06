@@ -657,6 +657,7 @@ CMD mv $IMG_VFAT.boot $KRESQ_PATH/OW_BOOT
     cd $KRESQ_PATH
     $make_image
 
+    cd $PA
 }
 
 md5sum $IMG_VFAT > $IMG_VFAT.md5sum
