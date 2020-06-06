@@ -1,6 +1,12 @@
 # khadas openwrt
 
-openwrt for Khadas VIMs boards
+openwrt for Khadas VIMs (Amlogic) and Edge (RockChip) arm boards
+
++ VIM1  https://docs.khadas.com/vim1/
++ VIM2  https://docs.khadas.com/vim2/
++ VIM3  https://docs.khadas.com/vim3/
++ VIM3L https://docs.khadas.com/vim3/#VIM3L
++ Edge (Edge-V Edge-Captain Edge) https://docs.khadas.com/edge/
 
 ## how to ...
 
@@ -16,7 +22,7 @@ openwrt for Khadas VIMs boards
 ## related projects
 
 + https://github.com/hyphop/khadas-linux-kernel
-+ https://github.com/hyphop/khadas-uboot-spi
++ https://github.com/hyphop/khadas-uboot
 + https://github.com/hyphop/khadas-rescue
 
 ## links

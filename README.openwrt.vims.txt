@@ -1,6 +1,6 @@
 # Khadas OpenWrt VIMs
 
-openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim
+openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim and Edge boards https://docs.khadas.com/edge/
 
 ![Khadas VIM openwrt](pics/khadas_vim1_openwrt.jpg)
 
@@ -10,9 +10,7 @@ openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim
 + khadas VIM2 - OK
 + khadas VIM3 - OK
 + khadas VIM3L - OK
-
-NOTE:	this openwrt build works properly only with U-Boot 2015.01-g377aea7bb8 (Oct 15 2019 - 12:18:07)
-	openwrt can boot with another uboots but not works properly!!!
++ khadas Edge - OK
 
 ## Download Images
 
@@ -20,6 +18,7 @@ NOTE:	this openwrt build works properly only with U-Boot 2015.01-g377aea7bb8 (Oc
 + https://dl.khadas.com/Firmware/VIM2/OpenWrt
 + https://dl.khadas.com/Firmware/VIM3/OpenWrt
 + https://dl.khadas.com/Firmware/VIM3L/OpenWrt
++ https://dl.khadas.com/Firmware/Edge/OpenWrt
 + https://dl.khadas.com/Firmware/Krescue/images/
 + https://github.com/hyphop/khadas-openwrt/releases/
 
@@ -31,13 +30,13 @@ NOTE:	this openwrt build works properly only with U-Boot 2015.01-g377aea7bb8 (Oc
 + wan -> eth0 (dhcp)
 + serial console enabled -> ttyAML0
 + hdmi output -> tty0
-+ web luci      http://openwrt-vim.local or http://172.23.0.1/
-+ web-terminal  http://openwrt-vim.local:8088/ or http://172.23.0.1:8088/
-+ ssh `root@openwrt-vim.local -p 22` or `root@172.23.0.1 -p 22`
++ web luci      http://openwrt-khadas.local or http://172.23.0.1/
++ web-terminal  http://openwrt-khadas.local:8088/ or http://172.23.0.1:8088/
++ ssh `root@openwrt-khadas.local -p 22` or `root@172.23.0.1 -p 22`
 
 # LAN ip resolve to local openwrt hosts
 
-    172.23.0.1 openwrt-vim.local
+    172.23.0.1 openwrt-khadas.local
 
 # mDNS
 

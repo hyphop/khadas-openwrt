@@ -7,6 +7,7 @@
 + https://dl.khadas.com/Firmware/VIM2/OpenWrt
 + https://dl.khadas.com/Firmware/VIM3/OpenWrt
 + https://dl.khadas.com/Firmware/VIM3L/OpenWrt
++ https://dl.khadas.com/Firmware/Edge/OpenWrt
 
 ```
 cd /tmp

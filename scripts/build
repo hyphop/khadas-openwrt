@@ -637,7 +637,11 @@ CMD mv $IMG_VFAT.boot $KRESQ_PATH/OW_BOOT
     CMD cp $OWTMP.squashfs $KRESQ_PATH/OW_DATA
     CMP mkdir $KRESQ_PATH/.meta
 
+    CMP cp $PR/../files/docs/README.md $KRESQ_PATH/README.txt
+    CMP cp $PR/../README.changes.txt $KRESQ_PATH/
+
     export DATE="$DATE"
+    export LABEL="$LABEL"
     export KRESQ_IMAGE_NAME="Khadas.$LABEL.$REL.$VER.$apps"
     export KRESQ_IMAGE_DESC="$LABEL $REL $VER $apps"
 

@@ -4,6 +4,10 @@
 + If your EMMC is empty, openwrt will automatically boot from your SD card. (goto uboot console and run `store init 3` for erase emmc)
 + Else, Uboot will start from EMMC by default - it can boot from SD card, but only with the proper version and config!
 
+### Edge
+
+Just triple-press `KEY_F` (middle button) to force SD bootup!
+
 ### VIM1 v14 (current) VIM2 v14
 
 Just triple-press `KEY_F` (middle button) to force SD bootup!
