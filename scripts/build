@@ -109,7 +109,8 @@ IMG_EXT4="$OUT_/${BOARD}.$LABEL.$REL.$VER.$apps.ext4.$ITYPE.img"
 
 IMG_VFAT="$OUT_/${BOARD}.$IMG_CNAME.img"
 
-IMG_="$OUT_/Khadas.$IMG_CNAME"
+IMG_NAME2=Khadas.$IMG_CNAME
+IMG_="$OUT_/$IMG_NAME2"
 
 ## check
 REQUIRED="rsync curl wget sync sfdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
@@ -623,6 +624,7 @@ cat $PR/../README.openwrt.vims.txt \
     > $IMG_.readme.txt
 
 
+(
 [ "$MAKE_KRESQ_IMAGE" ] && {
 
 [ "$KRESQ_PATH" ] || KRESQ_PATH=/tmp/openwrt_kresq
@@ -647,7 +649,7 @@ CMD mv $IMG_VFAT.boot $KRESQ_PATH/OW_BOOT
 
     export DATE="$DATE"
     export LABEL="$LABEL"
-    export KRESQ_IMAGE_NAME="$IMG_CNAME"
+    export KRESQ_IMAGE_NAME="$IMG_NAME2"
     export KRESQ_IMAGE_DESC="$LABEL $REL $VER $apps"
 
     sh $PR/../files/krescue.image.conf.tpl > $KRESQ_PATH/.krescue.image.conf
@@ -656,9 +658,10 @@ CMD mv $IMG_VFAT.boot $KRESQ_PATH/OW_BOOT
 
     cd $KRESQ_PATH
     $make_image
-
-    cd $PA
 }
+)
+
+ls -l1 
 
 md5sum $IMG_VFAT > $IMG_VFAT.md5sum
 gzip -1 -c $IMG_VFAT > $IMG_VFAT.gz
