@@ -501,6 +501,7 @@ $sfdisk $SFDISK_ARGS --part-type $IMG_VFAT 1 e || FAIL
 #[ "$CMP_BLOCK_SIZE" ] || CMP_BLOCK_SIZE=1024k
 [ "$CMP_BLOCK_SIZE" ] || CMP_BLOCK_SIZE=128k
 [ "$COMP" = "xz" ] && CMP_OPTS="-Xdict-size $CMP_BLOCK_SIZE -Xbcj arm"
+[ "$COMP" = "xz" ] && CMP_OPTS="-Xdict-size $CMP_BLOCK_SIZE"
 
 [ -f $OWTMP.squashfs ] && rm $OWTMP.squashfs
 
