@@ -55,6 +55,10 @@ test "$devtype" = "" && setenv devtype mmc
     echo "[i] openwrt loaded $LOADER"
 
 DTB_EDGE=/boot/rk3399-khadas-edge-v.dtb
+DTB_VIM3=/boot/meson-g12b-a311d-khadas-vim3.dtb
+DTB_VIM2=/boot/meson-gxm-khadas-vim2.dtb
+DTB_VIM1=/boot/meson-gxl-s905x-khadas-vim.dtb
+DTB_VIM3L=/boot/meson-sm1-khadas-vim3l.dtb
 
     setenv Cdtb     /boot/openwrt.dtb
 
@@ -62,32 +66,31 @@ DTB_EDGE=/boot/rk3399-khadas-edge-v.dtb
 if test "$hwver" = ""; then
     echo "[w] hwver not defined"
 else 
-    test "$hwver" = "VIM1.V12" && setenv Cdtb /boot/krescue-vim1.dtb
-    test "$hwver" = "VIM1.V13" && setenv Cdtb /boot/krescue-vim1.dtb
-    test "$hwver" = "VIM1.V14" && setenv Cdtb /boot/krescue-vim1.dtb
-    test "$hwver" = "VIM2.V12" && setenv Cdtb /boot/krescue-vim2.dtb
-    test "$hwver" = "VIM2.V14" && setenv Cdtb /boot/krescue-vim2.dtb
-    test "$hwver" = "VIM3.V10" && setenv Cdtb /boot/krescue-vim3-s922x.dtb
-    test "$hwver" = "VIM3.V11" && setenv Cdtb /boot/krescue-vim3-a311d.dtb
+    test "$hwver" = "VIM1.V12" && setenv Cdtb $DTB_VIM1
+    test "$hwver" = "VIM1.V13" && setenv Cdtb $DTB_VIM1
+    test "$hwver" = "VIM1.V14" && setenv Cdtb $DTB_VIM1
+    test "$hwver" = "VIM2.V12" && setenv Cdtb $DTB_VIM2
+    test "$hwver" = "VIM2.V14" && setenv Cdtb $DTB_VIM2
+    test "$hwver" = "VIM3.V10" && setenv Cdtb $DTB_VIM3
+    test "$hwver" = "VIM3.V11" && setenv Cdtb $DTB_VIM3
 fi
 
 if test "$maxcpus" = ""; then
     echo "[w] maxcpus not defined"
-    test "$hostname" = "arm_gxbb" && setenv Cdtb /boot/krescue-vim3-s905d3.dtb
-    test "$hostname" = "KVIM3" && setenv Cdtb /boot/krescue-vim3-a311d.dtb
-    test "$hostname" = "kVIM1" && setenv Cdtb /boot/krescue-vim1.dtb
+    test "$hostname" = "arm_gxbb" && setenv Cdtb $DTB_VIM3L
+    test "$hostname" = "KVIM3" && setenv Cdtb $DTB_VIM3
+    test "$hostname" = "kVIM1" && setenv Cdtb $DTB_VIM1
 else
-    test "$hwver" = "VIM3.V12" && test "$maxcpus" = "4" && setenv Cdtb /boot/krescue-vim3-s905d3.dtb
-    test "$maxcpus" = "6" && setenv Cdtb /boot/krescue-vim3-a311d.dtb
-    test "$maxcpus" = "8" && setenv Cdtb /boot/krescue-vim2.dtb
+    test "$hwver" = "VIM3.V12" && test "$maxcpus" = "4" && setenv Cdtb $DTB_VIM3L
+    test "$maxcpus" = "6" && setenv Cdtb $DTB_VIM3
+    test "$maxcpus" = "8" && setenv Cdtb $DTB_VIM2
 fi
 
-
 ## emmc MAINLINE UBOOT 
-test "$fdtfile" = "amlogic/meson-sm1-khadas-vim3l.dtb" && setenv Cdtb /boot/krescue-vim3-s905d3.dtb
-test "$fdtfile" = "amlogic/meson-gxl-s905x-khadas-vim.dtb" && setenv Cdtb /boot/krescue-vim1.dtb
-test "$fdtfile" = "amlogic/meson-gxm-khadas-vim2.dtb" && setenv Cdtb /boot/krescue-vim2.dtb
-test "$fdtfile" = "amlogic/meson-g12b-a311d-khadas-vim3.dtb" && setenv Cdtb /boot/krescue-vim3-a311d.dtb
+test "$fdtfile" = "amlogic/meson-sm1-khadas-vim3l.dtb"       && setenv Cdtb $DTB_VIM3L
+test "$fdtfile" = "amlogic/meson-gxl-s905x-khadas-vim.dtb"   && setenv Cdtb $DTB_VIM1
+test "$fdtfile" = "amlogic/meson-gxm-khadas-vim2.dtb"        && setenv Cdtb $DTB_VIM2
+test "$fdtfile" = "amlogic/meson-g12b-a311d-khadas-vim3.dtb" && setenv Cdtb $DTB_VIM3
 
 #boot_source=sd
 
