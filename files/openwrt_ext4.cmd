@@ -40,6 +40,7 @@ test "$distro_bootcmd" = "" || setenv Csplash /splash.bmp
     setenv CImage  /boot/Image
     setenv CuImage  /boot/uImage.gzip
 
+
 test "$devnum" = "" && $FSLOAD mmc 0 $loadaddr $LABEL.label && setenv devnum 0
 test "$devnum" = "" && $FSLOAD mmc 1 $loadaddr $LABEL.label && setenv devnum 1
 test "$devnum" = "" && $FSLOAD mmc 2 $loadaddr $LABEL.label && setenv devnum 2
@@ -48,17 +49,9 @@ test "$devnum" = "" && $FSLOAD usb 0 $loadaddr $LABEL.label && setenv devnum 0 &
 test "$devnum"  = "" && setenv devnum 0
 test "$devtype" = "" && setenv devtype mmc
 
-test "$ROOTFS" = "" -a "$devtype" = "usb" && ROOTFS=root=/dev/sda2
-test "$ROOTFS" = "" -a "$devnum"  = "0"   && ROOTFS=root=/dev/mmcblk0p2
-test "$ROOTFS" = "" -a "$devnum"  = "1"   && ROOTFS=root=/dev/mmcblk1p2
-test "$ROOTFS" = "" -a "$devnum"  = "2"   && ROOTFS=root=/dev/mmcblk2p2
-test "$ROOTFS" = "" -a "$devnum"  = "0:1" && ROOTFS=root=/dev/mmcblk0p2
-test "$ROOTFS" = "" -a "$devnum"  = "1:1" && ROOTFS=root=/dev/mmcblk1p2
-test "$ROOTFS" = "" -a "$devnum"  = "2:1" && ROOTFS=root=/dev/mmcblk2p2
 
     setenv LOADER "$FSLOAD $devtype $devnum"
 
-    echo "[i] openwrt rootfs $ROOTFS"
     echo "[i] openwrt loaded $LOADER"
 
 DTB_EDGE=/boot/rk3399-khadas-edge-v.dtb
@@ -110,6 +103,18 @@ test "$fdtfile" = "rockchip/rk3399-khadas-edge-captain.dtb" && setenv Cdtb $DTB_
 test "$fdtfile" = "rockchip/rk3399-khadas-edge.dtb"         && setenv Cdtb $DTB_EDGE && VENDOR_=rockchip
 
 test "$boot_source" = "" || setenv BOOTED $boot_source
+
+test "$ROOTFS" = "" -a "$devtype" = "usb" && ROOTFS=root=/dev/sda2
+test "$ROOTFS" = "" -a "$devnum"  = "0"   && ROOTFS=root=/dev/mmcblk0p2
+test "$ROOTFS" = "" -a "$devnum"  = "1"   && ROOTFS=root=/dev/mmcblk1p2
+test "$ROOTFS" = "" -a "$devnum"  = "2"   && ROOTFS=root=/dev/mmcblk2p2
+test "$ROOTFS" = "" -a "$devnum"  = "0:1" && ROOTFS=root=/dev/mmcblk0p2
+test "$ROOTFS" = "" -a "$devnum"  = "1:1" && ROOTFS=root=/dev/mmcblk1p2
+test "$ROOTFS" = "" -a "$devnum"  = "2:1" && ROOTFS=root=/dev/mmcblk2p2
+
+test "$VENDOR" != "" -a "$ROOTFS" = "root=/dev/mmcblk2p2" && ROOTFS=root=/dev/mmcblk0p2
+
+echo "[i] openwrt rootfs $ROOTFS"
 
 ##############################################################
 
