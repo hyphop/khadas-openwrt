@@ -28,24 +28,27 @@ cd khadas-openwrt
 
 # build usage examples
 
-./scripts/build -1 # build openwrt for VIM1
-...
-./scripts/build -2 # build openwrt for VIM2
-...
-./scripts/build -3 # build openwrt for VIM3
-...
-./scripts/build -3l # build openwrt for VIM3L
-...
+## build openwrt for VIM1
+./scripts/build -1  
+## build openwrt for VIM2
+./scripts/build -2  
+## build openwrt for VIM3
+./scripts/build -3  
+## build openwrt for VIM3L
+./scripts/build -3l 
+## build openwrt for Edge
+./scripts/build -e  
+#
 ./scripts/build -emmc -3l # build openwrt for VIM3L emmc image
-...
+#
 ./scripts/build -2 +server # build openwrt server variant for VIM2
-...
+#
 echo REL=18.06.4 > scripts/build.conf.user # build openwrt 18.06.4 series
 ./scripts/build -r -2
-...
+#
 echo REL=19.07.3 > scripts/build.conf.user # build openwrt 19.07.0 series
 ./scripts/build -r -2
-...
+#
 
 ```
 
