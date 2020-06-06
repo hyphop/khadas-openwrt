@@ -635,10 +635,10 @@ CMD mv $IMG_VFAT.boot $KRESQ_PATH/OW_BOOT
 
     CMD mkdir $KRESQ_PATH/OW_DATA
     CMD cp $OWTMP.squashfs $KRESQ_PATH/OW_DATA
-    CMP mkdir $KRESQ_PATH/.meta
+    CMD mkdir $KRESQ_PATH/.meta
 
-    CMP cp $PR/../files/docs/README.md $KRESQ_PATH/README.txt
-    CMP cp $PR/../README.changes.txt $KRESQ_PATH/
+    CMD cp $PR/../files/docs/README.md $KRESQ_PATH/README.txt
+    CMD cp $PR/../README.changes.txt $KRESQ_PATH/
 
     export DATE="$DATE"
     export LABEL="$LABEL"
