@@ -679,9 +679,9 @@ DL https://github.com/hyphop/khadas-uboot/releases/download/$UBOOT_REL/$B.u-boot
 IMG2="$OUT_/$B.$IMG_CNAME.img"
 
 CMD cp $IMG_VFAT $IMG2
-CMD dd if=/dev/zero of=$IMG2 conv=fsync,notrunc bs=1M count=1 seek=1
-CMD dd if=$R of=$IMG2 conv=fsync,notrunc bs=444 count=1
-CMD dd if=$R of=$IMG2 conv=fsync,notrunc bs=512 skip=1 seek=1
+CMD dd if=/dev/zero of=$IMG2 conv=fsync,notrunc bs=1M count=1 seek=1	2>/dev/null	|| FAIL  mkboot1
+CMD dd if=$R of=$IMG2 conv=fsync,notrunc bs=444 count=1			2>/dev/null	|| FAIL  mkboot2
+CMD dd if=$R of=$IMG2 conv=fsync,notrunc bs=512 skip=1 seek=1		2>/dev/null	|| FAIL  mkboot3
 
 md5sum $IMG2 > $IMG2.md5sum
 gzip -1 -c $IMG2 > $IMG2.gz
