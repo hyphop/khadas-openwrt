@@ -91,8 +91,6 @@ test "$fdtfile" = "amlogic/meson-g12b-a311d-khadas-vim3.dtb" && setenv Cdtb /boo
 
 #boot_source=sd
 
-
-
 VENDOR_=""
 
 test "$fdtfile" = "rockchip/rk3399-khadas-edge-v.dtb"       && setenv Cdtb $DTB_EDGE && VENDOR_=rockchip
@@ -113,7 +111,7 @@ test "$ROOTFS" = "" -a "$devnum"  = "0:1" && ROOTFS=root=/dev/mmcblk0p2
 test "$ROOTFS" = "" -a "$devnum"  = "1:1" && ROOTFS=root=/dev/mmcblk1p2
 test "$ROOTFS" = "" -a "$devnum"  = "2:1" && ROOTFS=root=/dev/mmcblk2p2
 
-test "$VENDOR" != "" -a "$ROOTFS" = "root=/dev/mmcblk0p2" && ROOTFS=root=/dev/mmcblk2p2
+test "$VENDOR_" != "" -a "$ROOTFS" = "root=/dev/mmcblk0p2" && ROOTFS=root=/dev/mmcblk2p2
 
 echo "[i] openwrt rootfs $ROOTFS"
 
@@ -203,7 +201,6 @@ echo "[i] bootcmd:  $bootcmd"
 
 echo "[i] sleep $BOOT_DELAY sec Ctrl+C for break boot"
 sleep $BOOT_DELAY
-
 
 setenv UINITRD_ADDR -
 
