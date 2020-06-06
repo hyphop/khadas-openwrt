@@ -83,7 +83,7 @@ if test "$maxcpus" = ""; then
 else
     test "$hwver" = "VIM3.V12" && test "$maxcpus" = "4" && setenv Cdtb $DTB_VIM3L
     test "$maxcpus" = "6" && setenv Cdtb $DTB_VIM3
-    test "$maxcpus" = "8" && setenv Cdtb $DTB_VIM2
+    test "$maxcpus" = "8" && setenv 
 fi
 
 ## emmc MAINLINE UBOOT 
@@ -114,7 +114,12 @@ test "$ROOTFS" = "" -a "$devnum"  = "0:1" && ROOTFS=root=/dev/mmcblk0p2
 test "$ROOTFS" = "" -a "$devnum"  = "1:1" && ROOTFS=root=/dev/mmcblk1p2
 test "$ROOTFS" = "" -a "$devnum"  = "2:1" && ROOTFS=root=/dev/mmcblk2p2
 
-test "$VENDOR_" != "" -a "$ROOTFS" = "root=/dev/mmcblk0p2" && ROOTFS=root=/dev/mmcblk2p2
+#test "$VENDOR_" != "" -a "$ROOTFS" = "root=/dev/mmcblk0p2" && ROOTFS=root=/dev/mmcblk2p2
+
+test "$Cdtb" = "$DTB_VIM1" -a "$ROOTFS" = "root=/dev/mmcblk0p2" && ROOTFS=root=/dev/mmcblk1p2
+test "$Cdtb" = "$DTB_VIM2" -a "$ROOTFS" = "root=/dev/mmcblk0p2" && ROOTFS=root=/dev/mmcblk1p2
+test "$Cdtb" = "$DTB_VIM3" -a "$ROOTFS" = "root=/dev/mmcblk0p2" && ROOTFS=root=/dev/mmcblk2p2
+test "$Cdtb" = "$DTB_VIM3L" -a "$ROOTFS" = "root=/dev/mmcblk0p2" && ROOTFS=root=/dev/mmcblk2p2
 
 echo "[i] openwrt rootfs $ROOTFS"
 
