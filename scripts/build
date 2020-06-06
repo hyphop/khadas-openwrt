@@ -302,7 +302,7 @@ CMD mkimage -A $TARGET_KERNEL_ARCH \
 
 #CMD cp $PR/../bin/*.dtb $OWTMP/boot
 CMD cp $UBOOT_BIN $OWTMP/boot
-CMD cp $PR/../files/splash/splash.bmp.gz $OWTMP/boot
+CMD cp splash/splash.bmp.gz $OWTMP/boot
 CMD cp $PR/../files/splash/splash.bgra.bmp.gz $OWTMP/boot
 CMD cp $PR/../files/splash/splash.bgra.bmp.gz $OWTMP/splash.bmp
 
@@ -374,7 +374,9 @@ echo "#!/bin/sh
 
 #CMD rm -rf $OWTMP/lib/modules/4*
 
-echo "[i] BUILD: $LABEL $REL $VER $BOARD $(TZ= date)" | tee $OWTMP/etc/banner.mod
+DATE="$(TZ= date)"
+
+echo "[i] BUILD: $LABEL $REL $VER - $DATE" | tee $OWTMP/etc/banner.mod
 
 CMD mkimage -C none -A arm -T script -d $PR/../files/openwrt_ext4.cmd $OWTMP/s905_autoscript
 CMD cp $OWTMP/s905_autoscript  $OWTMP/aml_autoscript
@@ -554,8 +556,8 @@ CMD dd if=$OWTMP.squashfs bs=1M conv=sync,notrunc of=$IMG_VFAT.overlay
     TMP_OVL=/tmp/openwrt.ovl
     mkdir -p $TMP_OVL || FAIL
     mkdir -p $TMP_OVL/upper $TMP_OVL/work || FAIL
-    echo "overlay created $(TZ= date)" > $TMP_OVL/.OVERLAY
-    echo "overlay created $(TZ= date)" > $TMP_OVL/upper/.overlay
+    echo "overlay created $DATE" > $TMP_OVL/.OVERLAY
+    echo "overlay created $DATE" > $TMP_OVL/upper/.overlay
     ln -s 2 $TMP_OVL/.fs_state
 
     echo "[i] INIT OVERLAY as ext4">&2
@@ -633,6 +635,18 @@ CMD mv $IMG_VFAT.boot $KRESQ_PATH/OW_BOOT
 
     CMD mkdir $KRESQ_PATH/OW_DATA
     CMD cp $OWTMP.squashfs $KRESQ_PATH/OW_DATA
+    CMP mkdir $KRESQ_PATH/.meta
+
+    export DATE="$DATE"
+    export KRESQ_IMAGE_NAME="Khadas.$LABEL.$REL.$VER.$apps"
+    export KRESQ_IMAGE_DESC="$LABEL $REL $VER $apps"
+
+    sh $PR/../files/krescue.image.conf.tpl > $KRESQ_PATH/.krescue.image.conf
+
+    make_image=$(which make_image)
+
+    cd $KRESQ_PATH
+    $make_image
 
 }
 
