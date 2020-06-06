@@ -57,7 +57,9 @@ $opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
     iptables-mod-tproxy \
     iptables-mod-trace \
     ipset libpcre luci-app-https-dns-proxy \
-    wpan-tools wireguard luci-app-wireguard
+    wpan-tools wireguard luci-app-wireguard \
+    pciutils 
+
 
 #    shadowsocks-libev-ss-redir shadowsocks-libev-ss-local shadowsocks-libev-ss-rules shadowsocks-libev-config luci-app-shadowsocks-libev \
 
