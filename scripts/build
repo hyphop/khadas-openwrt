@@ -663,9 +663,8 @@ CMD mv $IMG_VFAT.boot $KRESQ_PATH/OW_BOOT
 
 ls -l1 
 
-md5sum $IMG_VFAT > $IMG_VFAT.md5sum
+#md5sum $IMG_VFAT > $IMG_VFAT.md5sum
 gzip -1 -c $IMG_VFAT > $IMG_VFAT.gz
-
 
 
 [ "$MAKE_ALL" ] && {
@@ -697,7 +696,7 @@ done
 cd $OUT_
 md5sum   *.$IMG_CNAME.img \
 	 *.$IMG_CNAME.img.gz \
-	 *.$IMG_CNAME.kresq \
+	 *.$IMG_NAME2.kresq \
       > $IMG_NAME2.md5sums
 )
 
