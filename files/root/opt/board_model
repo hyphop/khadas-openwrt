@@ -1,0 +1,7 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= print board mode from fdt 
+
+cat /sys/firmware/devicetree/base/model

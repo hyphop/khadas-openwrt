@@ -1,0 +1,14 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= full dump emmc image
+
+SRC=$(mmcdisk mmc)
+SIZE="$(cat /sys/class/block/${SRC#/dev/}/size)"
+SIZEB=$((SIZE*512))
+SIZEM=$((SIZE/(2*1024*1024)))
+
+echo "$(board_id1).$(memtotal g).$(cpunums)C.emmc.${SIZEM}GB"
+
+

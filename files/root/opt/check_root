@@ -1,0 +1,26 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= check and prepare rootfs
+
+echo "[i] check root fs"
+
+ROOT=
+for a in $(cat /proc/cmdline); do
+    case $a in
+    root=*)
+    ROOT=${a#*=}
+    ;;
+    esac
+done
+
+OFF=$(/opt/squashfs_size2 $ROOT)
+echo "[i] squash root $ROOT offset + $OFF"
+blkid -pD -O$OFF $ROOT || {
+    echo "[i] not found root blkid"
+    losetup
+    #mkfs.ext4 -Loverlay 
+}
+
+
