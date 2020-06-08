@@ -109,7 +109,7 @@ IMG_EXT4="$OUT_/${BOARD}.$LABEL.$REL.$VER.$apps.ext4.$ITYPE.img"
 
 IMG_VFAT="$OUT_/${BOARD}.$IMG_CNAME.img"
 
-IMG_NAME2=Khadas.$IMG_CNAME
+IMG_NAME2=Khadas.$LABEL.$REL.$VER.$apps
 IMG_="$OUT_/$IMG_NAME2"
 
 ## check
@@ -684,7 +684,7 @@ CMD dd if=/dev/zero of=$IMG2 conv=fsync,notrunc bs=1M count=1 seek=1	2>/dev/null
 CMD dd if=$R of=$IMG2 conv=fsync,notrunc bs=444 count=1			2>/dev/null	|| FAIL  mkboot2
 CMD dd if=$R of=$IMG2 conv=fsync,notrunc bs=512 skip=1 seek=1		2>/dev/null	|| FAIL  mkboot3
 
-md5sum $IMG2 > $IMG2.md5sum
+#md5sum $IMG2 > $IMG2.md5sum
 gzip -1 -c $IMG2 > $IMG2.gz
 
 done
@@ -693,6 +693,13 @@ done
 }
 
 #NO_RAW_IMG=1
+(
+cd $OUT_
+md5sum   *.$IMG_CNAME.img \
+	 *.$IMG_CNAME.img.gz \
+	 *.$IMG_CNAME.kresq \
+      > $IMG_NAME2.md5sums
+)
 
 [ "$NO_RAW_IMG" ] && {
 for r in $OUT_/*.$IMG_CNAME.img; do
@@ -703,6 +710,7 @@ done
 }
 
 echo "[i] DONE">&2
+
 
 ls -l1 $OUT_/*.$IMG_CNAME.*
 
