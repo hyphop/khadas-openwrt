@@ -16,8 +16,8 @@ config interface 'wan'
 	option force_link '1'
 	option proto 'dhcp'
 	option metric '200'
-#	option dns '8.8.8.8'
-#	option peerdns '0'
+	option dns '8.8.8.8'
+	option peerdns '1'
 
 # pppoe wan
 

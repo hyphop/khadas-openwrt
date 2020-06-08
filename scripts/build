@@ -667,6 +667,7 @@ md5sum $IMG_VFAT > $IMG_VFAT.md5sum
 gzip -1 -c $IMG_VFAT > $IMG_VFAT.gz
 
 
+
 [ "$MAKE_ALL" ] && {
 
 echo "[i] make all $BOARDS">&2
@@ -691,7 +692,18 @@ done
 
 }
 
+NO_RAW_IMG=1
+
+[ "$NO_RAW_IMG" ] && {
+for r in $OUT_/*.$IMG_CNAME.img; do
+    echo "[i] cliean raw image $r"
+done
+
+}
+
 echo "[i] DONE">&2
 
-ls -l1 $IMG*
+ls -l1 $OUT_/*.$IMG_CNAME.*
+
+
 
