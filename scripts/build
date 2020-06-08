@@ -105,9 +105,9 @@ OUT_=/tmp
 
 IMG_CNAME="$LABEL.$REL.$VER.$apps.$ITYPE"
 
-IMG_EXT4="$OUT_/${BOARD}.$LABEL.$REL.$VER.$apps.ext4.$ITYPE.img"
+IMG_EXT4="$OUT_/$BOARD.$LABEL.$REL.$VER.$apps.ext4.$ITYPE.img"
 
-IMG_VFAT="$OUT_/${BOARD}.$IMG_CNAME.img"
+IMG_VFAT="$OUT_/$BOARD.$IMG_CNAME.img"
 
 IMG_NAME2=Khadas.$LABEL.$REL.$VER.$apps
 IMG_="$OUT_/$IMG_NAME2"
@@ -702,7 +702,7 @@ md5sum   *.$IMG_CNAME.img \
 
 [ "$NO_RAW_IMG" ] && {
 for r in $OUT_/*.$IMG_CNAME.img; do
-    echo "[i] cliean raw image $r"
+    echo "[i] clean raw image $r"
     rm $r
 done
 
