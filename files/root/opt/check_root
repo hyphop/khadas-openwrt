@@ -15,12 +15,34 @@ for a in $(cat /proc/cmdline); do
     esac
 done
 
-OFF=$(/opt/squashfs_size2 $ROOT)
+
+[ "$ROOT" ] || {
+    echo "[e] not root var in"
+    exit 1
+}
+
+OFF=$(/opt/squashfs_size2 $ROOT 2>/dev/null)
 echo "[i] squash root $ROOT offset + $OFF"
+
+[ "$OFF" ] || {
+    echo "[e] not found squash offset"
+    exit 1
+}
+
 blkid -pD -O$OFF $ROOT || {
     echo "[i] not found root blkid"
+
     losetup
-    #mkfs.ext4 -Loverlay 
+
+    LO=$(losetup -f -o$OFF $ROOT)
+    [ "$LO" ] && {
+	echo "[i] make ext4 overlay"
+	mkfs.ext4 -Loverlay $LO
+	losetup -d $LO
+    }
+
+    sleep 2
+
 }
 
 
