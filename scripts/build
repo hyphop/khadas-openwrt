@@ -692,11 +692,12 @@ done
 
 }
 
-NO_RAW_IMG=1
+#NO_RAW_IMG=1
 
 [ "$NO_RAW_IMG" ] && {
 for r in $OUT_/*.$IMG_CNAME.img; do
     echo "[i] cliean raw image $r"
+    rm $r
 done
 
 }
