@@ -4,7 +4,11 @@
 
 #= check and prepare rootfs
 
-echo "[i] check root fs"
+LOG(){
+    echo "check root: $@" | tee /dev/kmsg
+}
+
+LOG "[i] check root fs"
 
 ROOT=
 for a in $(cat /proc/cmdline); do
@@ -17,26 +21,26 @@ done
 
 
 [ "$ROOT" ] || {
-    echo "[e] not root var in"
+    LOG "[e] not root var in"
     exit 1
 }
 
 OFF=$(/opt/squashfs_size2 $ROOT 2>/dev/null)
-echo "[i] squash root $ROOT offset + $OFF"
+LOG "[i] squash root $ROOT offset + $OFF"
 
 [ "$OFF" ] || {
-    echo "[e] not found squash offset"
+    LOG "[e] not found squash offset"
     exit 1
 }
 
 blkid -pD -O$OFF $ROOT || {
-    echo "[i] not found root blkid"
+    LOG "[i] not found root blkid"
 
     losetup
 
-    LO=$(losetup -f -o$OFF $ROOT)
+    LO=$(losetup --show -f -o$OFF $ROOT)
     [ "$LO" ] && {
-	echo "[i] make ext4 overlay"
+	LOG "[i] make ext4 overlay $LO"
 	mkfs.ext4 -Loverlay $LO
 	losetup -d $LO
     }
