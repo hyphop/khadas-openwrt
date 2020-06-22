@@ -2,7 +2,17 @@
 
 ## hyphop ##
 
+#= mini downloader
+
 #GET(){
+
+	[ "$MAXTRY" ] || \
+	    MAXTRY=30
+	[ "$DL_MIN_SPEED" ] || \
+	    DL_MIN_SPEED=10000
+	[ "$DL_MIN_SPEED_TIME" ] || \
+	    DL_MIN_SPEED_TIME=3
+
 
     [ "$1" ] || { 
 	echo "[w] undef src">&2
@@ -16,8 +26,12 @@ OK(){
 #	return 0
 }
 
-    O_="$2"
-    D_="$3"
+    D_="$2"
+    O_="$3"
+
+    [ "$O_" ] || O_="$(basename "$1")"
+    [ "$D_" ] || D_="$DOWNLOADS"
+    
     echo "[i] DOWNLOAD $1 => $O_ DIR $D_">&2
 
     T_=/tmp/dl.head
@@ -48,9 +62,28 @@ OK(){
 	CMD mv "$o_" "$O_"
 	;;
 	*//*)
-	curl -f -jkL -C- -D "$O_.headers" "$1" -o "$O_"
+	r_=
+	TRY=0
+	while [ "1" ] ; do
+	[ "$TRY" -gt "$MAXTRY" ] && {
+	    echo "[e] max try $MAXTRY reached">&2
+	    exit 1
+	}
+	[ "$TRY" = "0" ] || \
+	echo "[i] try $TRY from $MAXTRY">&2
+    
+
+	TRY=$((TRY+1))
+
+	curl -Y $DL_MIN_SPEED -y $DL_MIN_SPEED_TIME \
+	     -f -jkL -C- -D "$O_.headers" "$1" -o "$O_"
+
 	r_=$?
 	case $r_ in
+	    28)
+	    echo "[i] restart downloading (slow dl speed)">&2
+	    #sleep 1
+	    ;;
 	    22)
 	    echo "[i] curl ret code $r_">&2
 	    head -n1 "$O_.headers" | grep 416 && {
@@ -65,8 +98,11 @@ OK(){
 	    *)
 	    echo "[i] curl ret code $r_">&2
 	    cat "$O_.headers">&2
+	    break
 	    ;;
 	esac
+	done
+
 	#echo "[i] curl ret $r_">&2
 	return $r_
 	#exit $r_

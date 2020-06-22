@@ -248,7 +248,7 @@ rm -rf $OWTMP
 
 for k in \
     Image.gz \
-    vims.dtb.tar.gz; do
+    fdt.tar.gz; do
     DL https://github.com/hyphop/khadas-linux-kernel/releases/download/$KERNEL_REL/$k || FAIL
 done
 

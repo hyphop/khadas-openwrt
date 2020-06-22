@@ -53,13 +53,13 @@ $opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
     samba36-client cifsmount \
     nfs-utils \
     ppp-mod-pptp \
-    openvpn-mbedtls luci-app-openvpn \
     iptables-mod-tproxy \
     iptables-mod-trace \
     ipset libpcre \
     wpan-tools wireguard luci-app-wireguard \
     pciutils 
 
+#    openvpn-mbedtls luci-app-openvpn \
 #    luci-app-https-dns-proxy \
 
 

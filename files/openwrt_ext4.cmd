@@ -54,11 +54,12 @@ test "$devtype" = "" && setenv devtype mmc
 
     echo "[i] openwrt loaded $LOADER"
 
-DTB_EDGE=/boot/rk3399-khadas-edge-v.dtb
-DTB_VIM3=/boot/meson-g12b-a311d-khadas-vim3.dtb
-DTB_VIM2=/boot/meson-gxm-khadas-vim2.dtb
-DTB_VIM1=/boot/meson-gxl-s905x-khadas-vim.dtb
-DTB_VIM3L=/boot/meson-sm1-khadas-vim3l.dtb
+DTB_EDGE=/boot/fdt/rockcip/rk3399-khadas-edge-v.dtb
+DTB_VIM3=/boot/fdt/amlogic/meson-g12b-a311d-khadas-vim3.dtb
+DTB_VIM31=/boot/fdt/amlogic/meson-g12b-s922x-khadas-vim3.dtb
+DTB_VIM2=/boot/fdt/amlogic/meson-gxm-khadas-vim2.dtb
+DTB_VIM1=/boot/fdt/amlogic/meson-gxl-s905x-khadas-vim.dtb
+DTB_VIM3L=/boot/fdt/amlogic/meson-sm1-khadas-vim3l.dtb
 
     setenv Cdtb     /boot/openwrt.dtb
 
@@ -91,6 +92,7 @@ test "$fdtfile" = "amlogic/meson-sm1-khadas-vim3l.dtb"       && setenv Cdtb $DTB
 test "$fdtfile" = "amlogic/meson-gxl-s905x-khadas-vim.dtb"   && setenv Cdtb $DTB_VIM1
 test "$fdtfile" = "amlogic/meson-gxm-khadas-vim2.dtb"        && setenv Cdtb $DTB_VIM2
 test "$fdtfile" = "amlogic/meson-g12b-a311d-khadas-vim3.dtb" && setenv Cdtb $DTB_VIM3
+test "$fdtfile" = "amlogic/meson-g12b-s922x-khadas-vim3.dtb" && setenv Cdtb $DTB_VIM31
 
 #boot_source=sd
 
