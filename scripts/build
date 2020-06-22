@@ -310,7 +310,7 @@ CMD mkimage -A $TARGET_KERNEL_ARCH \
 
 #CMD cp $PR/../bin/*.dtb $OWTMP/boot
 CMD cp $UBOOT_BIN $OWTMP/boot
-CMD cp splash/splash.bmp.gz $OWTMP/boot
+CMD cp $PR/../files/splash/splash.bmp.gz $OWTMP/boot
 CMD cp $PR/../files/splash/splash.bgra.bmp.gz $OWTMP/boot
 CMD cp $PR/../files/splash/splash.bgra.bmp.gz $OWTMP/splash.bmp
 
