@@ -16,6 +16,7 @@
 
 cat <<end
 
+src/gz extra https://github.com/hyphop/khadas-openwrt-feed-extra/releases/download/$PKGS_EXTRA_VER
 src/gz openwrt_core http://downloads.openwrt.org/releases/$REL/targets/$TARGET/$BITS/packages
 src/gz openwrt_base http://downloads.openwrt.org/releases/$REL/packages/$OWARCH/base
 src/gz openwrt_luci http://downloads.openwrt.org/releases/$REL/packages/$OWARCH/luci
