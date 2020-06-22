@@ -54,7 +54,7 @@ test "$devtype" = "" && setenv devtype mmc
 
     echo "[i] openwrt loaded $LOADER"
 
-DTB_EDGE=/boot/fdt/rockcip/rk3399-khadas-edge-v.dtb
+DTB_EDGE=/boot/fdt/rockchip/rk3399-khadas-edge-v.dtb
 DTB_VIM3=/boot/fdt/amlogic/meson-g12b-a311d-khadas-vim3.dtb
 DTB_VIM31=/boot/fdt/amlogic/meson-g12b-s922x-khadas-vim3.dtb
 DTB_VIM2=/boot/fdt/amlogic/meson-gxm-khadas-vim2.dtb
