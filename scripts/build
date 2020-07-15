@@ -249,7 +249,7 @@ rm -rf $OWTMP
 for k in \
     Image.gz \
     fdt.tar.gz; do
-    DL https://github.com/hyphop/khadas-linux-kernel/releases/download/$KERNEL_REL/$k || FAIL
+    DL $KERNEL_DL/$KERNEL_REL/$k || FAIL
 done
 
 CMD mkdir $OWTMP/boot
@@ -258,14 +258,14 @@ CMD tar -xf $R -C $OWTMP/boot || FAIL
 
 for k in \
     modules.openwrt.tar.gz; do
-    DL https://github.com/hyphop/khadas-linux-kernel/releases/download/$KERNEL_REL/$k || FAIL
+    DL $KERNEL_DL/$KERNEL_REL/$k || FAIL
 done
 
 #UNPACK $R 
 MODULES_TAR=$R
 
 #DL https://github.com/hyphop/khadas-uboot-spi/releases/download/$UBOOT_REL/u-boot.$BOARD.sd.bin || FAIL
-DL https://github.com/hyphop/khadas-uboot/releases/download/$UBOOT_REL/$BOARD.u-boot.sd.bin || FAIL
+DL $UBOOT_DL/$UBOOT_REL/$BOARD.u-boot.sd.bin || FAIL
 UBOOT_BIN=$R
 
 #DL https://github.com/hyphop/pkg/releases/download/openwrt_khadas_fw/openwrt_khadas_fw.tar.gz || FAIL
