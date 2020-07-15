@@ -14,7 +14,7 @@ PKG=$NAME-$VER.tar.gz
 
 echo "[i] make $PKG">&2
 
-../download ftp://ftp.gnu.org/gnu/mtools/$PKG $PKG $DL || exit 1
+../download ftp://ftp.gnu.org/gnu/mtools/$PKG  || exit 1
 
 cd $DL
 

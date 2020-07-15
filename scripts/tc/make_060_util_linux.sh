@@ -16,7 +16,7 @@ PKG=$NAME-$VER.tar.gz
 
 echo "[i] make $PKG">&2
 
-../download https://github.com/karelzak/$NAME/archive/v$VER.tar.gz $PKG $DL || exit 1
+../download https://github.com/karelzak/$NAME/archive/v$VER.tar.gz "" $PKG || exit 1
 
 cd $DL
 

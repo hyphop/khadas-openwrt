@@ -6,10 +6,13 @@ D=$(dirname $0)
 DP=$(realpath "$D")
 cd $D
 
+
 MAKE_MT=-j4
 
 DL=../../dl
 PREF=../../opt
+
+export DOWNLOADS="$DL"
 
 [ -d "$DL" ] || mkdir -p $DL
 [ -d "$PREF" ] || mkdir -p $PREF

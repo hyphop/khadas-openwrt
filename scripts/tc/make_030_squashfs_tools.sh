@@ -14,7 +14,7 @@ PKG=$NAME-$VER.tar.gz
 
 echo "[i] make $PKG">&2
 
-../download https://github.com/plougher/squashfs-tools/archive/$VER.tar.gz $PKG $DL || exit 1
+../download https://github.com/plougher/squashfs-tools/archive/$VER.tar.gz "" $PKG || exit 1
 
 cd $DL
 
@@ -31,7 +31,7 @@ export EXTRA_LDFLAGS="-L$PRE2/lib -Wl,-rpath=$PRE2/lib"
 
 make clean
 
-make $MAKE_MT XZ_SUPPORT=1 ZSTD_SUPPORT=1 mksquashfs unsquashfs && \
+make $MAKE_MT GZIP_SUPPORT=0 COMP_DEFAULT=zstd XZ_SUPPORT=1 ZSTD_SUPPORT=1 mksquashfs unsquashfs && \
     cp mksquashfs unsquashfs $PRE2/bin
 
 
