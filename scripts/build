@@ -470,9 +470,14 @@ CMD mdir -i $F ::
 cd $OWTMP
 for f in boot splash.* LABEL OPENWRT.label s9* aml* boot.* scripts README* .automount.no ; do
 ls -l1 $f
-CMD mcopy -i $F $f ::$f
+CMD mcopy -s -i $F $f ::$f
 CMD cp -a $f $IMG_VFAT.boot
 done
+
+CMD mdir -/ -i $F ::
+
+#exit 0
+
 cd $P
 
 [ "$MAKE_KRESQ_IMAGE" ] && {
