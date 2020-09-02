@@ -162,6 +162,11 @@ $LOADER $DTB_ADDR $Cdtb
 fdt addr $DTB_ADDR || exit 1
 #
 
+# activate pcie
+kbi portmode r
+test "$port_mode" = "1" && echo "** setup pcie port **"
+test "$port_mode" = "1" && fdt set /soc/pcie@fc000000 status okay && echo "** OK **"
+
 #SPI_=spifc
 #test "$VENDOR_" = "" || SPI_=spi1
 #fdt set $SPI_ status okay
