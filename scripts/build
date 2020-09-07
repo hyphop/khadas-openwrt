@@ -104,14 +104,18 @@ apps="${apps// /.}"
 
 OUT_=/tmp
 
-IMG_CNAME="$LABEL.$REL.$VER.$apps.$ITYPE"
+IMG_CNAME_="$Label.$REL.$apps.$ITYPE"
+IMG_CNAME="$Label.$REL.$apps.$ITYPE.$VER"
 
-IMG_EXT4="$OUT_/$BOARD.$LABEL.$REL.$VER.$apps.ext4.$ITYPE.img"
+IMG_EXT4="$OUT_/$BOARD.$Label.$REL.$VER.$apps.ext4.$ITYPE.img"
 
 IMG_VFAT="$OUT_/$BOARD.$IMG_CNAME.img"
 
-IMG_NAME2=Khadas.$LABEL.$REL.$VER.$apps
+IMG_NAME1=Khadas.$Label.$REL.$apps
+IMG_NAME2=Khadas.$Label.$REL.$apps.$VER
+
 IMG_="$OUT_/$IMG_NAME2"
+IMG_LAST="$OUT_/$IMG_NAME1.last"
 
 ## check
 REQUIRED="rsync curl wget sync sfdisk gzip mkimage mksquashfs mkfs.ext4 mkfs.vfat mdir mcopy"
@@ -677,8 +681,13 @@ CMD mv $IMG_VFAT.boot $KRESQ_PATH/OW_BOOT
 
     make_image=$(which make_image)
 
+    (
     cd $KRESQ_PATH
     $make_image
+    ) && ln -sf $IMG_NAME2.emmc.kresq $IMG_LAST.emmc.kresq
+
+#ln -sf $IMG_
+
 }
 )
 
@@ -697,7 +706,9 @@ for B in $BOARDS; do
 
 DL https://github.com/hyphop/khadas-uboot/releases/download/$UBOOT_REL/$B.u-boot.sd.bin || FAIL
 
+IMG2_="$B.$IMG_CNAME.img"
 IMG2="$OUT_/$B.$IMG_CNAME.img"
+IMG3="$OUT_/$B.$IMG_CNAME_.last.img"
 
 CMD cp $IMG_VFAT $IMG2
 CMD dd if=/dev/zero of=$IMG2 conv=fsync,notrunc bs=1M count=1 seek=1	2>/dev/null	|| FAIL  mkboot1
@@ -706,6 +717,7 @@ CMD dd if=$R of=$IMG2 conv=fsync,notrunc bs=512 skip=1 seek=1		2>/dev/null	|| FA
 
 #md5sum $IMG2 > $IMG2.md5sum
 gzip -1 -c $IMG2 > $IMG2.gz
+ln -sf $IMG2_.gz $IMG3.gz
 
 done
 
