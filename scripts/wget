@@ -1,0 +1,33 @@
+#!/bin/sh
+
+## hyphop ##
+
+#= wget wrapper -> replace to curl -> for opkg
+#=      solver many download problems
+
+# wget -q -O /tmp/opkg-njnCFe/Packages.gz \
+#     http://downloads.openwrt.org/releases/19.07.3/packages/aarch64_generic/packages/Packages.gz
+
+    [ "$MAXTRY" ] || \
+        MAXTRY=21
+    [ "$DL_MIN_SPEED" ] || \
+        DL_MIN_SPEED=10000
+    [ "$DL_MIN_SPEED_TIME" ] || \
+        DL_MIN_SPEED_TIME=3
+
+[ "$OPKG_CURL_SILENT" ] && \
+    OPKG_CURL_ARGS="-s -S"
+
+# echo "[i] OPKG_CURL_SILENT: $OPKG_CURL_SILENT">&2
+
+#    --max-time 120
+
+#    --retry-delay 3 \
+curl \
+    -C- \
+    -jkL -o"$3" "$4" \
+    $OPKG_CURL_ARGS -Y $DL_MIN_SPEED -y $DL_MIN_SPEED_TIME  \
+    --retry $MAXTRY --retry-delay 3 \
+    --retry-connrefused \
+    -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.89 Safari/537.36"
+

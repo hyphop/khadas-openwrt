@@ -16,8 +16,9 @@ PA=$(realpath $PR)
 
 case $PATH in
     */opt/bin:*);;
-    *)PATH="$PA/../opt/bin:$PATH";;
+    *)PATH="$PA:$PA/../opt/bin:$PA/../../khadas-rescue-tools/image:$PATH";;
 esac
+
 
 APPS=""
 apps=""
@@ -167,7 +168,22 @@ DL() {
     [ -f "$S" ] || {
 	case "$DL_PROG" in
 	    curl)
-	    CMD curl -f -jkL "$1" -o "$S" -#
+#	    CMD curl -f -jkL "$1" -o "$S" -#
+
+    [ "$MAXTRY" ] || \
+        MAXTRY=21
+    [ "$DL_MIN_SPEED" ] || \
+        DL_MIN_SPEED=10000
+    [ "$DL_MIN_SPEED_TIME" ] || \
+        DL_MIN_SPEED_TIME=3
+
+[ "$OPKG_CURL_SILENT" ] && \
+    OPKG_CURL_ARGS="-s -S"
+
+	    CMD curl -f -jkL "$1" -o "$S" \
+		-Y $DL_MIN_SPEED -y $DL_MIN_SPEED_TIME  \
+		--retry $MAXTRY --retry-delay 3
+
 	    curl_code=$?
 	    [ "$curl_code" = "0" ] || {
 	        echo "[w] curl exit $curl_code :: $1">&2
