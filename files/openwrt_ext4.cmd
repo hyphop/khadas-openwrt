@@ -145,16 +145,12 @@ test "$kernel_addr_r"  = "" || setenv UIMAGE_ADDR  $kernel_addr_r
 test "$avb2" = "" || setenv UIMAGE_ADDR 0x1080000
 
 echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-echo "KRESCUE_TIME: $KRESCUE_TIME"
-echo "KRESCUE_DATE: $KRESCUE_DATE"
-echo "KRESCUE_VER : $KRESCUE_VER"
-echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 
 echo "addrs:  UIMAGE_ADDR ::  UINITRD_ADDR ::  DTB_ADDR"
 echo "addrs: $UIMAGE_ADDR :: $UINITRD_ADDR :: $DTB_ADDR"
 echo "setenv kernel_addr_r $kernel_addr_r; setenv ramdisk_addr_r $ramdisk_addr_r; setenv fdt_addr_r $fdt_addr_r;"
 
-echo ":::::::::::::::"
+echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 
 echo "load dtb"
 echo $LOADER $DTB_ADDR $Cdtb
