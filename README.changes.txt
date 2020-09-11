@@ -1,9 +1,13 @@
 # OpenWrt VIMs Change log
 
+## Khadas Vims OpenWrt rel 0.74
+
++ updated openwrt base to 19.07.4
+
 ## Khadas Vims OpenWrt rel 0.73
 
 + linux kernel 5.7.7
-+ updated openwrt base 
++ updated openwrt base 19.07.3
 + fixed boot scripts
 + fixed eth mac for VIM3x
 + fixed sd boot problem with legacy uboot 
