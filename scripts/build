@@ -658,9 +658,7 @@ cat $PR/../README.openwrt.vims.txt \
 
 echo "[i] KRESQ for $BOARDS">&2
 for B in $BOARDS; do
-#DL https://github.com/hyphop/khadas-uboot-spi/releases/download/openwrt/u-boot.$B.sd.bin || FAIL
-#DL https://github.com/hyphop/khadas-uboot/releases/download/openwrt/$B.u-boot.sd.bin || FAIL
-DL https://github.com/hyphop/khadas-uboot/releases/download/$UBOOT_REL/$B.u-boot.sd.bin || FAIL
+DL $UBOOT_DL/$UBOOT_REL/$B.u-boot.sd.bin || FAIL
 CMD cp $R $IMG_VFAT.boot/boot
 done
 CMD mv $IMG_VFAT.boot $KRESQ_PATH/OW_BOOT
@@ -702,6 +700,12 @@ gzip -1 -c $IMG_VFAT > $IMG_VFAT.gz
 echo "[i] make all $BOARDS">&2
 for B in $BOARDS; do
 
+IMG2_="$B.$IMG_CNAME.img"
+IMG2="$OUT_/$B.$IMG_CNAME.img"
+IMG3="$OUT_/$B.$IMG_CNAME_.last.img"
+
+ln -sf $IMG2_.gz $IMG3.gz
+
 [ "$B" = "$BOARD" ] && continue
 
 DL https://github.com/hyphop/khadas-uboot/releases/download/$UBOOT_REL/$B.u-boot.sd.bin || FAIL
@@ -717,7 +721,7 @@ CMD dd if=$R of=$IMG2 conv=fsync,notrunc bs=512 skip=1 seek=1		2>/dev/null	|| FA
 
 #md5sum $IMG2 > $IMG2.md5sum
 gzip -1 -c $IMG2 > $IMG2.gz
-ln -sf $IMG2_.gz $IMG3.gz
+#ln -sf $IMG2_.gz $IMG3.gz
 
 done
 
