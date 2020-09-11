@@ -1,5 +1,14 @@
 # OpenWrt VIMs Change log
 
+## Khadas Vims OpenWrt rel 0.73
+
++ linux kernel 5.7.7
++ updated openwrt base 
++ fixed boot scripts
++ fixed eth mac for VIM3x
++ fixed sd boot problem with legacy uboot 
++ updated uboot
+
 ## Khadas Vims OpenWrt rel 0.7
 
 + add Khadas Edge (rockchip rk3399) - https://docs.khadas.com/edge/
