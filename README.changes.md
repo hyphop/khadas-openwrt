@@ -1,10 +1,14 @@
-# OpenWrt VIMs Change log
+# OpenWrt Khadas Change log
 
-## Khadas Vims OpenWrt rel 0.74
+## OpenWrt Khadas rel 0.75
+
++ updated openwrt base to 19.07.5
+
+## OpenWrt Khadas rel 0.74
 
 + updated openwrt base to 19.07.4
 
-## Khadas Vims OpenWrt rel 0.73
+## OpenWrt Khadas rel 0.73
 
 + linux kernel 5.7.7
 + updated openwrt base 19.07.3
@@ -13,7 +17,7 @@
 + fixed sd boot problem with legacy uboot 
 + updated uboot
 
-## Khadas Vims OpenWrt rel 0.7
+## OpenWrt Khadas rel 0.7
 
 + add Khadas Edge (rockchip rk3399) - https://docs.khadas.com/edge/
 + linux kernel 5.7
@@ -22,7 +26,7 @@
 + pcie + nvme
 + some other fixes
 
-## Khadas Vims OpenWrt rel 0.66
+## OpenWrt Khadas rel 0.66
 
 + linux kernel fix usb-starage uas bug (just disable uas)
 + linux kernel other fixes ... 
@@ -31,27 +35,27 @@
 + uboot script autodetect rootfs
 + boot from usb storages
 
-## Khadas Vims OpenWrt rel 0.63
+## OpenWrt Khadas rel 0.63
 
 + change default dns resolver all via https-dns
 + change firewall users scripts /etc/firewall.user
 + small configs changes
 + f2fs blacklisted - overlay troubles with f2fs usage
 
-## Khadas Vims OpenWrt rel 0.62
+## OpenWrt Khadas rel 0.62
 
 + change default rel to OpenWrt 19.07.2
 + change default uboot to mainline
 + improve build tc
 
-## Khadas Vims OpenWrt rel 0.61
+## OpenWrt Khadas rel 0.61
 
 + change default rel to OpenWrt 19.07.1
 + update image build scripts
 + improve uboot scripts and config
 + add mainline uboot support + root env store to emmc fat partition
 
-## Khadas Vims OpenWrt rel 0.6
+## OpenWrt Khadas rel 0.6
 
 + Final release of OpenWrt 19.07.0
 + improve openwrt 19.07.X series
@@ -59,7 +63,7 @@
 + initial overlay build support
 + add f2fs overlay support
 
-## Khadas Vims OpenWrt rel 0.5
+## OpenWrt Khadas rel 0.5
 
 + add VIM3 and VIM3L initial support (without on board wifi)
 + add new kernel for VIM3L
@@ -70,7 +74,7 @@
 + https://github.com/hyphop/khadas-openwrt/releases/tag/19.07.0-rc2
 + https://www.reddit.com/r/openwrt/comments/e6uzmq/openwrt_19070rc2_for_khadas_vim3_vim3l_boards/
 
-## Khadas Vims OpenWrt rel 0.4
+## OpenWrt Khadas rel 0.4
 
 + add SQM support https://openwrt.org/docs/guide-user/network/traffic-shaping/sqm
 + rebuild linux kernel and modules config
@@ -78,11 +82,11 @@
 + prepare build scripts for openwrt 19.07.X series `cat scripts/build_last_rel.md` https://openwrt.org/releases/19.07/notes-19.07.0-rc1
 + add NFS-kernel-server only for 19.07.X server series - `nfsd_test` script test
 
-## Khadas Vims OpenWrt rel 0.3.1
+## OpenWrt Khadas rel 0.3.1
 
 + ethernet for VIM2 fixed, hotplug & reinit without bugs! OK
 
-## Khadas Vims OpenWrt rel 0.3
+## OpenWrt Khadas rel 0.3
 
 + added support for VIM2 ( with wifi chip AP6356S VIM2.V14 test mode )
 + preinstalled samba, mdns, ttyd, thd + many other packages
@@ -94,15 +98,15 @@
 + many improves
 + change default hostname to openwrt-vim + mdns name to: openwrt-vim.local
 
-## Khadas Vims OpenWrt rel 0.2
+## OpenWrt Khadas rel 0.2
 
 + usb 3g 4g modems - OK
 + improve build scripts
 + some changes
 
-## Khadas Vims OpenWrt rel 0.1
+## OpenWrt Khadas rel 0.1
 
-it's a firt release for Khadas Vims boards
+it's a firt release for Khadas  boards
 
 + vim1 ver 1.2 - OK
 + vim1 ver 1.4 - OK

@@ -1,4 +1,4 @@
-# Khadas OpenWrt VIMs
+# Khadas OpenWrt 
 
 openwrt https://openwrt.org/ for Khadas VIMs boards https://www.khadas.com/vim and Edge boards https://docs.khadas.com/edge/
 
