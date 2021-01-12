@@ -1,5 +1,10 @@
 # OpenWrt Khadas Change log
 
+## OpenWrt Khadas rel 0.76
+
++ u-boot updates and fixes
++ linux kernel updates and fixes
+
 ## OpenWrt Khadas rel 0.75
 
 + updated openwrt base to 19.07.5
