@@ -200,7 +200,8 @@ CONSOLE_="console=ttyAML0,115200n8 console=ttyS0,115200n8"
 
 test "$VENDOR_" = "" || CONSOLE_="console=uart8250,mmio32,0xff1a0000"
 
-setenv bootargs "${bootargs} console=tty0 $CONSOLE_ no_console_suspend consoleblank=0 module_blacklist=f2fs"
+#setenv bootargs "${bootargs} console=tty0 $CONSOLE_ no_console_suspend consoleblank=0 module_blacklist=f2fs"
+setenv bootargs "${bootargs} earlyprintk no_console_suspend consoleblank=0 module_blacklist=f2fs"
 
 #setenv bootargs "${bootargs} vout=${outputmode},enable hdmitx=${cecconfig},${colorattribute}"
 #setenv bootargs "${bootargs} hdmimode=${hdmimode} cvbsmode=${cvbsmode} osd_reverse=${osd_reverse}"
