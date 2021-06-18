@@ -108,6 +108,7 @@ fi
 
 test "$boot_source" = "" || setenv BOOTED $boot_source
 
+test "$ROOTFS" = "" -a "$devtype" = "nvme" && ROOTFS=root=/dev/nvme0n1p2
 test "$ROOTFS" = "" -a "$devtype" = "usb" && ROOTFS=root=/dev/sda2
 test "$ROOTFS" = "" -a "$devnum"  = "0"   && ROOTFS=root=/dev/mmcblk0p2
 test "$ROOTFS" = "" -a "$devnum"  = "1"   && ROOTFS=root=/dev/mmcblk1p2
