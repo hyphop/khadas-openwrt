@@ -1,5 +1,13 @@
 # OpenWrt Khadas Change log
 
+## OpenWrt Khadas rel 0.77
+
++ u-boot updated
++ linux kernel updated
++ nvme bootable
++ fix hdmi + nvme bug
++ updated openwrt base to 19.07.7
+
 ## OpenWrt Khadas rel 0.76
 
 + u-boot updates and fixes
