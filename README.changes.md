@@ -3,7 +3,8 @@
 ## OpenWrt Khadas rel 0.77
 
 + u-boot updated
-+ linux kernel updated
++ linux kernel updated 5.13x
++ soc watchdog activated
 + nvme bootable
 + fix hdmi + nvme bug
 + updated openwrt base to 19.07.7
