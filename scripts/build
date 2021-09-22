@@ -247,7 +247,15 @@ DL https://downloads.openwrt.org/releases/$REL/targets/x86/64/$X86_rootfs || FAI
 TO="$PR/../bin/$HOST_ARCH"
 [ -d "$TO" ] || \
 CMD mkdir -p $TO
+
+case $REL in
+21*)
+CMD tar -xf $R -C "$TO" ./bin/opkg  ./lib/libc.so  ./lib/libgcc_s.so.1  ./lib/libubox.so.20210516
+;;
+*)
 CMD tar -xf $R -C "$TO" ./bin/opkg  ./lib/libc.so  ./lib/libgcc_s.so.1  ./lib/libubox.so
+esac
+
 
 ###
 
