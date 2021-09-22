@@ -122,8 +122,11 @@ echo "[i] openwrt rootfs $ROOTFS // DTB: $Cdtb"
 
 test "$VENDOR_" != "" -a "$ROOTFS" = "root=/dev/mmcblk0p2" && ROOTFS=root=/dev/mmcblk2p2
 
+test "$Cdtb" = "$DTB_VIM1" -a "$ROOTFS" = "root=/dev/mmcblk1p2" && ROOTFS=root=/dev/mmcblk0p2
+test "$Cdtb" = "$DTB_VIM2" -a "$ROOTFS" = "root=/dev/mmcblk1p2" && ROOTFS=root=/dev/mmcblk0p2
 test "$Cdtb" = "$DTB_VIM1" -a "$ROOTFS" = "root=/dev/mmcblk2p2" && ROOTFS=root=/dev/mmcblk1p2
 test "$Cdtb" = "$DTB_VIM2" -a "$ROOTFS" = "root=/dev/mmcblk2p2" && ROOTFS=root=/dev/mmcblk1p2
+
 test "$Cdtb" = "$DTB_VIM3" -a "$ROOTFS" = "root=/dev/mmcblk1p2" && ROOTFS=root=/dev/mmcblk0p2
 test "$Cdtb" = "$DTB_VIM3L" -a "$ROOTFS" = "root=/dev/mmcblk1p2" && ROOTFS=root=/dev/mmcblk0p2
 test "$Cdtb" = "$DTB_VIM3" -a "$ROOTFS" = "root=/dev/mmcblk2p2" && ROOTFS=root=/dev/mmcblk1p2
