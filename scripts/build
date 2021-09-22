@@ -232,7 +232,15 @@ UNPACK(){
 
 ## PREPRARE HOST OPKG
 
-DL https://downloads.openwrt.org/releases/$REL/targets/x86/64/openwrt-$REL-x86-64-generic-rootfs.tar.gz || FAIL
+case $REL in
+21*)
+X86_rootfs=openwrt-$REL-x86-64-rootfs.tar.gz
+;;
+*)
+X86_rootfs=openwrt-$REL-x86-64-generic-rootfs.tar.gz
+esac
+
+DL https://downloads.openwrt.org/releases/$REL/targets/x86/64/$X86_rootfs || FAIL
 
 #HOST_ARCH="$(uname -m)"
 
