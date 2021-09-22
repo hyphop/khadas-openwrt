@@ -1,5 +1,16 @@
 # OpenWrt Khadas Change log
 
+## OpenWrt Khadas rel 19.07.8
+
++ u-boot updated 2021.07+
++ linux kernel updated 5.14*
++ updated openwrt base to 19.07.8
+  The current stable version series of OpenWrt is 19.07,
+  with v19.07.8 being the latest release of the series.
+  It was released on 7 August 2021.
++ fixed rootfs detection
++ simplify image names to BOARD.OpenWrt.servers.sd.VERSION.img
+
 ## OpenWrt Khadas rel 0.77
 
 + u-boot updated
