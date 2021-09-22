@@ -26,6 +26,7 @@ src/gz openwrt_telephony http://downloads.openwrt.org/releases/$REL/packages/$OW
 
 arch all 100
 arch $OWARCH 200
+arch aarch64_cortex-a53 300
 
 dest root $OWTMP
 dest ram /tmp
