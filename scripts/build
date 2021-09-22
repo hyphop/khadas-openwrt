@@ -105,17 +105,17 @@ apps="${apps// /.}"
 OUT_=/tmp
 
 IMG_CNAME_="$Label.$REL.$apps.$ITYPE"
-IMG_CNAME="$Label.$REL.$apps.$ITYPE.$VER"
+IMG_CNAME="$Label.$apps.$ITYPE.$VER"
 
 IMG_CNAML_="$Label.$apps.$ITYPE"
 IMG_CNAML="$Label.$apps.$ITYPE.$VER"
 
-IMG_EXT4="$OUT_/$BOARD.$Label.$REL.$VER.$apps.ext4.$ITYPE.img"
+IMG_EXT4="$OUT_/$BOARD.$Label.$VER.$apps.ext4.$ITYPE.img"
 
 IMG_VFAT="$OUT_/$BOARD.$IMG_CNAME.img"
 
 IMG_NAME1=Khadas.$Label.$REL.$apps
-IMG_NAME2=Khadas.$Label.$REL.$apps.$VER
+IMG_NAME2=Khadas.$Label.$apps.$VER
 
 IMG_="$OUT_/$IMG_NAME2"
 IMG_LAST="$OUT_/Khadas.$Label.$apps.last"
