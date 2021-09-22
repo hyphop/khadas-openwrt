@@ -68,12 +68,15 @@ $opkg install rsync bwm-ng curl procps-ng-pkill tcpdump nano mc \
 case $REL in
     18*)
     $opkg install zip
-
     ;;
     19*)
     echo ""
     $opkg install libzstd zstd
 #   $opkg install mkf2fs f2fs-tools
+    ;;
+    21*)
+    echo ""
+    $opkg install libzstd zstd blkid losetup
     ;;
 esac
 
