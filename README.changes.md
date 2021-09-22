@@ -1,5 +1,10 @@
 # OpenWrt Khadas Change log
 
+## OpenWrt Khadas rel 21.02.0
+
++ updated openwrt base to 21.02.0
++ testing new series
+
 ## OpenWrt Khadas rel 19.07.8
 
 + u-boot updated 2021.07+
