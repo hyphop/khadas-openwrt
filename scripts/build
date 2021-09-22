@@ -743,7 +743,7 @@ done
 cd $OUT_
 md5sum   *.$IMG_CNAME.img \
 	 *.$IMG_CNAME.img.gz \
-	 *.$IMG_NAME2.kresq \
+	 $IMG_NAME2.kresq \
       > $IMG_NAME2.md5sums
 )
 
